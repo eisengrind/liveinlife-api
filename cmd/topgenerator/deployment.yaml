@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: "{NAME}-pod"
-        image: eu.gcr.io/51st-state/{NAME}:dev
+        image: eu.gcr.io/liveinlife/{NAME}:dev
         imagePullPolicy: Always
         resources:
           limits:

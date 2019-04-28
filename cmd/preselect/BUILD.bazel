@@ -49,7 +49,7 @@ k8s_deploy(
     name = "deployment",
     template = ":dpl",
     images = {
-        "eu.gcr.io/51st-state/preselect:dev": ":image",
+        "eu.gcr.io/liveinlife/preselect:dev": ":image",
     },
 )
 
