@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["transport.go"],
+    importpath = "github.com/51st-state/api/pkg/api/endpoint",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/encode:go_default_library",
+        "//pkg/problems:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/google.golang.org/grpc/status:go_default_library",
+    ],
+)

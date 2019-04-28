@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["email.go"],
+    importpath = "github.com/51st-state/api/pkg/email",
+    visibility = ["//visibility:public"],
+    deps = ["//pkg/event:go_default_library"],
+)

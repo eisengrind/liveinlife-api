@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "manager.go",
+        "repository.go",
+        "top.go",
+        "transport.go",
+    ],
+    importpath = "github.com/51st-state/api/pkg/apis/topgenerator",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/api/endpoint:go_default_library",
+        "//pkg/encode:go_default_library",
+        "//pkg/problems:go_default_library",
+        "//vendor/github.com/go-chi/chi:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

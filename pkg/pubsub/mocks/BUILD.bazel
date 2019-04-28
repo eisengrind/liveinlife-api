@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "consumer.go",
+        "message.go",
+        "producer.go",
+    ],
+    importpath = "github.com/51st-state/api/pkg/pubsub/mocks",
+    visibility = ["//visibility:public"],
+    deps = ["//pkg/pubsub:go_default_library"],
+)

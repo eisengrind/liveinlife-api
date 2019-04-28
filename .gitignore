@@ -1,0 +1,7 @@
+.vscode
+debug
+*.exe
+.build
+cpuprofile
+bazel-*
+tmp/

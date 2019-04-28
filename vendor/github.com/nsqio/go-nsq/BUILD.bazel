@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "api_request.go",
+        "command.go",
+        "config.go",
+        "config_flag.go",
+        "conn.go",
+        "consumer.go",
+        "delegates.go",
+        "errors.go",
+        "message.go",
+        "producer.go",
+        "protocol.go",
+        "states.go",
+        "version.go",
+    ],
+    importmap = "github.com/51st-state/api/vendor/github.com/nsqio/go-nsq",
+    importpath = "github.com/nsqio/go-nsq",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/golang/snappy:go_default_library"],
+)

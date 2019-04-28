@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package user;
+
+message User {
+    UUID UUID = 1;
+    Data Data = 2;
+}
+
+message IncompletePassword {
+    string Password = 1;
+}
+
+message CompletePassword {
+    bytes Hash = 1;
+}
+
+message UUID {
+    string UUID = 1;
+}
+
+message Data {
+    uint64 WCFUserID = 1;
+    string GameHash = 2;
+    bool Banned = 3;
+}
+
+message GetUserRequest {
+    UUID UUID = 1;
+}
+
+message CreateUserRequest {
+    Data Data = 1;
+}
+
+message DeleteUserRequest {
+    UUID UUID = 1;
+}
+
+message UpdateUserRequest {
+    UUID UUID = 1;
+    Data Data = 2;
+}
+
+message CheckUserPasswordRequest {
+    UUID UUID = 1;
+    IncompletePassword Password = 2;
+}
+
+message WCFUserInfo {
+    uint64 UserID = 1;
+    string Email = 2;
+    bytes Password = 3;
+}
+
+message GetWCFInfoByEmailRequest {
+    string Email = 1;
+}
+
+message GetWCFInfoByUsernameRequest {
+    string Username = 1;
+}
+
+message GetUserByGameSerialHashRequest {
+    string Hash = 1;
+}
+
+message GetUserByWCFUserIDRequest {
+    uint64 WCFUserID = 1;
+}
+
+service Manager {
+    rpc GetUser(GetUserRequest) returns (User) {}
+    rpc GetUserByGameSerialHash(GetUserByGameSerialHashRequest) returns (User) {}
+    rpc GetUserByWCFUserID(GetUserByWCFUserIDRequest) returns (User) {}
+    rpc CreateUser(CreateUserRequest) returns (User) {}
+    rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {}
+    rpc UpdateUser(UpdateUserRequest) returns (google.protobuf.Empty) {}
+    rpc CheckUserPassword(CheckUserPasswordRequest) returns (google.protobuf.Empty) {}
+    rpc GetWCFInfoByEmail(GetWCFInfoByEmailRequest) returns (WCFUserInfo) {}
+    rpc GetWCFInfoByUsername(GetWCFInfoByUsernameRequest) returns (WCFUserInfo) {}
+}

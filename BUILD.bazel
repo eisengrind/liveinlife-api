@@ -1,0 +1,19 @@
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix github.com/51st-state/api
+gazelle(name = "gazelle")
+# gazelle:proto disable_global
+
+package(default_visibility = ["//visibility:public"])
+
+# k8s stuff
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
+
+k8s_objects(
+    name = "dev",
+    objects = [
+        "//cmd/topgenerator:dev",
+        "//cmd/email:dev",
+        "//cmd/preselect:dev",
+    ],
+)

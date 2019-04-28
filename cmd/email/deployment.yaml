@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: "{NAME}"
+  name: "{NAME}-deployment"
+spec:
+  revisionHistoryLimit: 1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{NAME}"
+  template:
+    metadata:
+      labels:
+        app: "{NAME}"
+    spec:
+      containers:
+      - name: "{NAME}-pod"
+        image: eu.gcr.io/51st-state/{NAME}:dev
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: "10m"
+            memory: "64Mi"
+        env:
+        - name: NSQ_ADDR
+          valueFrom:
+            configMapKeyRef:
+              key: nsqAddr
+              name: "{NAME}-config"
+        - name: NSQ_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: nsqTopic
+              name: "{NAME}-config"
+        - name: SMTP_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: smtpEmail
+              name: "{NAME}-config"
+        - name: SMTP_SERVER
+          valueFrom:
+            configMapKeyRef:
+              key: smtpServer
+              name: "{NAME}-config"
+        - name: SMTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: smtpPort
+              name: "{NAME}-config"
+        - name: SMTP_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: smtpUsername
+              name: "{NAME}-config"
+        - name: SMTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: smtpPassword
+              name: "{NAME}-secrets"
+      imagePullSecrets:
+      - name: cloud-build-docker-registry

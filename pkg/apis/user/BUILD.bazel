@@ -1,0 +1,43 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "event.go",
+        "grpc_client.go",
+        "grpc_server.go",
+        "manager.go",
+        "repository.go",
+        "transport.go",
+        "user.go",
+    ],
+    importpath = "github.com/51st-state/api/pkg/apis/user",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/api/endpoint:go_default_library",
+        "//pkg/apis/user/proto:go_default_library",
+        "//pkg/bcrypt:go_default_library",
+        "//pkg/encode:go_default_library",
+        "//pkg/event:go_default_library",
+        "//vendor/github.com/go-chi/chi:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/empty:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/google.golang.org/grpc:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "manager_test.go",
+        "user_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = [
+        "//pkg/apis/user/mocks:go_default_library",
+        "//pkg/event:go_default_library",
+        "//pkg/pubsub/mocks:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+    ],
+)

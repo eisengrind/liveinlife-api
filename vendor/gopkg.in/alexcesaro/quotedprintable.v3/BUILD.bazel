@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "encodedword.go",
+        "pool.go",
+        "pool_go12.go",
+        "reader.go",
+        "writer.go",
+    ],
+    importmap = "github.com/51st-state/api/vendor/gopkg.in/alexcesaro/quotedprintable.v3",
+    importpath = "gopkg.in/alexcesaro/quotedprintable.v3",
+    visibility = ["//visibility:public"],
+)

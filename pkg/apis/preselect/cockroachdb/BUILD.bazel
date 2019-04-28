@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["db.go"],
+    importpath = "github.com/51st-state/api/pkg/apis/preselect/cockroachdb",
+    visibility = ["//visibility:public"],
+    deps = ["//pkg/apis/preselect:go_default_library"],
+)

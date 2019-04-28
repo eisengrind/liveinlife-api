@@ -1,0 +1,1923 @@
+openapi: 3.0.0
+info:
+  title: orbisapi
+  description: Polls is a simple API allowing consumers to view polls and vote in them.
+  contact: {}
+  version: '1.0'
+servers:
+  - url: 'https://dex.api.eisengrind.de/'
+    variables: {}
+  - url: 'http://api.eisengrind.de/'
+    variables: {}
+paths:
+  '/character/preselect/count':
+    get:
+      summary: Returns the count of left preselections
+      description: ''
+      operationId: GetLeftPreselectionCount
+      security: []
+      tags:
+      - pre-selector
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreSelectionCount'
+      deprecated: false
+  '/character/preselect/next':
+    get:
+      summary: Returns the next preselect item in queue
+      description: ''
+      operationId: GetNextPreselection
+      security: []
+      tags:
+      - pre-selector
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreSelection'
+      deprecated: false
+  '/character/preselect':
+    post:
+      summary: Create multiple available component variations
+      description: ''
+      operationId: CreatePreSelections
+      security: []
+      tags:
+      - pre-selector
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PreSelection'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      deprecated: false
+    patch:
+      summary: Set multiple available compnent variations
+      description: ''
+      operationId: SetPreSelections
+      security: []
+      tags:
+      - pre-selector
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PreSelection'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      deprecated: false
+  '/character/top-generator/tops/{sex}/{undershirtId}/{undershirtTextureId}/{overshirtId}/{overshirtTextureId}':
+    get:
+      summary: Get Top
+      description: ''
+      operationId: GetTop
+      security: []
+      tags:
+      - top-generator
+      parameters:
+      - name: sex
+        in: path
+        description: the sex id of the top
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      - name: undershirtId
+        in: path
+        description: unique id of an undershirt
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      - name: overshirtId
+        in: path
+        description: unique id of a shirt
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      - name: undershirtTextureId
+        in: path
+        description: unique id of a undershirt texture
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      - name: overshirtTextureId
+        in: path
+        description: unique id of a overshirt texture
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Top'
+              example:
+        '404':
+          description: 'the given resource is not existing in the database'
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      deprecated: false
+    patch:
+      summary: Set Top
+      description: ''
+      operationId: SetTop
+      security: []
+      tags:
+      - top-generator
+      parameters:
+      - name: sex
+        in: path
+        description: the sex id of the top
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      - name: undershirtId
+        in: path
+        description: unique id of an undershirt
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      - name: overshirtId
+        in: path
+        description: unique id of a shirt
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      - name: undershirtTextureId
+        in: path
+        description: unique id of a undershirt texture
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      - name: overshirtTextureId
+        in: path
+        description: unique id of a overshirt texture
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Top'
+              example:
+  '/character/top-generator/torsos':
+    get:
+      summary: Get Torsos
+      description: ''
+      operationId: GetTorsos
+      security: []
+      tags:
+      - top-generator
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TorsosRequest'
+      deprecated: false
+    patch:
+      summary: Set Torsos
+      description: ''
+      operationId: SetTorsos
+      security: []
+      tags:
+      - top-generator
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TorsosRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Torsos'
+  '/character/top-generator/undershirts':
+    get:
+      summary: Get Undershirts
+      description: ''
+      operationId: GetUndershirts
+      security: []
+      tags:
+      - top-generator
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Undershirts'
+    patch:
+      summary: Set Undershirts
+      description: ''
+      operationId: Set Undershirts
+      security: []
+      tags:
+      - top-generator
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UndershirtsRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Undershirts'
+  '/character/top-generator/overshirts':
+    get:
+      summary: Get Overshirts
+      description: ''
+      operationId: GetOvershirts
+      security: []
+      tags:
+      - top-generator
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Overshirts'
+    patch:
+      summary: Set Overshirts
+      description: ''
+      operationId: SetOvershirts
+      security: []
+      tags:
+      - top-generator
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OvershirtsRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Overshirts'
+  '/characters/top-generator/overshirts/{overshirt_id}/whitelist/undershirts':
+    get:
+      summary: Get Whitelisted Undershirts for Overshirts
+      description: ''
+      operationId: GetWhitelistedUndershirtsForOvershirts
+      security: []
+      tags:
+      - top-generator
+      parameters:
+      - name: overshirt_id
+        in: path
+        description: unique id of an overshirt
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhitelistUndershirt'
+    patch:
+      summary: Set Whitelisted Undershirts for Overshirts
+      description: ''
+      operationId: SetWhitelistedUndershirtsForOvershirts
+      security: []
+      tags:
+      - top-generator
+      parameters:
+      - name: overshirt_id
+        in: path
+        description: unique id of an overshirt
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: double
+          example: 1
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhitelistUndershirtRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhitelistUndershirt'
+  '/profiles/{id}':
+    get:
+      summary: Get Profile
+      description: ''
+      operationId: GetProfile
+      tags:
+      - profiles
+      parameters:
+        - name: id
+          in: path
+          description: unique id of a profile
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+            format: double
+            example: 1
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+              example:
+                uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      deprecated: false
+    patch:
+      summary: Set Profile
+      description: ''
+      operationId: SetProfile
+      tags:
+      - profiles
+      parameters:
+        - name: id
+          in: path
+          description: unique id of a profile
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+            format: double
+            example: 1
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileID'
+              example:
+                id: 1
+      deprecated: false
+    delete:
+      summary: Remove Profile
+      description: ''
+      operationId: RemoveProfile
+      tags:
+      - profiles
+      parameters:
+        - name: id
+          in: path
+          description: unique id of a profile
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+            format: double
+            example: 1
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileID'
+              example:
+                id: 1
+      deprecated: false
+  /profiles:
+    get:
+      summary: Get Profiles
+      description: ''
+      operationId: GetProfiles
+      tags:
+      - profiles
+      parameters:
+        - name: count
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: full_name
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: firstname
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: lastname
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+                description: ''
+              example:
+                - uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      deprecated: false
+    post:
+      summary: Create Profiles
+      description: ''
+      operationId: CreateProfiles
+      tags:
+      - profiles
+      parameters:
+        - name: count
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: full_name
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: firstname
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: lastname
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+              example:
+                uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      deprecated: false
+    delete:
+      summary: Delete Profiles
+      description: ''
+      operationId: DeleteProfiles
+      tags:
+      - profiles
+      parameters:
+        - name: count
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: full_name
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: firstname
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: lastname
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileID'
+              example:
+                id: 1
+      deprecated: false
+  '/profiles/{id}/cash/give/{tpid}':
+    post:
+      summary: Give Cash
+      description: ''
+      operationId: GiveCash
+      tags:
+      - profiles
+      parameters:
+        - name: id
+          in: path
+          description: tmpDesc
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+            format: double
+            example: 1
+        - name: tpid
+          in: path
+          description: tmpDesc
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+            format: double
+            example: 1
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  '/vehicles/{uuid}':
+    get:
+      summary: Get Vehicle
+      description: ''
+      operationId: GetVehicle
+      tags:
+      - vehicles
+      parameters:
+        - name: uuid
+          in: path
+          description: unique id of a vehicle
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+              example:
+                uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+                profile_id: 1
+                classname: B_Truck_01_ammo_F
+                parked: true
+                destroyed: false
+                garage_id: 1
+                position:
+                  coordinates:
+                    - 0
+                    - 0
+                    - 0
+                  direction:
+                    - 0
+                    - 0
+                    - 0
+                  up:
+                    - 0
+                    - 0
+                    - 0
+                inventory:
+                  items:
+                    - classname: '"itemClassname"'
+                      amount: 1
+                  weapons:
+                    - classname: '"weaponClassname"'
+                      amount: 1
+                  magazines:
+                    - classname: '"magazineClassname"'
+                      amount: 1
+                      ammo: 20
+                  containers:
+                    - classname: '"vehicleClassname"'
+                      items:
+                        - classname: '"itemClassname"'
+                          amount: 1
+                      weapons:
+                        - classname: '"weaponClassname"'
+                          amount: 1
+                      magazines:
+                        - classname: '"magazineClassname"'
+                          amount: 1
+                          ammo: 20
+                damage: {}
+                fuel: 1
+                locked: true
+                nick: someNickname
+                cracked: false
+                created_at: '2017-02-06T19:44:06.95325400Z'
+                updated_at: '2017-02-06T19:44:06.95325400Z'
+                parked_at: '2017-02-06T19:44:06.95325400Z'
+                revealed_at: '2017-02-06T19:44:06.95325400Z'
+                destroyed_at: '2017-02-06T19:44:06.95325400Z'
+      deprecated: false
+    patch:
+      summary: Set Vehicle
+      description: ''
+      operationId: SetVehicle
+      tags:
+      - vehicles
+      parameters:
+        - name: uuid
+          in: path
+          description: unique id of a vehicle
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleUID'
+              example:
+                uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      deprecated: false
+    delete:
+      summary: Remove Vehicle
+      description: ''
+      operationId: RemoveVehicle
+      tags:
+      - vehicles
+      parameters:
+        - name: uuid
+          in: path
+          description: unique id of a vehicle
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleUID'
+              example:
+                uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      deprecated: false
+  /vehicles/:
+    get:
+      summary: Get Vehicles
+      description: ''
+      operationId: GetVehicles
+      tags:
+      - vehicles
+      parameters:
+        - name: offset
+          in: query
+          description: The offset of the results to be returned
+          style: form
+          explode: true
+          schema:
+            type: number
+            format: double
+        - name: limit
+          in: query
+          description: The maximum number of results to return
+          style: form
+          explode: true
+          schema:
+            type: number
+            format: double
+        - name: sort_by
+          in: query
+          description: The fields to sort the results by
+          style: form
+          explode: true
+          schema:
+            $ref: '#/components/schemas/sort_by'
+        - name: order_by
+          in: query
+          description: The order how results will be arranged
+          style: form
+          explode: true
+          schema:
+            type: boolean
+        - name: profile_id
+          in: query
+          description: The profile id who is the owner of a vehicle
+          style: form
+          explode: true
+          schema:
+            type: number
+            format: double
+        - name: classname
+          in: query
+          description: The classname of a vehicle
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: parked
+          in: query
+          description: The parked status of a vehicle
+          style: form
+          explode: true
+          schema:
+            type: boolean
+        - name: destroyed
+          in: query
+          description: The destroyed status of a vehicle
+          style: form
+          explode: true
+          schema:
+            type: boolean
+        - name: garage_id
+          in: query
+          description: The garage id
+          style: form
+          explode: true
+          schema:
+            type: number
+            format: double
+        - name: fuel_min
+          in: query
+          description: The maximum fuel value of a vehicle
+          style: form
+          explode: true
+          schema:
+            type: number
+            format: double
+        - name: fuel_max
+          in: query
+          description: The minimum fuel value of a vehicle
+          style: form
+          explode: true
+          schema:
+            type: number
+            format: double
+        - name: fuel
+          in: query
+          description: The exact fuel of a vehicle
+          style: form
+          explode: true
+          schema:
+            type: number
+            format: double
+        - name: locked
+          in: query
+          description: The locked status of a vehicle
+          style: form
+          explode: true
+          schema:
+            type: boolean
+        - name: nick
+          in: query
+          description: A vehicle nick
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: cracked
+          in: query
+          description: The cracked status of a vehicle
+          style: form
+          explode: true
+          schema:
+            type: boolean
+        - name: plate
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+                description: ''
+              example:
+                - uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+                  profile_id: 1
+                  classname: B_Truck_01_fuel_F
+                  parked: true
+                  destroyed: false
+                  garage_id: 1
+                  position:
+                    coordinates:
+                      - 0
+                      - 0
+                      - 0
+                    direction:
+                      - 0
+                      - 0
+                      - 0
+                    up:
+                      - 0
+                      - 0
+                      - 0
+                  inventory:
+                    items:
+                      - classname: itemClassname
+                        amount: 1
+                    weapons:
+                      - classname: weaponClassname
+                        amount: 1
+                    magazines:
+                      - classname: magazineClassname
+                        amount: 1
+                        ammo: 20
+                    containers:
+                      - classname: vehicleClassname
+                        items:
+                          - classname: itemClassname
+                            amount: 1
+                        weapons:
+                          - classname: weaponClassname
+                            amount: 1
+                        magazines:
+                          - classname: magazineClassname
+                            amount: 1
+                            ammo: 20
+                  damage: {}
+                  fuel: 1
+                  locked: true
+                  nick: someNickname
+                  cracked: false
+                  created_at: '2017-02-06T19:44:06.95325400Z'
+                  updated_at: '2017-02-06T19:44:06.95325400Z'
+                  parked_at: '2017-02-06T19:44:06.95325400Z'
+                  revealed_at: '2017-02-06T19:44:06.95325400Z'
+                  destroyed_at: '2017-02-06T19:44:06.95325400Z'
+                - uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c2
+                  profile_id: 1
+                  classname: testClassname
+                  parked: true
+                  destroyed: false
+                  garage_id: 1
+                  position:
+                    coordinates:
+                      - 0
+                      - 0
+                      - 0
+                    direction:
+                      - 0
+                      - 0
+                      - 0
+                    up:
+                      - 0
+                      - 0
+                      - 0
+                  inventory:
+                    items:
+                      - classname: itemClassname
+                        amount: 1
+                    weapons:
+                      - classname: weaponClassname
+                        amount: 1
+                    magazines:
+                      - classname: magazineClassname
+                        amount: 1
+                        ammo: 20
+                    containers:
+                      - classname: vehicleClassname
+                        items:
+                          - classname: itemClassname
+                            amount: 1
+                        weapons:
+                          - classname: weaponClassname
+                            amount: 1
+                        magazines:
+                          - classname: magazineClassname
+                            amount: 1
+                            ammo: 20
+                  damage: {}
+                  fuel: 1
+                  locked: true
+                  nick: someNickname
+                  cracked: false
+                  created_at: '2017-02-06T19:44:06.95325400Z'
+                  updated_at: '2017-02-06T19:44:06.95325400Z'
+                  parked_at: '2017-02-06T19:44:06.95325400Z'
+                  revealed_at: '2017-02-06T19:44:06.95325400Z'
+                  destroyed_at: '2017-02-06T19:44:06.95325400Z'
+                - uuid: 6ba7b810-9dad-11d1-80b4-00c04fas3dt4
+                  profile_id: 1
+                  classname: B_Truck_01_ammo_F
+                  parked: true
+                  destroyed: false
+                  garage_id: 1
+                  position:
+                    coordinates:
+                      - 0
+                      - 0
+                      - 0
+                    direction:
+                      - 0
+                      - 0
+                      - 0
+                    up:
+                      - 0
+                      - 0
+                      - 0
+                  inventory:
+                    items:
+                      - classname: itemClassname
+                        amount: 1
+                    weapons:
+                      - classname: weaponClassname
+                        amount: 1
+                    magazines:
+                      - classname: magazineClassname
+                        amount: 1
+                        ammo: 20
+                    containers:
+                      - classname: vehicleClassname
+                        items:
+                          - classname: itemClassname
+                            amount: 1
+                        weapons:
+                          - classname: weaponClassname
+                            amount: 1
+                        magazines:
+                          - classname: magazineClassname
+                            amount: 1
+                            ammo: 20
+                  damage: {}
+                  fuel: 1
+                  locked: true
+                  nick: someNickname
+                  cracked: false
+                  created_at: '2017-02-06T19:44:06.95325400Z'
+                  updated_at: '2017-02-06T19:44:06.95325400Z'
+                  parked_at: '2017-02-06T19:44:06.95325400Z'
+                  revealed_at: '2017-02-06T19:44:06.95325400Z'
+                  destroyed_at: '2017-02-06T19:44:06.95325400Z'
+      deprecated: false
+    post:
+      summary: Create Vehicle
+      description: ''
+      operationId: CreateVehicle
+      tags:
+      - vehicles
+      parameters:
+        - name: offset
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: sort_by
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: order_by
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: profile_id
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: classname
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: parked
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: destroyed
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: garage_id
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: fuel_min
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: fuel_max
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: fuel
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: locked
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: nick
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: plate
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: cracked
+          in: query
+          description: ''
+          style: form
+          explode: true
+          schema:
+            type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVehicleRequest'
+            example: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+              example:
+                uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+                profile_id: 1
+                classname: B_Truck_01_ammo_F
+                parked: true
+                destroyed: false
+                garage_id: 1
+                position:
+                  coordinates:
+                    - 0
+                    - 0
+                    - 0
+                  direction:
+                    - 0
+                    - 0
+                    - 0
+                  up:
+                    - 0
+                    - 0
+                    - 0
+                inventory:
+                  items:
+                    - classname: '"itemClassname"'
+                      amount: 1
+                  weapons:
+                    - classname: '"weaponClassname"'
+                      amount: 1
+                  magazines:
+                    - classname: '"magazineClassname"'
+                      amount: 1
+                      ammo: 20
+                  containers:
+                    - classname: '"vehicleClassname"'
+                      items:
+                        - classname: '"itemClassname"'
+                          amount: 1
+                      weapons:
+                        - classname: '"weaponClassname"'
+                          amount: 1
+                      magazines:
+                        - classname: '"magazineClassname"'
+                          amount: 1
+                          ammo: 20
+                damage: {}
+                fuel: 1
+                locked: true
+                nick: someNickname
+                cracked: false
+                created_at: '2017-02-06T19:44:06.95325400Z'
+                updated_at: '2017-02-06T19:44:06.95325400Z'
+                parked_at: '2017-02-06T19:44:06.95325400Z'
+                revealed_at: '2017-02-06T19:44:06.95325400Z'
+                destroyed_at: '2017-02-06T19:44:06.95325400Z'
+      deprecated: false
+  '/vehicles/{uuid}/park':
+    post:
+      summary: Park Vehicle
+      description: ''
+      operationId: ParkVehicle
+      tags:
+      - vehicles
+      parameters:
+        - name: uuid
+          in: path
+          description: unique id of a vehicle
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleUID'
+              example:
+                uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      deprecated: false
+  '/vehicles/{uuid}/reveal':
+    post:
+      summary: Reveal Vehicle
+      description: ''
+      operationId: RevealVehicle
+      tags:
+      - vehicles
+      parameters:
+        - name: uuid
+          in: path
+          description: unique id of a vehicle
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleUID'
+              example:
+                uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      deprecated: false
+  '/vehicles/{uuid}/destroy':
+    post:
+      summary: Destroy Vehicle
+      description: ''
+      operationId: DestroyVehicle
+      tags:
+      - vehicles
+      parameters:
+        - name: uuid
+          in: path
+          description: unique id of a vehicle
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleUID'
+              example:
+                uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      deprecated: false
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    WhitelistUndershirt:
+      title: Whitelisted Undershirt
+      type: object
+      properties:
+        overshirt_id:
+          type: number
+          description: the overshirt id
+        undershirt_id:
+          type: number
+          description: the undershirt id
+    WhitelistUndershirtRequest:
+      title: Whitelisted Undershirt Request
+      type: object
+      required:
+      - items
+      properties:
+        undershirt_id:
+          type: number
+          description: the undershirt id
+    Overshirts:
+      title: Overshirt IDs
+      type: array
+      items:
+        type: number
+    OvershirtsRequest:
+      title: Overshirts Request
+      type: array
+      required:
+      - items
+      items:
+        type: number
+    Undershirts:
+      title: Undershirt IDs
+      type: array
+      items:
+        type: number
+    UndershirtsRequest:
+      title: Undershirts Request
+      type: array
+      required:
+      - items
+      items:
+        type: number
+    Torsos:
+      title: Torso IDs
+      type: array
+      items:
+        type: number
+    TorsosRequest:
+      title: Torsos Request
+      type: array
+      required:
+      - items
+      items:
+        type: number
+    PreSelection:
+      title: Pre Selection
+      type: object
+      properties:
+        sex:
+          type: number
+        component_id:
+          type: number
+        drawable_id:
+          type: number
+        texture_id:
+          type: number
+        accepted:
+          type: number
+    PreSelectionCount:
+      title: Preselection count
+      type: object
+      properties:
+        count:
+          type: number
+    Empty:
+      title: Empty object
+      type: object
+    Top:
+      title: Top
+      type: object
+      properties:
+        sex:
+          type: number
+          description: the sex of the clothing
+        overshirt_id:
+          type: number
+          description: the number of the overshirt id
+        overshirt_texture_id:
+          type: number
+          description: the number of the overshirt texture id
+        undershirt_id:
+          type: number
+          description: the number of the undershirt id
+        undershirt_texture_id:
+          type: number
+          description: the number of the undershirt texture id
+        status:
+          type: number
+          description: the current status of this item. 0 = unset; 1 = accepted; 2 = not accepted; 3 = pending
+        torso_id:
+          type: number
+          description: the number of the torso id
+        torso_texture_id:
+          type: number
+          description: the number of the torso texture id
+        name:
+          type: string
+          description: the name of the top
+        notice:
+          type: string
+          description: a notice of the given item combination
+        valency_type:
+          type: number
+          description: the valency type category
+        clothing_type:
+          type: number
+          description: the clothing type of this item
+        polyester_percentage:
+          type: number
+          description: the percentage of polyester of a top
+        cotton_percentage:
+          type: number
+          description: the cotton percentage of a top
+        leather_percentage:
+          type: number
+          description: the leather percentage of a top
+        silk_percentage:
+          type: number
+          description: the silk percentage of a top
+        relative_amount:
+          type: number
+          description: the relative amount of items needed
+    TopRequest:
+      title: TopRequest
+      type: object
+      properties:
+        status:
+          type: number
+          description: the current status of this item. 0 = unset; 1 = accepted; 2 = not accepted; 3 = pending
+        torso_id:
+          type: number
+          description: the number of the torso id
+        torso_texture_id:
+          type: number
+          description: the number of the torso texture id
+        name:
+          type: string
+          description: the name of the top
+        notice:
+          type: string
+          description: a notice of the given item combination
+        valency_type:
+          type: number
+          description: the valency type category
+        clothing_type:
+          type: number
+          description: the clothing type of this item
+        polyester_percentage:
+          type: number
+          description: the percentage of polyester of a top
+        cotton_percentage:
+          type: number
+          description: the cotton percentage of a top
+        leather_percentage:
+          type: number
+          description: the leather percentage of a top
+        silk_percentage:
+          type: number
+          description: the silk percentage of a top
+        relative_amount:
+          type: number
+          description: the relative amount of items needed
+    Problem:
+      title: Problem
+      type: object
+      properties:
+        title:
+          type: string
+          description: the title of the occurred problem
+        detail:
+          type: string
+          description: the more detailed information of the problem
+        type:
+          type: string
+          description: the type of the problem
+        instance:
+          type: string
+          description: the instance where the problem occurred
+        status:
+          type: number
+          description: the returned http status code for older browsers
+    Position:
+      title: Position
+      type: object
+      properties:
+        coordinates:
+          type: array
+          items:
+            type: number
+          description: the exact coordinates of an ArmA 3 object
+        direction:
+          type: array
+          items:
+            type: number
+          description: the exact direction vector of an ArmA 3 object
+        up:
+          type: array
+          items:
+            type: number
+          description: the exact up vector of an ArmA 3 object
+    Item:
+      title: Item
+      type: object
+      properties:
+        classname:
+          type: string
+          description: item classname
+          example: '"itemClassname"'
+        amount:
+          type: number
+          description: item amount
+          example: 1
+    Magazine:
+      title: Magazine
+      type: object
+      properties:
+        classname:
+          type: string
+          description: magazine classname
+          example: '"magazineClassname"'
+        amount:
+          type: number
+          description: magazine amount
+          example: 1
+        ammo:
+          type: number
+          description: magazine ammo count
+          example: 20
+    Weapon:
+      title: Weapon
+      type: object
+      properties:
+        classname:
+          type: string
+          description: weapon classname
+          example: '"weaponClassname"'
+        amount:
+          type: number
+          description: weapon amount
+          example: 1
+    ContainerInventory:
+      title: ContainerInventory
+      type: object
+      properties:
+        classname:
+          type: string
+          description: vehicle classname of an inventory container
+          example: '"vehicleClassname"'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+          description: items contained
+        weapons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Weapon'
+          description: weapons contained
+        magazines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Magazine'
+          description: magazines contained
+    BoxInventory:
+      title: BoxInventory
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+          description: items contained
+        weapons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Weapon'
+          description: weapons contained
+        magazines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Magazine'
+          description: magazines contained
+        containers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContainerInventory'
+          description: contained backpacks or container inventories
+    ProfileID:
+      title: ProfileID
+      type: object
+      properties:
+        id:
+          type: number
+          description: the id of a profile
+          example: 1
+      example:
+        id: 1
+    Profile:
+      title: Profile
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: is the unique id of a player
+          example: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      example:
+        uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+    VehicleUID:
+      title: VehicleUID
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: is the unique id of a vehicle
+          example: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+      example:
+        uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+    Vehicle:
+      title: Vehicle
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: is the unique id of a vehicle
+          example: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+        profile_id:
+          type: number
+          description: is the owner of a vehicle
+          example: 1
+        classname:
+          type: string
+          description: is the in-game classname of a vehicle
+          example: B_Truck_01_ammo_F
+        parked:
+          type: boolean
+          description: informs about whether a vehicle is parked
+          example: true
+        destroyed:
+          type: boolean
+          description: informs about whether a vehicle is destroyed
+          example: false
+        garage_id:
+          type: number
+          description: represents the current garage a vehicle is parked in
+          example: 1
+        position:
+          $ref: '#/components/schemas/Position'
+        inventory:
+          $ref: '#/components/schemas/BoxInventory'
+        damage:
+          type: object
+          description: damage of a vehicle
+        fuel:
+          type: number
+          description: fuel of a vehicle
+          example: 1
+        locked:
+          type: boolean
+          description: status whether a vehicle is locked
+          example: true
+        nick:
+          type: string
+          description: nickname of a vehicle
+          example: someNickname
+        cracked:
+          type: boolean
+          description: status whether a vehicle is cracked
+          example: false
+        created_at:
+          type: string
+          description: created at timestamp
+          example: '2017-02-06T19:44:06.95325400Z'
+        updated_at:
+          type: string
+          description: updated at timestamp
+          example: '2017-02-06T19:44:06.95325400Z'
+        parked_at:
+          type: string
+          description: parked at timestamp
+          example: '2017-02-06T19:44:06.95325400Z'
+        revealed_at:
+          type: string
+          description: revealed at timestamp
+          example: '2017-02-06T19:44:06.95325400Z'
+        destroyed_at:
+          type: string
+          description: destroyed at timestamp
+          example: '2017-02-06T19:44:06.95325400Z'
+      example:
+        uuid: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+        profile_id: 1
+        classname: B_Truck_01_ammo_F
+        parked: true
+        destroyed: false
+        garage_id: 1
+        position:
+          coordinates:
+            - 0
+            - 0
+            - 0
+          direction:
+            - 0
+            - 0
+            - 0
+          up:
+            - 0
+            - 0
+            - 0
+        inventory:
+          items:
+            - classname: '"itemClassname"'
+              amount: 1
+          weapons:
+            - classname: '"weaponClassname"'
+              amount: 1
+          magazines:
+            - classname: '"magazineClassname"'
+              amount: 1
+              ammo: 20
+          containers:
+            - classname: '"vehicleClassname"'
+              items:
+                - classname: '"itemClassname"'
+                  amount: 1
+              weapons:
+                - classname: '"weaponClassname"'
+                  amount: 1
+              magazines:
+                - classname: '"magazineClassname"'
+                  amount: 1
+                  ammo: 20
+        damage: {}
+        fuel: 1
+        locked: true
+        nick: someNickname
+        cracked: false
+        created_at: '2017-02-06T19:44:06.95325400Z'
+        updated_at: '2017-02-06T19:44:06.95325400Z'
+        parked_at: '2017-02-06T19:44:06.95325400Z'
+        revealed_at: '2017-02-06T19:44:06.95325400Z'
+        destroyed_at: '2017-02-06T19:44:06.95325400Z'
+    CreateVehicleRequest:
+      title: CreateVehicleRequest
+      required:
+        - classname
+        - profile_id
+      type: object
+      properties:
+        classname:
+          type: string
+          description: the classname of the vehicle
+          example: B_Truck_01_ammo_F
+        profile_id:
+          type: number
+          description: the owner of the vehicle as profile id
+          example: 1
+    sort_by:
+      title: sort_by
+      enum:
+        - createdAt
+        - updatedAt
+        - parkedAt
+        - revealedAt
+        - destroyedAt
+        - classname
+        - profile_id
+        - id
+        - parked
+        - destroyed
+        - garage_id
+        - fuel
+        - locked
+        - nick
+        - plate
+        - cracked
+      type: string
+      example: createdAt
+tags: []
+security:
+  - BearerAuth: []

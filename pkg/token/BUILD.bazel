@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "context.go",
+        "event.go",
+        "middleware.go",
+        "token.go",
+    ],
+    importpath = "github.com/51st-state/api/pkg/token",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/api/endpoint:go_default_library",
+        "//vendor/github.com/dgrijalva/jwt-go:go_default_library",
+        "//vendor/github.com/dgrijalva/jwt-go/request:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["token_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//test:go_default_library",
+        "//vendor/github.com/dgrijalva/jwt-go:go_default_library",
+    ],
+)

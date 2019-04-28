@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "manager.go",
+        "preselect.go",
+        "repository.go",
+        "transport.go",
+    ],
+    importpath = "github.com/51st-state/api/pkg/apis/preselect",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/api/endpoint:go_default_library",
+        "//pkg/encode:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

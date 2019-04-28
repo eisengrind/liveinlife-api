@@ -1,0 +1,16 @@
+steps:
+- name: gcr.io/cloud-builders/gcloud
+  args: [ 'kms', 'decrypt', '--ciphertext-file=helpers/secrets/.kube/config.cipher', '--plaintext-file=helpers/secrets/.kube/config', '--location=global', '--keyring=liveinlife-cloud-build', '--key=certificate' ]
+- name: 'gcr.io/cloud-builders/go'
+  args: [ 'test', './...' ]
+  env: [ 'PROJECT_ROOT=github.com/51st-state/api']
+- name: gcr.io/cloud-builders/bazel
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
+    mkdir -p ~/.kube/ && cp -f helpers/secrets/.kube/config ~/.kube/config
+    bazel run --verbose_failures --spawn_strategy=local :dev
+    bazel run --verbose_failures --spawn_strategy=local :dev.apply
+timeout: 1000s
