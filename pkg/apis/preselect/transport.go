@@ -1,18 +1,15 @@
 package preselect
 
 import (
-	"context"
-	"encoding/json"
 	"net/http"
 
-	"github.com/51st-state/api/pkg/api/endpoint"
 	"github.com/51st-state/api/pkg/encode"
 	"go.uber.org/zap"
 )
 
 // MakeGetLeftPreSelectionsEndpoint for a HTTP server
 func MakeGetLeftPreSelectionsEndpoint(l *zap.Logger, m *Manager, e encode.Encoder) http.HandlerFunc {
-	return endpoint.New(e, func(ctx context.Context, _ *http.Request) (interface{}, error) {
+	return nil /*endpoint.New(e, func(ctx context.Context, _ *http.Request) (interface{}, error) {
 		left, err := m.GetLeft(ctx)
 		if err != nil {
 			return nil, err
@@ -23,19 +20,19 @@ func MakeGetLeftPreSelectionsEndpoint(l *zap.Logger, m *Manager, e encode.Encode
 		}{
 			left,
 		}, nil
-	}).HandlerFunc(l)
+	}).HandlerFunc(l)*/
 }
 
 // MakeGetNextPreSelectionsEndpoint for a HTTP server
 func MakeGetNextPreSelectionsEndpoint(l *zap.Logger, m *Manager, e encode.Encoder) http.HandlerFunc {
-	return endpoint.New(e, func(ctx context.Context, _ *http.Request) (interface{}, error) {
+	return nil /*endpoint.New(e, func(ctx context.Context, _ *http.Request) (interface{}, error) {
 		return m.GetNext(ctx)
-	}).HandlerFunc(l)
+	}).HandlerFunc(l)*/
 }
 
 // MakeCreatePreSelectionsEndpoint for a HTTP server
 func MakeCreatePreSelectionsEndpoint(l *zap.Logger, m *Manager, e encode.Encoder) http.HandlerFunc {
-	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
+	return nil /*endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		cInternal := make([]*complete, 0)
 
 		if err := json.NewDecoder(r.Body).Decode(&cInternal); err != nil {
@@ -49,12 +46,12 @@ func MakeCreatePreSelectionsEndpoint(l *zap.Logger, m *Manager, e encode.Encoder
 		}
 
 		return struct{}{}, m.Create(ctx, c...)
-	}).HandlerFunc(l)
+	}).HandlerFunc(l)*/
 }
 
 // MakeSetPreSelectionsEndpoint for a HTTP server
 func MakeSetPreSelectionsEndpoint(l *zap.Logger, m *Manager, e encode.Encoder) http.HandlerFunc {
-	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
+	return nil /*endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		cInternal := make([]*complete, 0)
 
 		if err := json.NewDecoder(r.Body).Decode(&cInternal); err != nil {
@@ -68,5 +65,5 @@ func MakeSetPreSelectionsEndpoint(l *zap.Logger, m *Manager, e encode.Encoder) h
 		}
 
 		return struct{}{}, m.Set(ctx, c...)
-	}).HandlerFunc(l)
+	}).HandlerFunc(l)*/
 }
