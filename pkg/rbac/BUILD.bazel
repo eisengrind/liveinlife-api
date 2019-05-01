@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "control.go",
+        "grpc_client.go",
+        "grpc_server.go",
+        "repository.go",
+        "role.go",
+        "rule.go",
+        "subject.go",
+    ],
+    importpath = "github.com/51st-state/api/pkg/rbac",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/rbac/proto:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/empty:go_default_library",
+        "//vendor/google.golang.org/grpc:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "control_test.go",
+        "role_test.go",
+        "subject_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = ["//pkg/rbac/mocks:go_default_library"],
+)

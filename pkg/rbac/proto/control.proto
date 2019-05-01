@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package rbac;
+
+message Rule {
+    string Rule = 1;
+}
+
+message RoleID {
+    string ID = 1;
+}
+
+message RoleRules {
+    repeated string Rules = 1;
+}
+
+message SubjectID {
+    string ID = 1;
+}
+
+message SubjectRoles {
+    repeated string RoleIDs = 1;
+}
+
+message SetRoleRulesRequest {
+    RoleID RoleID = 1;
+    RoleRules RoleRules = 2;
+}
+
+message SetSubjectRolesRequest {
+    SubjectID SubjectID = 1;
+    SubjectRoles SubjectRoles = 2;
+}
+
+message IsSubjectAllowedRequest {
+    SubjectID SubjectID = 1;
+    Rule Rule = 2;
+}
+
+service Control {
+    rpc GetRoleRules(RoleID) returns (RoleRules) {}
+    rpc SetRoleRules(SetRoleRulesRequest) returns (google.protobuf.Empty) {}
+    rpc GetSubjectRoles(SubjectID) returns (SubjectRoles) {}
+    rpc SetSubjectRoles(SetSubjectRolesRequest) returns (google.protobuf.Empty) {}
+    rpc IsSubjectAllowed(IsSubjectAllowedRequest) returns (google.protobuf.Empty) {}
+}
