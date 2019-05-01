@@ -14,7 +14,7 @@ k8s_objects(
     objects = [
         "//cmd/topgenerator:dev",
         "//cmd/email:dev",
-#        "//cmd/preselect:dev",
+        #        "//cmd/preselect:dev",
         "//cmd/rbac:dev",
     ],
 )
