@@ -1,7 +1,5 @@
 package preselect
 
-import "context"
-
 // Manager for pre-selection management
 type Manager struct {
 	repository Repository
@@ -14,7 +12,7 @@ func NewManager(r Repository) *Manager {
 	}
 }
 
-// GetLeft preselect objects
+/*// GetLeft preselect objects
 func (m *Manager) GetLeft(ctx context.Context) (uint64, error) {
 	return m.repository.GetLeft(ctx)
 }
@@ -32,4 +30,4 @@ func (m *Manager) Create(ctx context.Context, c ...Complete) error {
 // Set pre-selections
 func (m *Manager) Set(ctx context.Context, c ...Complete) error {
 	return m.repository.Update(ctx, c...)
-}
+}*/

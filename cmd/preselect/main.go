@@ -27,12 +27,12 @@ var (
 )
 
 func main() {
+	flagenv.Parse()
+
 	logger, err := zap.NewProductionConfig().Build()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-
-	flagenv.Parse()
 
 	logger.Info("connecting to database")
 	db, err := makeCockroachDBDatabase()
