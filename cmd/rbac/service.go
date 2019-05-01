@@ -16,6 +16,8 @@ import (
 	"github.com/playnet-public/flagenv"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+
+	_ "github.com/lib/pq"
 )
 
 var (
