@@ -4,6 +4,8 @@ import (
 	"context"
 
 	pb "github.com/51st-state/api/pkg/apis/user/proto"
+	"github.com/51st-state/api/pkg/rbac"
+	proto1 "github.com/51st-state/api/pkg/rbac/proto"
 	grpc "google.golang.org/grpc"
 )
 
@@ -168,4 +170,39 @@ func (cli *GRPCClient) GetWCFInfoByUsername(ctx context.Context, username string
 		resp.GetEmail(),
 		newCompletePassword(resp.GetPassword()),
 	}, nil
+}
+
+// GetRoles of a user
+func (cli *GRPCClient) GetRoles(ctx context.Context, id Identifier) (rbac.SubjectRoles, error) {
+	resp, err := cli.client.GetUserRoles(ctx, &pb.UUID{
+		UUID: id.UUID(),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	roles := make(rbac.SubjectRoles, 0)
+	for _, v := range resp.GetRoleIDs() {
+		roles = append(roles, rbac.RoleID(v))
+	}
+
+	return nil, nil
+}
+
+// SetRoles of a user
+func (cli *GRPCClient) SetRoles(ctx context.Context, id Identifier, roles rbac.SubjectRoles) error {
+	grpcRoles := make([]string, 0)
+	for _, v := range roles {
+		grpcRoles = append(grpcRoles, string(v))
+	}
+
+	_, err := cli.client.SetUserRoles(ctx, &pb.SetUserRolesRequest{
+		UUID: &pb.UUID{
+			UUID: id.UUID(),
+		},
+		Roles: &proto1.SubjectRoles{
+			RoleIDs: grpcRoles,
+		},
+	})
+	return err
 }

@@ -2,9 +2,11 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"regexp"
 
 	"github.com/51st-state/api/pkg/event"
+	"github.com/51st-state/api/pkg/rbac"
 
 	"github.com/pkg/errors"
 
@@ -16,15 +18,17 @@ type Manager struct {
 	repository    Repository
 	wcfRepository WCFRepository
 	event         *event.Producer
+	rbac          rbac.Control
 }
 
 // NewManager for user objects
-//go:generate protoc -I ./proto --go_out=plugins=grpc:./proto ./proto/manager.proto
-func NewManager(r Repository, wcf WCFRepository, prod *event.Producer) *Manager {
+//go:generate protoc -I./../../../../../../  -I ./proto --go_out=plugins=grpc:./proto ./proto/manager.proto
+func NewManager(r Repository, wcf WCFRepository, prod *event.Producer, rb rbac.Control) *Manager {
 	return &Manager{
 		r,
 		wcf,
 		prod,
+		rb,
 	}
 }
 
@@ -198,4 +202,25 @@ func getFirstPasswordHash(hash, password []byte) ([]byte, error) {
 		majorBcryptVersion,
 		minorBcryptVersion,
 	).Hash(), nil
+}
+
+// GetRoles of a user
+func (m *Manager) GetRoles(ctx context.Context, id Identifier) (rbac.SubjectRoles, error) {
+	roles, err := m.rbac.GetSubjectRoles(ctx, rbac.SubjectID(fmt.Sprintf(
+		"user/%s",
+		id.UUID(),
+	)))
+	if err != nil {
+		return nil, err
+	}
+
+	return roles, nil
+}
+
+// SetRoles of a user
+func (m *Manager) SetRoles(ctx context.Context, id Identifier, roles rbac.SubjectRoles) error {
+	return m.rbac.SetSubjectRoles(ctx, rbac.SubjectID(fmt.Sprintf(
+		"user/%s",
+		id.UUID(),
+	)), roles)
 }

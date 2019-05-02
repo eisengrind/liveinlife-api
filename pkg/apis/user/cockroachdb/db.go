@@ -156,6 +156,7 @@ func (r *repository) GetByGameSerialHash(ctx context.Context, hash string) (user
 
 func (r *repository) Create(ctx context.Context, inc user.Incomplete) (user.Complete, error) {
 	rand, err := uuid.NewRandom()
+
 	if err != nil {
 		return nil, err
 	}

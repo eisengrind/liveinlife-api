@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "github.com/51st-state/api/pkg/rbac/proto/control.proto";
 
 package user;
 
@@ -71,6 +72,11 @@ message GetUserByWCFUserIDRequest {
     uint64 WCFUserID = 1;
 }
 
+message SetUserRolesRequest {
+    UUID UUID = 1;
+    rbac.SubjectRoles Roles = 2;
+}
+
 service Manager {
     rpc GetUser(GetUserRequest) returns (User) {}
     rpc GetUserByGameSerialHash(GetUserByGameSerialHashRequest) returns (User) {}
@@ -81,4 +87,6 @@ service Manager {
     rpc CheckUserPassword(CheckUserPasswordRequest) returns (google.protobuf.Empty) {}
     rpc GetWCFInfoByEmail(GetWCFInfoByEmailRequest) returns (WCFUserInfo) {}
     rpc GetWCFInfoByUsername(GetWCFInfoByUsernameRequest) returns (WCFUserInfo) {}
+    rpc GetUserRoles(UUID) returns (rbac.SubjectRoles) {}
+    rpc SetUserRoles(SetUserRolesRequest) returns (google.protobuf.Empty) {}
 }
