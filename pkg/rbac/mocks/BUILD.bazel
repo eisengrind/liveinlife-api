@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["repository.go"],
+    srcs = [
+        "control.go",
+        "repository.go",
+    ],
     importpath = "github.com/51st-state/api/pkg/rbac/mocks",
     visibility = ["//visibility:public"],
     deps = ["//pkg/rbac:go_default_library"],

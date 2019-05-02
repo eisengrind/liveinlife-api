@@ -8,11 +8,11 @@ import (
 )
 
 type grpcServer struct {
-	control *Control
+	control Control
 }
 
 // NewGRPCServer creates a new grpc server instance for the rbac control
-func NewGRPCServer(c *Control) pb.ControlServer {
+func NewGRPCServer(c Control) pb.ControlServer {
 	return &grpcServer{
 		c,
 	}

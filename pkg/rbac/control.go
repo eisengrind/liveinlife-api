@@ -6,14 +6,23 @@ import (
 )
 
 // Control of the rbac system
-type Control struct {
+//go:generate counterfeiter -o ./mocks/control.go . Control
+type Control interface {
+	GetRoleRules(ctx context.Context, roleID RoleID) (RoleRules, error)
+	SetRoleRules(ctx context.Context, roleID RoleID, rules RoleRules) error
+	GetSubjectRoles(ctx context.Context, subjectID SubjectID) (SubjectRoles, error)
+	SetSubjectRoles(ctx context.Context, subjectID SubjectID, roles SubjectRoles) error
+	IsSubjectAllowed(ctx context.Context, subjectID SubjectID, rule Rule) error
+}
+
+type control struct {
 	repository Repository
 }
 
 // NewControl instantiates a new RBAC control
 //go:generate protoc -I ./proto --go_out=plugins=grpc:./proto ./proto/control.proto
-func NewControl(r Repository) *Control {
-	return &Control{
+func NewControl(r Repository) Control {
+	return &control{
 		r,
 	}
 }
@@ -25,16 +34,16 @@ var (
 )
 
 // GetRoleRules gets the rules of  role
-func (m *Control) GetRoleRules(ctx context.Context, roleID RoleID) (RoleRules, error) {
+func (m *control) GetRoleRules(ctx context.Context, roleID RoleID) (RoleRules, error) {
 	if roleID == "" {
 		return nil, errEmptyRoleID
 	}
 
-	return m.GetRoleRules(ctx, roleID)
+	return m.repository.GetRoleRules(ctx, roleID)
 }
 
 // SetRoleRules sets the rules of a role
-func (m *Control) SetRoleRules(ctx context.Context, roleID RoleID, rules RoleRules) error {
+func (m *control) SetRoleRules(ctx context.Context, roleID RoleID, rules RoleRules) error {
 	if roleID == "" {
 		return errEmptyRoleID
 	}
@@ -45,11 +54,11 @@ func (m *Control) SetRoleRules(ctx context.Context, roleID RoleID, rules RoleRul
 		}
 	}
 
-	return nil
+	return m.repository.SetRoleRules(ctx, roleID, rules)
 }
 
 // GetSubjectRoles returns the subject roles
-func (m *Control) GetSubjectRoles(ctx context.Context, subjectID SubjectID) (SubjectRoles, error) {
+func (m *control) GetSubjectRoles(ctx context.Context, subjectID SubjectID) (SubjectRoles, error) {
 	if subjectID == "" {
 		return nil, errEmptySubjectID
 	}
@@ -58,7 +67,7 @@ func (m *Control) GetSubjectRoles(ctx context.Context, subjectID SubjectID) (Sub
 }
 
 // SetSubjectRoles sets the roles of a subject
-func (m *Control) SetSubjectRoles(ctx context.Context, subjectID SubjectID, roles SubjectRoles) error {
+func (m *control) SetSubjectRoles(ctx context.Context, subjectID SubjectID, roles SubjectRoles) error {
 	if subjectID == "" {
 		return errEmptySubjectID
 	}
@@ -69,11 +78,11 @@ func (m *Control) SetSubjectRoles(ctx context.Context, subjectID SubjectID, role
 		}
 	}
 
-	return nil
+	return m.repository.SetSubjectRoles(ctx, subjectID, roles)
 }
 
 // IsSubjectAllowed checks whether a subject has access to a rule
-func (m *Control) IsSubjectAllowed(ctx context.Context, subjectID SubjectID, rule Rule) error {
+func (m *control) IsSubjectAllowed(ctx context.Context, subjectID SubjectID, rule Rule) error {
 	if subjectID == "" {
 		return errEmptySubjectID
 	}

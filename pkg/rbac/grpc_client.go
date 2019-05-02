@@ -8,20 +8,19 @@ import (
 	pb "github.com/51st-state/api/pkg/rbac/proto"
 )
 
-// GRPCClient is an instance for a grpc rbac controller
-type GRPCClient struct {
+type grpcClient struct {
 	client pb.ControlClient
 }
 
-// NewGRPCClient for the rbac controller
-func NewGRPCClient(c *grpc.ClientConn) *GRPCClient {
-	return &GRPCClient{
+// NewgrpcClient for the rbac controller
+func NewgrpcClient(c *grpc.ClientConn) Control {
+	return &grpcClient{
 		pb.NewControlClient(c),
 	}
 }
 
 // GetRoleRules gets the rules of  role
-func (c *GRPCClient) GetRoleRules(ctx context.Context, roleID RoleID) (RoleRules, error) {
+func (c *grpcClient) GetRoleRules(ctx context.Context, roleID RoleID) (RoleRules, error) {
 	grpcRules, err := c.client.GetRoleRules(ctx, &pb.RoleID{
 		ID: string(roleID),
 	})
@@ -38,7 +37,7 @@ func (c *GRPCClient) GetRoleRules(ctx context.Context, roleID RoleID) (RoleRules
 }
 
 // SetRoleRules sets the rules of a role
-func (c *GRPCClient) SetRoleRules(ctx context.Context, roleID RoleID, rules RoleRules) error {
+func (c *grpcClient) SetRoleRules(ctx context.Context, roleID RoleID, rules RoleRules) error {
 	grpcRules := &pb.RoleRules{
 		Rules: []string{},
 	}
@@ -56,7 +55,7 @@ func (c *GRPCClient) SetRoleRules(ctx context.Context, roleID RoleID, rules Role
 }
 
 // GetSubjectRoles returns the subject roles
-func (c *GRPCClient) GetSubjectRoles(ctx context.Context, subjectID SubjectID) (SubjectRoles, error) {
+func (c *grpcClient) GetSubjectRoles(ctx context.Context, subjectID SubjectID) (SubjectRoles, error) {
 	grpcRoles, err := c.client.GetSubjectRoles(ctx, &pb.SubjectID{
 		ID: string(subjectID),
 	})
@@ -73,7 +72,7 @@ func (c *GRPCClient) GetSubjectRoles(ctx context.Context, subjectID SubjectID) (
 }
 
 // SetSubjectRoles sets the roles of a subject
-func (c *GRPCClient) SetSubjectRoles(ctx context.Context, subjectID SubjectID, roles SubjectRoles) error {
+func (c *grpcClient) SetSubjectRoles(ctx context.Context, subjectID SubjectID, roles SubjectRoles) error {
 	grpcRoles := &pb.SubjectRoles{
 		RoleIDs: []string{},
 	}
@@ -91,7 +90,7 @@ func (c *GRPCClient) SetSubjectRoles(ctx context.Context, subjectID SubjectID, r
 }
 
 // IsSubjectAllowed checks whether a subject has access to a rule
-func (c *GRPCClient) IsSubjectAllowed(ctx context.Context, subjectID SubjectID, rule Rule) error {
+func (c *grpcClient) IsSubjectAllowed(ctx context.Context, subjectID SubjectID, rule Rule) error {
 	_, err := c.client.IsSubjectAllowed(ctx, &pb.IsSubjectAllowedRequest{
 		SubjectID: &pb.SubjectID{
 			ID: string(subjectID),
