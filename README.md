@@ -1,8 +1,10 @@
-![Banner](https://github.com/51st-state/api/blob/master/assets/banner.png?raw=true)
+# 51st-state api
 
 [![GitHub license](https://img.shields.io/github/license/51st-state/api.svg)](https://github.com/51st-state/api/blob/master/LICENSE)
 [![Documentation](https://godoc.org/github.com/51st-state/api?status.svg)](https://godoc.org/github.com/51st-state/api)
 [![Go Report Card](https://goreportcard.com/badge/github.com/51st-state/api)](https://goreportcard.com/report/github.com/51st-state/api)
+
+![Banner](https://github.com/51st-state/api/blob/master/assets/banner.png?raw=true)
 
 api is an API service for the Eisengrind RageMP RPG server. It provides scalability, stability and availability of important API functions to be called by the server and its clients and thus, reducing the load on the main game server.
 
