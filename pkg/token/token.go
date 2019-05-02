@@ -18,7 +18,7 @@ type Token interface {
 }
 
 type tokenInfo struct {
-	UUID string `json:"uuid"`
+	ID   string `json:"id"`
 	Type uint8  `json:"type"`
 }
 
@@ -46,11 +46,11 @@ func (t *token) Data() *data {
 // New creates a new api-friendly api token.
 // Available types are 0 = user-token, 1 = user-refresh-token.
 // More types can follow - e.g. specific API-Token in addition to user token.
-func New(c *jwt.StandardClaims, uuid string, t uint8) Token {
+func New(c *jwt.StandardClaims, id string, t uint8) Token {
 	return &token{
 		token: jwt.NewWithClaims(jwt.SigningMethodRS512, &data{
 			&tokenInfo{
-				UUID: uuid,
+				ID:   id,
 				Type: t,
 			},
 			c,

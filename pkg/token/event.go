@@ -4,7 +4,7 @@ import "context"
 
 // EventPayload of a token in the event system of the API.
 type EventPayload struct {
-	UUID string `json:"uuid"`
+	ID   string `json:"id"`
 	Type uint8  `json:"type"`
 }
 
@@ -17,7 +17,7 @@ func EventPayloadFromContext(ctx context.Context) (*EventPayload, error) {
 	}
 
 	return &EventPayload{
-		UUID: tok.Data().UUID,
+		ID:   tok.Data().ID,
 		Type: tok.Data().Type,
 	}, nil
 }

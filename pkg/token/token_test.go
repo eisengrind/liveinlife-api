@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/51st-state/api/pkg/token"
 	"github.com/51st-state/api/test"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 func TestNew(t *testing.T) {
@@ -15,8 +15,8 @@ func TestNew(t *testing.T) {
 		ExpiresAt: time.Now().Add(time.Minute * 2).Unix(),
 	}, "1234", 0)
 
-	if tok.Data().UUID != "1234" {
-		t.Fatal("invalid uuid casted")
+	if tok.Data().ID != "1234" {
+		t.Fatal("invalid id casted")
 	}
 
 	if tok.Data().Type != 0 {
