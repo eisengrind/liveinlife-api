@@ -16,5 +16,6 @@ k8s_objects(
         "//cmd/email:dev",
         #        "//cmd/preselect:dev",
         "//cmd/rbac:dev",
+        "//cmd/role:dev",
     ],
 )
