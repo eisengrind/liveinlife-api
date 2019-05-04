@@ -27,7 +27,8 @@ func NewMiddleware(pK rsa.PublicKey) endpoint.MiddlewareFunc {
 			return nil, err
 		}
 
-		if tok.Data().Type != 0 {
+		if tok.Data().User.Type != "user" &&
+			tok.Data().User.Type != "service_account" {
 			return nil, errInvalidToken
 		}
 

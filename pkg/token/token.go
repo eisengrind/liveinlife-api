@@ -2,6 +2,7 @@ package token
 
 import (
 	"crypto/rsa"
+	"fmt"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
@@ -18,8 +19,17 @@ type Token interface {
 }
 
 type tokenInfo struct {
+	User *User `json:"user"`
+}
+
+// User represents an authenticated consumer of the api
+type User struct {
 	ID   string `json:"id"`
-	Type uint8  `json:"type"`
+	Type string `json:"type"`
+}
+
+func (u *User) String() string {
+	return fmt.Sprintf("%s/%s", u.Type, u.ID)
 }
 
 type data struct {
@@ -46,12 +56,11 @@ func (t *token) Data() *data {
 // New creates a new api-friendly api token.
 // Available types are 0 = user-token, 1 = user-refresh-token.
 // More types can follow - e.g. specific API-Token in addition to user token.
-func New(c *jwt.StandardClaims, id string, t uint8) Token {
+func New(c *jwt.StandardClaims, user *User) Token {
 	return &token{
 		token: jwt.NewWithClaims(jwt.SigningMethodRS512, &data{
 			&tokenInfo{
-				ID:   id,
-				Type: t,
+				User: user,
 			},
 			c,
 		}),

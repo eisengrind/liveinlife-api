@@ -13,13 +13,16 @@ import (
 func TestNew(t *testing.T) {
 	tok := token.New(&jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(time.Minute * 2).Unix(),
-	}, "1234", 0)
+	}, &token.User{
+		ID:   "username",
+		Type: "user",
+	})
 
-	if tok.Data().ID != "1234" {
+	if tok.Data().User.ID != "username" {
 		t.Fatal("invalid id casted")
 	}
 
-	if tok.Data().Type != 0 {
+	if tok.Data().User.Type != "user" {
 		t.Fatal("invalid type casted")
 	}
 
