@@ -205,8 +205,12 @@ func getFirstPasswordHash(hash, password []byte) ([]byte, error) {
 }
 
 // GetRoles of a user
-func (m *Manager) GetRoles(ctx context.Context, id Identifier) (rbac.SubjectRoles, error) {
-	roles, err := m.rbac.GetSubjectRoles(ctx, rbac.SubjectID(fmt.Sprintf(
+func (m *Manager) GetRoles(ctx context.Context, id Identifier) (rbac.AccountRoles, error) {
+	if id.UUID() == "" {
+		return nil, errInvalidUUID
+	}
+
+	roles, err := m.rbac.GetAccountRoles(ctx, rbac.AccountID(fmt.Sprintf(
 		"user/%s",
 		id.UUID(),
 	)))
@@ -218,8 +222,12 @@ func (m *Manager) GetRoles(ctx context.Context, id Identifier) (rbac.SubjectRole
 }
 
 // SetRoles of a user
-func (m *Manager) SetRoles(ctx context.Context, id Identifier, roles rbac.SubjectRoles) error {
-	return m.rbac.SetSubjectRoles(ctx, rbac.SubjectID(fmt.Sprintf(
+func (m *Manager) SetRoles(ctx context.Context, id Identifier, roles rbac.AccountRoles) error {
+	if id.UUID() == "" {
+		return errInvalidUUID
+	}
+
+	return m.rbac.SetAccountRoles(ctx, rbac.AccountID(fmt.Sprintf(
 		"user/%s",
 		id.UUID(),
 	)), roles)

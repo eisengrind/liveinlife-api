@@ -6,10 +6,12 @@ import (
 	"testing"
 
 	"github.com/51st-state/api/pkg/event"
+	"github.com/51st-state/api/pkg/rbac"
 
 	"github.com/51st-state/api/pkg/apis/user"
 	"github.com/51st-state/api/pkg/apis/user/mocks"
 	pubsubMocks "github.com/51st-state/api/pkg/pubsub/mocks"
+	rbacMocks "github.com/51st-state/api/pkg/rbac/mocks"
 	"github.com/pkg/errors"
 )
 
@@ -25,8 +27,9 @@ func (c *fakeComplete) MarshalJSON() ([]byte, error) {
 func TestManagerGet(t *testing.T) {
 	repo := &mocks.FakeRepository{}
 	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
 
-	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}))
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
 
 	fComplPassword := &mocks.FakeCompletePassword{}
 	fComplPassword.HashReturns([]byte("testHash"))
@@ -66,11 +69,72 @@ func TestManagerGet(t *testing.T) {
 	}
 }
 
+func TestManagerGetByGameSerialHash(t *testing.T) {
+	repo := &mocks.FakeRepository{}
+	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
+
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
+
+	if _, err := m.GetByGameSerialHash(context.Background(), ""); err == nil {
+		t.Fatal("empty hash given")
+	}
+
+	repo.GetByGameSerialHashReturns(nil, errors.New("fake error"))
+
+	if _, err := m.GetByGameSerialHash(context.Background(), "testHash"); err == nil {
+		t.Fatal("repository returns an error")
+	}
+}
+
+func TestManagerGetByWCFUserID(t *testing.T) {
+	repo := &mocks.FakeRepository{}
+	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
+
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
+
+	if _, err := m.GetByWCFUserID(context.Background(), 0); err == nil {
+		t.Fatal("the given wcf user id is invalid")
+	}
+
+	repo.GetByWCFUserIDReturns(nil, errors.New("fake error"))
+
+	if _, err := m.GetByWCFUserID(context.Background(), 1); err == nil {
+		t.Fatal("repository returns an error")
+	}
+}
+
+func TestManagerGetWCFInfoByEmail(t *testing.T) {
+	repo := &mocks.FakeRepository{}
+	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
+
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
+
+	if _, err := m.GetWCFInfoByEmail(context.Background(), "test@email.com"); err != nil {
+		t.Fatal("there should be no error")
+	}
+}
+
+func TestManagerGetWCFInfoByUsername(t *testing.T) {
+	repo := &mocks.FakeRepository{}
+	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
+
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
+
+	if _, err := m.GetWCFInfoByUsername(context.Background(), "testUsername"); err != nil {
+		t.Fatal("there should be no error")
+	}
+}
+
 func TestManagerCreate(t *testing.T) {
 	repo := &mocks.FakeRepository{}
 	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
 
-	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}))
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
 
 	validIncomplete := user.NewIncomplete(1, "exampleHash", false)
 	if _, err := m.Create(
@@ -95,7 +159,8 @@ func TestManagerCreate(t *testing.T) {
 		t.Fatal("the wcf repository returns an error")
 	}
 
-	repo.GetReturns(nil, errors.New("fake error"))
+	wcfRepo.GetInfoReturns(nil, nil)
+	repo.CreateReturns(nil, errors.New("fake error"))
 	if _, err := m.Create(
 		context.Background(),
 		validIncomplete,
@@ -115,8 +180,9 @@ func (id *fakeIdentifier) UUID() string {
 func TestManagerDelete(t *testing.T) {
 	repo := &mocks.FakeRepository{}
 	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
 
-	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}))
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
 
 	id := &fakeIdentifier{""}
 
@@ -128,13 +194,20 @@ func TestManagerDelete(t *testing.T) {
 	if err := m.Delete(context.Background(), id); err != nil {
 		t.Fatal("given request is correct")
 	}
+
+	repo.DeleteReturns(errors.New("fake error"))
+
+	if err := m.Delete(context.Background(), id); err == nil {
+		t.Fatal("the repository returns an error")
+	}
 }
 
 func TestManagerUpdate(t *testing.T) {
 	repo := &mocks.FakeRepository{}
 	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
 
-	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}))
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
 
 	id := &mocks.FakeIdentifier{}
 	id.UUIDReturns("")
@@ -147,6 +220,16 @@ func TestManagerUpdate(t *testing.T) {
 	}
 
 	id.UUIDReturns("test")
+
+	if err := m.Update(
+		context.Background(),
+		&fakeComplete{
+			id,
+			user.NewIncomplete(0, "exampleHash", false),
+		},
+	); err == nil {
+		t.Fatal("the given wcf user id is invalid")
+	}
 
 	if err := m.Update(
 		context.Background(),
@@ -169,6 +252,7 @@ func TestManagerUpdate(t *testing.T) {
 		t.Fatal("the wcf repository returns an error")
 	}
 
+	wcfRepo.GetInfoReturns(nil, nil)
 	repo.UpdateReturns(errors.New("fake error"))
 	if err := m.Update(
 		context.Background(),
@@ -184,8 +268,9 @@ func TestManagerUpdate(t *testing.T) {
 func TestManagerCheckPassword(t *testing.T) {
 	repo := &mocks.FakeRepository{}
 	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
 
-	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}))
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
 
 	id := &mocks.FakeIdentifier{}
 	id.UUIDReturns("")
@@ -236,5 +321,53 @@ func TestManagerCheckPassword(t *testing.T) {
 
 	if err := m.CheckPassword(context.Background(), id, fakeInc); err == nil {
 		t.Fatal("the password is definetely invalid")
+	}
+}
+
+func TestManagerGetRoles(t *testing.T) {
+	repo := &mocks.FakeRepository{}
+	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
+
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
+	id := &mocks.FakeIdentifier{}
+	id.UUIDReturns("testuuid")
+
+	rbControl.GetAccountRolesReturns(nil, errors.New("fake error"))
+
+	if _, err := m.GetRoles(context.Background(), id); err == nil {
+		t.Fatal("the rbac control returns an error")
+	}
+
+	rbControl.GetAccountRolesReturns(nil, nil)
+
+	if _, err := m.GetRoles(context.Background(), id); err != nil {
+		t.Fatal("there should be no error")
+	}
+
+	id.UUIDReturns("")
+
+	if _, err := m.GetRoles(context.Background(), id); err == nil {
+		t.Fatal("empty uuid given")
+	}
+}
+
+func TestManagerSetRoles(t *testing.T) {
+	repo := &mocks.FakeRepository{}
+	wcfRepo := &mocks.FakeWCFRepository{}
+	rbControl := &rbacMocks.FakeControl{}
+
+	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
+	id := &mocks.FakeIdentifier{}
+	id.UUIDReturns("")
+
+	if err := m.SetRoles(context.Background(), id, rbac.AccountRoles{}); err == nil {
+		t.Fatal("uuid is empty")
+	}
+
+	id.UUIDReturns("uuid2")
+
+	if err := m.SetRoles(context.Background(), id, rbac.AccountRoles{}); err != nil {
+		t.Fatal("there should be no error")
 	}
 }

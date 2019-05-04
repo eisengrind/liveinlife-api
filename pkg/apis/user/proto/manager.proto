@@ -74,7 +74,7 @@ message GetUserByWCFUserIDRequest {
 
 message SetUserRolesRequest {
     UUID UUID = 1;
-    rbac.SubjectRoles Roles = 2;
+    rbac.AccountRoles Roles = 2;
 }
 
 service Manager {
@@ -87,6 +87,6 @@ service Manager {
     rpc CheckUserPassword(CheckUserPasswordRequest) returns (google.protobuf.Empty) {}
     rpc GetWCFInfoByEmail(GetWCFInfoByEmailRequest) returns (WCFUserInfo) {}
     rpc GetWCFInfoByUsername(GetWCFInfoByUsernameRequest) returns (WCFUserInfo) {}
-    rpc GetUserRoles(UUID) returns (rbac.SubjectRoles) {}
+    rpc GetUserRoles(UUID) returns (rbac.AccountRoles) {}
     rpc SetUserRoles(SetUserRolesRequest) returns (google.protobuf.Empty) {}
 }

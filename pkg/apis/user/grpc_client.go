@@ -173,7 +173,7 @@ func (cli *GRPCClient) GetWCFInfoByUsername(ctx context.Context, username string
 }
 
 // GetRoles of a user
-func (cli *GRPCClient) GetRoles(ctx context.Context, id Identifier) (rbac.SubjectRoles, error) {
+func (cli *GRPCClient) GetRoles(ctx context.Context, id Identifier) (rbac.AccountRoles, error) {
 	resp, err := cli.client.GetUserRoles(ctx, &pb.UUID{
 		UUID: id.UUID(),
 	})
@@ -181,7 +181,7 @@ func (cli *GRPCClient) GetRoles(ctx context.Context, id Identifier) (rbac.Subjec
 		return nil, err
 	}
 
-	roles := make(rbac.SubjectRoles, 0)
+	roles := make(rbac.AccountRoles, 0)
 	for _, v := range resp.GetRoleIDs() {
 		roles = append(roles, rbac.RoleID(v))
 	}
@@ -190,7 +190,7 @@ func (cli *GRPCClient) GetRoles(ctx context.Context, id Identifier) (rbac.Subjec
 }
 
 // SetRoles of a user
-func (cli *GRPCClient) SetRoles(ctx context.Context, id Identifier, roles rbac.SubjectRoles) error {
+func (cli *GRPCClient) SetRoles(ctx context.Context, id Identifier, roles rbac.AccountRoles) error {
 	grpcRoles := make([]string, 0)
 	for _, v := range roles {
 		grpcRoles = append(grpcRoles, string(v))
@@ -200,7 +200,7 @@ func (cli *GRPCClient) SetRoles(ctx context.Context, id Identifier, roles rbac.S
 		UUID: &pb.UUID{
 			UUID: id.UUID(),
 		},
-		Roles: &proto1.SubjectRoles{
+		Roles: &proto1.AccountRoles{
 			RoleIDs: grpcRoles,
 		},
 	})

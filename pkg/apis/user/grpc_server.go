@@ -165,13 +165,13 @@ func (s *GRPCServer) GetWCFInfoByUsername(ctx context.Context, req *pb.GetWCFInf
 }
 
 // GetUserRoles of a user
-func (s *GRPCServer) GetUserRoles(ctx context.Context, id *pb.UUID) (*proto1.SubjectRoles, error) {
+func (s *GRPCServer) GetUserRoles(ctx context.Context, id *pb.UUID) (*proto1.AccountRoles, error) {
 	roles, err := s.manager.GetRoles(ctx, newIdentifier(id.GetUUID()))
 	if err != nil {
 		return nil, err
 	}
 
-	grpcRoles := &proto1.SubjectRoles{
+	grpcRoles := &proto1.AccountRoles{
 		RoleIDs: make([]string, 0),
 	}
 	for _, v := range roles {
@@ -183,7 +183,7 @@ func (s *GRPCServer) GetUserRoles(ctx context.Context, id *pb.UUID) (*proto1.Sub
 
 // SetUserRoles of a user
 func (s *GRPCServer) SetUserRoles(ctx context.Context, req *pb.SetUserRolesRequest) (*empty.Empty, error) {
-	roles := make(rbac.SubjectRoles, 0)
+	roles := make(rbac.AccountRoles, 0)
 	for _, v := range req.GetRoles().GetRoleIDs() {
 		roles = append(roles, rbac.RoleID(v))
 	}

@@ -41,6 +41,8 @@ go_test(
         "//pkg/apis/user/mocks:go_default_library",
         "//pkg/event:go_default_library",
         "//pkg/pubsub/mocks:go_default_library",
+        "//pkg/rbac:go_default_library",
+        "//pkg/rbac/mocks:go_default_library",
         "//vendor/github.com/pkg/errors:go_default_library",
     ],
 )
