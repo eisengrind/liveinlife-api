@@ -1,0 +1,65 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: "{NAME}"
+  name: "{NAME}-deployment"
+spec:
+  revisionHistoryLimit: 1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{NAME}"
+  template:
+    metadata:
+      labels:
+        app: "{NAME}"
+    spec:
+      containers:
+      - name: "{NAME}-pod"
+        image: eu.gcr.io/liveinlife/{NAME}:dev
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: "10m"
+            memory: "64Mi"
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: dbHost
+              name: "{NAME}-config"
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: dbPort
+              name: "{NAME}-config"
+        - name: DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: dbUsername
+              name: "{NAME}-config"
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: dbName
+              name: "{NAME}-config"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: dbPassword
+              name: "{NAME}-secrets"
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /secrets/
+          name: authentication
+      volumes:
+      - name: authentication
+        secret:
+          defaultMode: 420
+          secretName: authentication
+      imagePullSecrets:
+      - name: cloud-build-docker-registry
