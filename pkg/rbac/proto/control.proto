@@ -16,11 +16,11 @@ message RoleRules {
     repeated string Rules = 1;
 }
 
-message SubjectID {
+message AccountID {
     string ID = 1;
 }
 
-message SubjectRoles {
+message AccountRoles {
     repeated string RoleIDs = 1;
 }
 
@@ -29,20 +29,20 @@ message SetRoleRulesRequest {
     RoleRules RoleRules = 2;
 }
 
-message SetSubjectRolesRequest {
-    SubjectID SubjectID = 1;
-    SubjectRoles SubjectRoles = 2;
+message SetAccountRolesRequest {
+    AccountID AccountID = 1;
+    AccountRoles AccountRoles = 2;
 }
 
-message IsSubjectAllowedRequest {
-    SubjectID SubjectID = 1;
+message IsAccountAllowedRequest {
+    AccountID AccountID = 1;
     Rule Rule = 2;
 }
 
 service Control {
     rpc GetRoleRules(RoleID) returns (RoleRules) {}
     rpc SetRoleRules(SetRoleRulesRequest) returns (google.protobuf.Empty) {}
-    rpc GetSubjectRoles(SubjectID) returns (SubjectRoles) {}
-    rpc SetSubjectRoles(SetSubjectRolesRequest) returns (google.protobuf.Empty) {}
-    rpc IsSubjectAllowed(IsSubjectAllowedRequest) returns (google.protobuf.Empty) {}
+    rpc GetAccountRoles(AccountID) returns (AccountRoles) {}
+    rpc SetAccountRoles(SetAccountRolesRequest) returns (google.protobuf.Empty) {}
+    rpc IsAccountAllowed(IsAccountAllowedRequest) returns (google.protobuf.Empty) {}
 }

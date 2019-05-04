@@ -6,8 +6,8 @@ import (
 	"github.com/51st-state/api/pkg/rbac"
 )
 
-func TestSubjectRolesContains(t *testing.T) {
-	roles := rbac.SubjectRoles{
+func TestAccountRolesContains(t *testing.T) {
+	roles := rbac.AccountRoles{
 		"testRole1",
 		"testRole2",
 	}

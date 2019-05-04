@@ -36,45 +36,45 @@ type FakeRepository struct {
 	setRoleRulesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	GetSubjectRolesStub        func(context.Context, rbac.SubjectID) (rbac.SubjectRoles, error)
-	getSubjectRolesMutex       sync.RWMutex
-	getSubjectRolesArgsForCall []struct {
+	GetAccountRolesStub        func(context.Context, rbac.AccountID) (rbac.AccountRoles, error)
+	getAccountRolesMutex       sync.RWMutex
+	getAccountRolesArgsForCall []struct {
 		arg1 context.Context
-		arg2 rbac.SubjectID
+		arg2 rbac.AccountID
 	}
-	getSubjectRolesReturns struct {
-		result1 rbac.SubjectRoles
+	getAccountRolesReturns struct {
+		result1 rbac.AccountRoles
 		result2 error
 	}
-	getSubjectRolesReturnsOnCall map[int]struct {
-		result1 rbac.SubjectRoles
+	getAccountRolesReturnsOnCall map[int]struct {
+		result1 rbac.AccountRoles
 		result2 error
 	}
-	SetSubjectRolesStub        func(context.Context, rbac.SubjectID, rbac.SubjectRoles) error
-	setSubjectRolesMutex       sync.RWMutex
-	setSubjectRolesArgsForCall []struct {
+	SetAccountRolesStub        func(context.Context, rbac.AccountID, rbac.AccountRoles) error
+	setAccountRolesMutex       sync.RWMutex
+	setAccountRolesArgsForCall []struct {
 		arg1 context.Context
-		arg2 rbac.SubjectID
-		arg3 rbac.SubjectRoles
+		arg2 rbac.AccountID
+		arg3 rbac.AccountRoles
 	}
-	setSubjectRolesReturns struct {
+	setAccountRolesReturns struct {
 		result1 error
 	}
-	setSubjectRolesReturnsOnCall map[int]struct {
+	setAccountRolesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	GetSubjectRuleCountStub        func(context.Context, rbac.SubjectID, rbac.Rule) (uint64, error)
-	getSubjectRuleCountMutex       sync.RWMutex
-	getSubjectRuleCountArgsForCall []struct {
+	GetAccountRuleCountStub        func(context.Context, rbac.AccountID, rbac.Rule) (uint64, error)
+	getAccountRuleCountMutex       sync.RWMutex
+	getAccountRuleCountArgsForCall []struct {
 		arg1 context.Context
-		arg2 rbac.SubjectID
+		arg2 rbac.AccountID
 		arg3 rbac.Rule
 	}
-	getSubjectRuleCountReturns struct {
+	getAccountRuleCountReturns struct {
 		result1 uint64
 		result2 error
 	}
-	getSubjectRuleCountReturnsOnCall map[int]struct {
+	getAccountRuleCountReturnsOnCall map[int]struct {
 		result1 uint64
 		result2 error
 	}
@@ -184,156 +184,156 @@ func (fake *FakeRepository) SetRoleRulesReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
-func (fake *FakeRepository) GetSubjectRoles(arg1 context.Context, arg2 rbac.SubjectID) (rbac.SubjectRoles, error) {
-	fake.getSubjectRolesMutex.Lock()
-	ret, specificReturn := fake.getSubjectRolesReturnsOnCall[len(fake.getSubjectRolesArgsForCall)]
-	fake.getSubjectRolesArgsForCall = append(fake.getSubjectRolesArgsForCall, struct {
+func (fake *FakeRepository) GetAccountRoles(arg1 context.Context, arg2 rbac.AccountID) (rbac.AccountRoles, error) {
+	fake.getAccountRolesMutex.Lock()
+	ret, specificReturn := fake.getAccountRolesReturnsOnCall[len(fake.getAccountRolesArgsForCall)]
+	fake.getAccountRolesArgsForCall = append(fake.getAccountRolesArgsForCall, struct {
 		arg1 context.Context
-		arg2 rbac.SubjectID
+		arg2 rbac.AccountID
 	}{arg1, arg2})
-	fake.recordInvocation("GetSubjectRoles", []interface{}{arg1, arg2})
-	fake.getSubjectRolesMutex.Unlock()
-	if fake.GetSubjectRolesStub != nil {
-		return fake.GetSubjectRolesStub(arg1, arg2)
+	fake.recordInvocation("GetAccountRoles", []interface{}{arg1, arg2})
+	fake.getAccountRolesMutex.Unlock()
+	if fake.GetAccountRolesStub != nil {
+		return fake.GetAccountRolesStub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getSubjectRolesReturns.result1, fake.getSubjectRolesReturns.result2
+	return fake.getAccountRolesReturns.result1, fake.getAccountRolesReturns.result2
 }
 
-func (fake *FakeRepository) GetSubjectRolesCallCount() int {
-	fake.getSubjectRolesMutex.RLock()
-	defer fake.getSubjectRolesMutex.RUnlock()
-	return len(fake.getSubjectRolesArgsForCall)
+func (fake *FakeRepository) GetAccountRolesCallCount() int {
+	fake.getAccountRolesMutex.RLock()
+	defer fake.getAccountRolesMutex.RUnlock()
+	return len(fake.getAccountRolesArgsForCall)
 }
 
-func (fake *FakeRepository) GetSubjectRolesArgsForCall(i int) (context.Context, rbac.SubjectID) {
-	fake.getSubjectRolesMutex.RLock()
-	defer fake.getSubjectRolesMutex.RUnlock()
-	return fake.getSubjectRolesArgsForCall[i].arg1, fake.getSubjectRolesArgsForCall[i].arg2
+func (fake *FakeRepository) GetAccountRolesArgsForCall(i int) (context.Context, rbac.AccountID) {
+	fake.getAccountRolesMutex.RLock()
+	defer fake.getAccountRolesMutex.RUnlock()
+	return fake.getAccountRolesArgsForCall[i].arg1, fake.getAccountRolesArgsForCall[i].arg2
 }
 
-func (fake *FakeRepository) GetSubjectRolesReturns(result1 rbac.SubjectRoles, result2 error) {
-	fake.GetSubjectRolesStub = nil
-	fake.getSubjectRolesReturns = struct {
-		result1 rbac.SubjectRoles
+func (fake *FakeRepository) GetAccountRolesReturns(result1 rbac.AccountRoles, result2 error) {
+	fake.GetAccountRolesStub = nil
+	fake.getAccountRolesReturns = struct {
+		result1 rbac.AccountRoles
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeRepository) GetSubjectRolesReturnsOnCall(i int, result1 rbac.SubjectRoles, result2 error) {
-	fake.GetSubjectRolesStub = nil
-	if fake.getSubjectRolesReturnsOnCall == nil {
-		fake.getSubjectRolesReturnsOnCall = make(map[int]struct {
-			result1 rbac.SubjectRoles
+func (fake *FakeRepository) GetAccountRolesReturnsOnCall(i int, result1 rbac.AccountRoles, result2 error) {
+	fake.GetAccountRolesStub = nil
+	if fake.getAccountRolesReturnsOnCall == nil {
+		fake.getAccountRolesReturnsOnCall = make(map[int]struct {
+			result1 rbac.AccountRoles
 			result2 error
 		})
 	}
-	fake.getSubjectRolesReturnsOnCall[i] = struct {
-		result1 rbac.SubjectRoles
+	fake.getAccountRolesReturnsOnCall[i] = struct {
+		result1 rbac.AccountRoles
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeRepository) SetSubjectRoles(arg1 context.Context, arg2 rbac.SubjectID, arg3 rbac.SubjectRoles) error {
-	fake.setSubjectRolesMutex.Lock()
-	ret, specificReturn := fake.setSubjectRolesReturnsOnCall[len(fake.setSubjectRolesArgsForCall)]
-	fake.setSubjectRolesArgsForCall = append(fake.setSubjectRolesArgsForCall, struct {
+func (fake *FakeRepository) SetAccountRoles(arg1 context.Context, arg2 rbac.AccountID, arg3 rbac.AccountRoles) error {
+	fake.setAccountRolesMutex.Lock()
+	ret, specificReturn := fake.setAccountRolesReturnsOnCall[len(fake.setAccountRolesArgsForCall)]
+	fake.setAccountRolesArgsForCall = append(fake.setAccountRolesArgsForCall, struct {
 		arg1 context.Context
-		arg2 rbac.SubjectID
-		arg3 rbac.SubjectRoles
+		arg2 rbac.AccountID
+		arg3 rbac.AccountRoles
 	}{arg1, arg2, arg3})
-	fake.recordInvocation("SetSubjectRoles", []interface{}{arg1, arg2, arg3})
-	fake.setSubjectRolesMutex.Unlock()
-	if fake.SetSubjectRolesStub != nil {
-		return fake.SetSubjectRolesStub(arg1, arg2, arg3)
+	fake.recordInvocation("SetAccountRoles", []interface{}{arg1, arg2, arg3})
+	fake.setAccountRolesMutex.Unlock()
+	if fake.SetAccountRolesStub != nil {
+		return fake.SetAccountRolesStub(arg1, arg2, arg3)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.setSubjectRolesReturns.result1
+	return fake.setAccountRolesReturns.result1
 }
 
-func (fake *FakeRepository) SetSubjectRolesCallCount() int {
-	fake.setSubjectRolesMutex.RLock()
-	defer fake.setSubjectRolesMutex.RUnlock()
-	return len(fake.setSubjectRolesArgsForCall)
+func (fake *FakeRepository) SetAccountRolesCallCount() int {
+	fake.setAccountRolesMutex.RLock()
+	defer fake.setAccountRolesMutex.RUnlock()
+	return len(fake.setAccountRolesArgsForCall)
 }
 
-func (fake *FakeRepository) SetSubjectRolesArgsForCall(i int) (context.Context, rbac.SubjectID, rbac.SubjectRoles) {
-	fake.setSubjectRolesMutex.RLock()
-	defer fake.setSubjectRolesMutex.RUnlock()
-	return fake.setSubjectRolesArgsForCall[i].arg1, fake.setSubjectRolesArgsForCall[i].arg2, fake.setSubjectRolesArgsForCall[i].arg3
+func (fake *FakeRepository) SetAccountRolesArgsForCall(i int) (context.Context, rbac.AccountID, rbac.AccountRoles) {
+	fake.setAccountRolesMutex.RLock()
+	defer fake.setAccountRolesMutex.RUnlock()
+	return fake.setAccountRolesArgsForCall[i].arg1, fake.setAccountRolesArgsForCall[i].arg2, fake.setAccountRolesArgsForCall[i].arg3
 }
 
-func (fake *FakeRepository) SetSubjectRolesReturns(result1 error) {
-	fake.SetSubjectRolesStub = nil
-	fake.setSubjectRolesReturns = struct {
+func (fake *FakeRepository) SetAccountRolesReturns(result1 error) {
+	fake.SetAccountRolesStub = nil
+	fake.setAccountRolesReturns = struct {
 		result1 error
 	}{result1}
 }
 
-func (fake *FakeRepository) SetSubjectRolesReturnsOnCall(i int, result1 error) {
-	fake.SetSubjectRolesStub = nil
-	if fake.setSubjectRolesReturnsOnCall == nil {
-		fake.setSubjectRolesReturnsOnCall = make(map[int]struct {
+func (fake *FakeRepository) SetAccountRolesReturnsOnCall(i int, result1 error) {
+	fake.SetAccountRolesStub = nil
+	if fake.setAccountRolesReturnsOnCall == nil {
+		fake.setAccountRolesReturnsOnCall = make(map[int]struct {
 			result1 error
 		})
 	}
-	fake.setSubjectRolesReturnsOnCall[i] = struct {
+	fake.setAccountRolesReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
 }
 
-func (fake *FakeRepository) GetSubjectRuleCount(arg1 context.Context, arg2 rbac.SubjectID, arg3 rbac.Rule) (uint64, error) {
-	fake.getSubjectRuleCountMutex.Lock()
-	ret, specificReturn := fake.getSubjectRuleCountReturnsOnCall[len(fake.getSubjectRuleCountArgsForCall)]
-	fake.getSubjectRuleCountArgsForCall = append(fake.getSubjectRuleCountArgsForCall, struct {
+func (fake *FakeRepository) GetAccountRuleCount(arg1 context.Context, arg2 rbac.AccountID, arg3 rbac.Rule) (uint64, error) {
+	fake.getAccountRuleCountMutex.Lock()
+	ret, specificReturn := fake.getAccountRuleCountReturnsOnCall[len(fake.getAccountRuleCountArgsForCall)]
+	fake.getAccountRuleCountArgsForCall = append(fake.getAccountRuleCountArgsForCall, struct {
 		arg1 context.Context
-		arg2 rbac.SubjectID
+		arg2 rbac.AccountID
 		arg3 rbac.Rule
 	}{arg1, arg2, arg3})
-	fake.recordInvocation("GetSubjectRuleCount", []interface{}{arg1, arg2, arg3})
-	fake.getSubjectRuleCountMutex.Unlock()
-	if fake.GetSubjectRuleCountStub != nil {
-		return fake.GetSubjectRuleCountStub(arg1, arg2, arg3)
+	fake.recordInvocation("GetAccountRuleCount", []interface{}{arg1, arg2, arg3})
+	fake.getAccountRuleCountMutex.Unlock()
+	if fake.GetAccountRuleCountStub != nil {
+		return fake.GetAccountRuleCountStub(arg1, arg2, arg3)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getSubjectRuleCountReturns.result1, fake.getSubjectRuleCountReturns.result2
+	return fake.getAccountRuleCountReturns.result1, fake.getAccountRuleCountReturns.result2
 }
 
-func (fake *FakeRepository) GetSubjectRuleCountCallCount() int {
-	fake.getSubjectRuleCountMutex.RLock()
-	defer fake.getSubjectRuleCountMutex.RUnlock()
-	return len(fake.getSubjectRuleCountArgsForCall)
+func (fake *FakeRepository) GetAccountRuleCountCallCount() int {
+	fake.getAccountRuleCountMutex.RLock()
+	defer fake.getAccountRuleCountMutex.RUnlock()
+	return len(fake.getAccountRuleCountArgsForCall)
 }
 
-func (fake *FakeRepository) GetSubjectRuleCountArgsForCall(i int) (context.Context, rbac.SubjectID, rbac.Rule) {
-	fake.getSubjectRuleCountMutex.RLock()
-	defer fake.getSubjectRuleCountMutex.RUnlock()
-	return fake.getSubjectRuleCountArgsForCall[i].arg1, fake.getSubjectRuleCountArgsForCall[i].arg2, fake.getSubjectRuleCountArgsForCall[i].arg3
+func (fake *FakeRepository) GetAccountRuleCountArgsForCall(i int) (context.Context, rbac.AccountID, rbac.Rule) {
+	fake.getAccountRuleCountMutex.RLock()
+	defer fake.getAccountRuleCountMutex.RUnlock()
+	return fake.getAccountRuleCountArgsForCall[i].arg1, fake.getAccountRuleCountArgsForCall[i].arg2, fake.getAccountRuleCountArgsForCall[i].arg3
 }
 
-func (fake *FakeRepository) GetSubjectRuleCountReturns(result1 uint64, result2 error) {
-	fake.GetSubjectRuleCountStub = nil
-	fake.getSubjectRuleCountReturns = struct {
+func (fake *FakeRepository) GetAccountRuleCountReturns(result1 uint64, result2 error) {
+	fake.GetAccountRuleCountStub = nil
+	fake.getAccountRuleCountReturns = struct {
 		result1 uint64
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeRepository) GetSubjectRuleCountReturnsOnCall(i int, result1 uint64, result2 error) {
-	fake.GetSubjectRuleCountStub = nil
-	if fake.getSubjectRuleCountReturnsOnCall == nil {
-		fake.getSubjectRuleCountReturnsOnCall = make(map[int]struct {
+func (fake *FakeRepository) GetAccountRuleCountReturnsOnCall(i int, result1 uint64, result2 error) {
+	fake.GetAccountRuleCountStub = nil
+	if fake.getAccountRuleCountReturnsOnCall == nil {
+		fake.getAccountRuleCountReturnsOnCall = make(map[int]struct {
 			result1 uint64
 			result2 error
 		})
 	}
-	fake.getSubjectRuleCountReturnsOnCall[i] = struct {
+	fake.getAccountRuleCountReturnsOnCall[i] = struct {
 		result1 uint64
 		result2 error
 	}{result1, result2}
@@ -346,12 +346,12 @@ func (fake *FakeRepository) Invocations() map[string][][]interface{} {
 	defer fake.getRoleRulesMutex.RUnlock()
 	fake.setRoleRulesMutex.RLock()
 	defer fake.setRoleRulesMutex.RUnlock()
-	fake.getSubjectRolesMutex.RLock()
-	defer fake.getSubjectRolesMutex.RUnlock()
-	fake.setSubjectRolesMutex.RLock()
-	defer fake.setSubjectRolesMutex.RUnlock()
-	fake.getSubjectRuleCountMutex.RLock()
-	defer fake.getSubjectRuleCountMutex.RUnlock()
+	fake.getAccountRolesMutex.RLock()
+	defer fake.getAccountRolesMutex.RUnlock()
+	fake.setAccountRolesMutex.RLock()
+	defer fake.setAccountRolesMutex.RUnlock()
+	fake.getAccountRuleCountMutex.RLock()
+	defer fake.getAccountRuleCountMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value

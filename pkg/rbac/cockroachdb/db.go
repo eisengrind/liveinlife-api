@@ -18,12 +18,12 @@ func CreateSchema(ctx context.Context, db *sql.DB) (err error) {
         CREATE UNIQUE INDEX IF NOT EXISTS role_ids_idx_roleId ON role_ids (roleId);
         CREATE UNIQUE INDEX IF NOT EXISTS role_ids_idx_roleIdStr ON role_ids (roleIdStr);
 
-        CREATE TABLE IF NOT EXISTS subject_ids (
-            subjectId SERIAL PRIMARY KEY,
-            subjectIdStr TEXT NOT NULL DEFAULT ''
+        CREATE TABLE IF NOT EXISTS account_ids (
+            accountId SERIAL PRIMARY KEY,
+            accountIdStr TEXT NOT NULL DEFAULT ''
         );
-        CREATE UNIQUE INDEX IF NOT EXISTS subject_ids_idx_subjectId ON subject_ids (subjectId);
-        CREATE UNIQUE INDEX IF NOT EXISTS subject_ids_idx_subjectIdStr ON subject_ids (subjectIdStr);
+        CREATE UNIQUE INDEX IF NOT EXISTS account_ids_idx_accountId ON account_ids (accountId);
+        CREATE UNIQUE INDEX IF NOT EXISTS account_ids_idx_accountIdStr ON account_ids (accountIdStr);
 
         CREATE TABLE IF NOT EXISTS rule_ids (
             ruleId SERIAL PRIMARY KEY,
@@ -33,10 +33,10 @@ func CreateSchema(ctx context.Context, db *sql.DB) (err error) {
         CREATE UNIQUE INDEX IF NOT EXISTS rule_ids_idx_ruleIdStr ON rule_ids (ruleIdStr);
 
         CREATE TABLE IF NOT EXISTS rolebindings (
-            subjectId integer references subject_ids (subjectId),
+            accountId integer references account_ids (accountId),
             roleId integer references role_ids (roleId)
         );
-        CREATE UNIQUE INDEX IF NOT EXISTS rolebindings_idx_subjectId_roleId ON rolebindings (subjectId, roleId);
+        CREATE UNIQUE INDEX IF NOT EXISTS rolebindings_idx_accountId_roleId ON rolebindings (accountId, roleId);
 
         CREATE TABLE IF NOT EXISTS rulebindings (
             roleId integer references role_ids (roleId),
@@ -172,23 +172,23 @@ func (d *db) SetRoleRules(ctx context.Context, roleID rbac.RoleID, rules rbac.Ro
 	return tx.Commit()
 }
 
-func (d *db) GetSubjectRoles(ctx context.Context, subjectID rbac.SubjectID) (rbac.SubjectRoles, error) {
+func (d *db) GetAccountRoles(ctx context.Context, accountID rbac.AccountID) (rbac.AccountRoles, error) {
 	rows, err := d.database.QueryContext(
 		ctx,
 		`SELECT role_ids.roleIdStr
         FROM role_ids,
         rolebindings,
-        subject_ids
-        WHERE subject_ids.subjectIdStr = $1
-        AND rolebindings.subjectId = subject_ids.subjectId
+        account_ids
+        WHERE account_ids.accountIdStr = $1
+        AND rolebindings.accountId = account_ids.accountId
         AND role_ids.roleId = rolebindings.roleId`,
-		subjectID,
+		accountID,
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	subjectRoles := make(rbac.SubjectRoles, 0)
+	accountRoles := make(rbac.AccountRoles, 0)
 	for rows.Next() {
 		var role rbac.RoleID
 		if err := rows.Scan(
@@ -197,31 +197,31 @@ func (d *db) GetSubjectRoles(ctx context.Context, subjectID rbac.SubjectID) (rba
 			return nil, err
 		}
 
-		subjectRoles = append(subjectRoles, role)
+		accountRoles = append(accountRoles, role)
 	}
 
-	return subjectRoles, nil
+	return accountRoles, nil
 }
 
-func (d *db) upsertSubjectID(ctx context.Context, subjectID rbac.SubjectID) error {
+func (d *db) upsertAccountID(ctx context.Context, accountID rbac.AccountID) error {
 	_, err := d.database.ExecContext(
 		ctx,
-		`INSERT INTO subject_ids (
-            subjectIdStr
+		`INSERT INTO account_ids (
+            accountIdStr
         ) SELECT $1
         ON CONFLICT
         DO NOTHING`,
-		subjectID,
+		accountID,
 	)
 	return err
 }
 
-func (d *db) SetSubjectRoles(ctx context.Context, subjectID rbac.SubjectID, roles rbac.SubjectRoles) error {
-	if err := d.upsertSubjectID(ctx, subjectID); err != nil {
+func (d *db) SetAccountRoles(ctx context.Context, accountID rbac.AccountID, roles rbac.AccountRoles) error {
+	if err := d.upsertAccountID(ctx, accountID); err != nil {
 		return err
 	}
 
-	subjectRoles, err := d.GetSubjectRoles(ctx, subjectID)
+	accountRoles, err := d.GetAccountRoles(ctx, accountID)
 	if err != nil {
 		return err
 	}
@@ -231,19 +231,19 @@ func (d *db) SetSubjectRoles(ctx context.Context, subjectID rbac.SubjectID, role
 		return err
 	}
 
-	for _, subjectRoleID := range subjectRoles {
-		if !roles.Contains(subjectRoleID) {
+	for _, accountRoleID := range accountRoles {
+		if !roles.Contains(accountRoleID) {
 			if _, err := tx.ExecContext(
 				ctx,
 				`DELETE FROM rolebindings
                 USING role_ids,
-                subject_ids
+                account_ids
                 WHERE role_ids.roleIdStr = $1
-                AND subject_ids.subjectIdStr = $2
+                AND account_ids.accountIdStr = $2
                 AND rolebindings.roleId = role_ids.roleId
-                AND rolebindings.subjectId = subject_ids.subjectId`,
-				subjectRoleID,
-				subjectID,
+                AND rolebindings.accountId = account_ids.accountId`,
+				accountRoleID,
+				accountID,
 			); err != nil {
 				return txError(tx, err)
 			}
@@ -251,19 +251,19 @@ func (d *db) SetSubjectRoles(ctx context.Context, subjectID rbac.SubjectID, role
 	}
 
 	for _, roleID := range roles {
-		if !subjectRoles.Contains(roleID) {
+		if !accountRoles.Contains(roleID) {
 			if _, err := tx.ExecContext(
 				ctx,
 				`INSERT INTO rolebindings (
                     roleId,
-                    subjectId
+                    accountId
                 ) SELECT role_ids.roleId,
-                subject_ids.subjectId
+                account_ids.accountId
                 FROM role_ids,
-                subject_ids
-                WHERE subject_ids.subjectIdStr = $1
+                account_ids
+                WHERE account_ids.accountIdStr = $1
                 AND role_ids.roleIdStr = $2`,
-				subjectID,
+				accountID,
 				roleID,
 			); err != nil {
 				return txError(tx, err)
@@ -274,21 +274,21 @@ func (d *db) SetSubjectRoles(ctx context.Context, subjectID rbac.SubjectID, role
 	return tx.Commit()
 }
 
-func (d *db) GetSubjectRuleCount(ctx context.Context, subjectID rbac.SubjectID, rule rbac.Rule) (uint64, error) {
+func (d *db) GetAccountRuleCount(ctx context.Context, accountID rbac.AccountID, rule rbac.Rule) (uint64, error) {
 	var count uint64
 	if err := d.database.QueryRowContext(
 		ctx,
 		`SELECT COUNT(rulebindings.ruleId)
         FROM rolebindings,
         rulebindings,
-        subject_ids,
+        account_ids,
         rule_ids
-        WHERE subject_ids.subjectIdStr = $1
+        WHERE account_ids.accountIdStr = $1
         AND rule_ids.ruleIdStr = $2
-        AND rolebindings.subjectId = subject_ids.subjectId
+        AND rolebindings.accountId = account_ids.accountId
         AND rulebindings.roleId = rolebindings.roleId
         AND rulebindings.ruleId = rule_ids.ruleId`,
-		subjectID,
+		accountID,
 		rule,
 	).Scan(
 		&count,

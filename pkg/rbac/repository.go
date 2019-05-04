@@ -9,11 +9,11 @@ type Repository interface {
 	GetRoleRules(context.Context, RoleID) (RoleRules, error)
 	// SetRoleRules sets the rules of a role
 	SetRoleRules(context.Context, RoleID, RoleRules) error
-	// GetSubjectRoles returns the roles of a subject
-	GetSubjectRoles(context.Context, SubjectID) (SubjectRoles, error)
-	// SetSubjectRoles sets the roles of a subject
-	SetSubjectRoles(context.Context, SubjectID, SubjectRoles) error
-	// GetSubjectRuleCount returns the amount of occurrences of a given rule
+	// GetAccountRoles returns the roles of a subject
+	GetAccountRoles(context.Context, AccountID) (AccountRoles, error)
+	// SetAccountRoles sets the roles of a subject
+	SetAccountRoles(context.Context, AccountID, AccountRoles) error
+	// GetAccountRuleCount returns the amount of occurrences of a given rule
 	// for a given subject
-	GetSubjectRuleCount(context.Context, SubjectID, Rule) (uint64, error)
+	GetAccountRuleCount(context.Context, AccountID, Rule) (uint64, error)
 }

@@ -10,9 +10,9 @@ import (
 type Control interface {
 	GetRoleRules(ctx context.Context, roleID RoleID) (RoleRules, error)
 	SetRoleRules(ctx context.Context, roleID RoleID, rules RoleRules) error
-	GetSubjectRoles(ctx context.Context, subjectID SubjectID) (SubjectRoles, error)
-	SetSubjectRoles(ctx context.Context, subjectID SubjectID, roles SubjectRoles) error
-	IsSubjectAllowed(ctx context.Context, subjectID SubjectID, rule Rule) error
+	GetAccountRoles(ctx context.Context, accountID AccountID) (AccountRoles, error)
+	SetAccountRoles(ctx context.Context, accountID AccountID, roles AccountRoles) error
+	IsAccountAllowed(ctx context.Context, accountID AccountID, rule Rule) error
 }
 
 type control struct {
@@ -30,7 +30,7 @@ func NewControl(r Repository) Control {
 var (
 	errEmptyRoleID    = errors.New("empty role id")
 	errEmptyRule      = errors.New("empty rule")
-	errEmptySubjectID = errors.New("empty subject id")
+	errEmptyAccountID = errors.New("empty account id")
 )
 
 // GetRoleRules gets the rules of  role
@@ -57,19 +57,19 @@ func (m *control) SetRoleRules(ctx context.Context, roleID RoleID, rules RoleRul
 	return m.repository.SetRoleRules(ctx, roleID, rules)
 }
 
-// GetSubjectRoles returns the subject roles
-func (m *control) GetSubjectRoles(ctx context.Context, subjectID SubjectID) (SubjectRoles, error) {
-	if subjectID == "" {
-		return nil, errEmptySubjectID
+// GetAccountRoles returns the account roles
+func (m *control) GetAccountRoles(ctx context.Context, accountID AccountID) (AccountRoles, error) {
+	if accountID == "" {
+		return nil, errEmptyAccountID
 	}
 
-	return m.repository.GetSubjectRoles(ctx, subjectID)
+	return m.repository.GetAccountRoles(ctx, accountID)
 }
 
-// SetSubjectRoles sets the roles of a subject
-func (m *control) SetSubjectRoles(ctx context.Context, subjectID SubjectID, roles SubjectRoles) error {
-	if subjectID == "" {
-		return errEmptySubjectID
+// SetAccountRoles sets the roles of a account
+func (m *control) SetAccountRoles(ctx context.Context, accountID AccountID, roles AccountRoles) error {
+	if accountID == "" {
+		return errEmptyAccountID
 	}
 
 	for _, v := range roles {
@@ -78,20 +78,20 @@ func (m *control) SetSubjectRoles(ctx context.Context, subjectID SubjectID, role
 		}
 	}
 
-	return m.repository.SetSubjectRoles(ctx, subjectID, roles)
+	return m.repository.SetAccountRoles(ctx, accountID, roles)
 }
 
-// IsSubjectAllowed checks whether a subject has access to a rule
-func (m *control) IsSubjectAllowed(ctx context.Context, subjectID SubjectID, rule Rule) error {
-	if subjectID == "" {
-		return errEmptySubjectID
+// IsAccountAllowed checks whether a account has access to a rule
+func (m *control) IsAccountAllowed(ctx context.Context, accountID AccountID, rule Rule) error {
+	if accountID == "" {
+		return errEmptyAccountID
 	}
 
 	if rule == "" {
 		return errEmptyRule
 	}
 
-	count, err := m.repository.GetSubjectRuleCount(ctx, subjectID, rule)
+	count, err := m.repository.GetAccountRuleCount(ctx, accountID, rule)
 	if err != nil {
 		return err
 	}

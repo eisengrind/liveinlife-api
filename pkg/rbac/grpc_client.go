@@ -12,8 +12,8 @@ type grpcClient struct {
 	client pb.ControlClient
 }
 
-// NewgrpcClient for the rbac controller
-func NewgrpcClient(c *grpc.ClientConn) Control {
+// NewGRPCClient for the rbac controller
+func NewGRPCClient(c *grpc.ClientConn) Control {
 	return &grpcClient{
 		pb.NewControlClient(c),
 	}
@@ -54,16 +54,16 @@ func (c *grpcClient) SetRoleRules(ctx context.Context, roleID RoleID, rules Role
 	return err
 }
 
-// GetSubjectRoles returns the subject roles
-func (c *grpcClient) GetSubjectRoles(ctx context.Context, subjectID SubjectID) (SubjectRoles, error) {
-	grpcRoles, err := c.client.GetSubjectRoles(ctx, &pb.SubjectID{
-		ID: string(subjectID),
+// GetAccountRoles returns the account roles
+func (c *grpcClient) GetAccountRoles(ctx context.Context, accountID AccountID) (AccountRoles, error) {
+	grpcRoles, err := c.client.GetAccountRoles(ctx, &pb.AccountID{
+		ID: string(accountID),
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	roles := make(SubjectRoles, 0)
+	roles := make(AccountRoles, 0)
 	for _, v := range grpcRoles.GetRoleIDs() {
 		roles = append(roles, RoleID(v))
 	}
@@ -71,29 +71,29 @@ func (c *grpcClient) GetSubjectRoles(ctx context.Context, subjectID SubjectID) (
 	return roles, nil
 }
 
-// SetSubjectRoles sets the roles of a subject
-func (c *grpcClient) SetSubjectRoles(ctx context.Context, subjectID SubjectID, roles SubjectRoles) error {
-	grpcRoles := &pb.SubjectRoles{
+// SetAccountRoles sets the roles of a account
+func (c *grpcClient) SetAccountRoles(ctx context.Context, accountID AccountID, roles AccountRoles) error {
+	grpcRoles := &pb.AccountRoles{
 		RoleIDs: []string{},
 	}
 	for _, v := range roles {
 		grpcRoles.RoleIDs = append(grpcRoles.RoleIDs, string(v))
 	}
 
-	_, err := c.client.SetSubjectRoles(ctx, &pb.SetSubjectRolesRequest{
-		SubjectID: &pb.SubjectID{
-			ID: string(subjectID),
+	_, err := c.client.SetAccountRoles(ctx, &pb.SetAccountRolesRequest{
+		AccountID: &pb.AccountID{
+			ID: string(accountID),
 		},
-		SubjectRoles: grpcRoles,
+		AccountRoles: grpcRoles,
 	})
 	return err
 }
 
-// IsSubjectAllowed checks whether a subject has access to a rule
-func (c *grpcClient) IsSubjectAllowed(ctx context.Context, subjectID SubjectID, rule Rule) error {
-	_, err := c.client.IsSubjectAllowed(ctx, &pb.IsSubjectAllowedRequest{
-		SubjectID: &pb.SubjectID{
-			ID: string(subjectID),
+// IsAccountAllowed checks whether a account has access to a rule
+func (c *grpcClient) IsAccountAllowed(ctx context.Context, accountID AccountID, rule Rule) error {
+	_, err := c.client.IsAccountAllowed(ctx, &pb.IsAccountAllowedRequest{
+		AccountID: &pb.AccountID{
+			ID: string(accountID),
 		},
 		Rule: &pb.Rule{
 			Rule: string(rule),

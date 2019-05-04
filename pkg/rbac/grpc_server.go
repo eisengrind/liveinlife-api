@@ -43,31 +43,31 @@ func (s *grpcServer) SetRoleRules(ctx context.Context, req *pb.SetRoleRulesReque
 	return &empty.Empty{}, s.control.SetRoleRules(ctx, RoleID(req.GetRoleID().GetID()), roleRules)
 }
 
-func (s *grpcServer) GetSubjectRoles(ctx context.Context, subjectID *pb.SubjectID) (*pb.SubjectRoles, error) {
-	subjectRoles, err := s.control.GetSubjectRoles(ctx, SubjectID(subjectID.GetID()))
+func (s *grpcServer) GetAccountRoles(ctx context.Context, accountID *pb.AccountID) (*pb.AccountRoles, error) {
+	accountRoles, err := s.control.GetAccountRoles(ctx, AccountID(accountID.GetID()))
 	if err != nil {
 		return nil, err
 	}
 
-	grpcSubjectRoles := make([]string, 0)
-	for _, v := range subjectRoles {
-		grpcSubjectRoles = append(grpcSubjectRoles, string(v))
+	grpcAccountRoles := make([]string, 0)
+	for _, v := range accountRoles {
+		grpcAccountRoles = append(grpcAccountRoles, string(v))
 	}
 
-	return &pb.SubjectRoles{
-		RoleIDs: grpcSubjectRoles,
+	return &pb.AccountRoles{
+		RoleIDs: grpcAccountRoles,
 	}, nil
 }
 
-func (s *grpcServer) SetSubjectRoles(ctx context.Context, req *pb.SetSubjectRolesRequest) (*empty.Empty, error) {
-	subjectRoles := make(SubjectRoles, 0)
-	for _, v := range req.GetSubjectRoles().GetRoleIDs() {
-		subjectRoles = append(subjectRoles, RoleID(v))
+func (s *grpcServer) SetAccountRoles(ctx context.Context, req *pb.SetAccountRolesRequest) (*empty.Empty, error) {
+	accountRoles := make(AccountRoles, 0)
+	for _, v := range req.GetAccountRoles().GetRoleIDs() {
+		accountRoles = append(accountRoles, RoleID(v))
 	}
 
-	return &empty.Empty{}, s.control.SetSubjectRoles(ctx, SubjectID(req.GetSubjectID().GetID()), subjectRoles)
+	return &empty.Empty{}, s.control.SetAccountRoles(ctx, AccountID(req.GetAccountID().GetID()), accountRoles)
 }
 
-func (s *grpcServer) IsSubjectAllowed(ctx context.Context, req *pb.IsSubjectAllowedRequest) (*empty.Empty, error) {
-	return &empty.Empty{}, s.control.IsSubjectAllowed(ctx, SubjectID(req.GetSubjectID().GetID()), Rule(req.GetRule().GetRule()))
+func (s *grpcServer) IsAccountAllowed(ctx context.Context, req *pb.IsAccountAllowedRequest) (*empty.Empty, error) {
+	return &empty.Empty{}, s.control.IsAccountAllowed(ctx, AccountID(req.GetAccountID().GetID()), Rule(req.GetRule().GetRule()))
 }
