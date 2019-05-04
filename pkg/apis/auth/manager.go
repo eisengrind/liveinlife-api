@@ -54,11 +54,19 @@ func (m *Manager) Login(ctx context.Context, c Credentials) (t *Token, err error
 
 	aT := token.New(&jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(time.Minute * 5).UnixNano(),
-	}, user.UUID(), 0)
+		Audience:  "default",
+	}, &token.User{
+		ID:   user.UUID(),
+		Type: "user",
+	})
 
 	rT := token.New(&jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(time.Hour * 48).UnixNano(),
-	}, user.UUID(), 1)
+		Audience:  "auth/refresh",
+	}, &token.User{
+		ID:   user.UUID(),
+		Type: "user",
+	})
 
 	return &Token{
 		m.pK,
