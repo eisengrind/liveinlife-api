@@ -1,11 +1,27 @@
 package role
 
-import "github.com/51st-state/api/pkg/rbac"
+import (
+	"encoding/json"
+
+	"github.com/51st-state/api/pkg/rbac"
+)
 
 // Identifier of a role object
 //go:generate counterfeiter -o ./mocks/identifier.go . Identifier
 type Identifier interface {
 	ID() rbac.RoleID
+}
+
+type identifier struct {
+	id rbac.RoleID
+}
+
+func (i *identifier) ID() rbac.RoleID {
+	return i.id
+}
+
+func newIdentifier(id rbac.RoleID) Identifier {
+	return &identifier{id}
 }
 
 // Provider of payload data of a role object
@@ -22,6 +38,25 @@ type Incomplete interface {
 type Complete interface {
 	Identifier
 	Incomplete
+}
+
+type complete struct {
+	Identifier
+	Incomplete
+}
+
+func (c *complete) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		ID          rbac.RoleID    `json:"id"`
+		Title       string         `json:"title"`
+		Description string         `json:"description"`
+		Rules       rbac.RoleRules `json:"rules"`
+	}{
+		c.ID(),
+		c.Data().Title,
+		c.Data().Description,
+		c.Data().Rules,
+	})
 }
 
 type data struct {

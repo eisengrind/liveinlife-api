@@ -15,6 +15,7 @@ go_library(
         "//pkg/encode:go_default_library",
         "//pkg/rbac:go_default_library",
         "//pkg/token:go_default_library",
+        "//vendor/github.com/go-chi/chi:go_default_library",
         "//vendor/go.uber.org/zap:go_default_library",
     ],
 )
