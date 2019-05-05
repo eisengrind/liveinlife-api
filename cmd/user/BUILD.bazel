@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["service.go"],
+    importpath = "github.com/51st-state/api/cmd/user",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//pkg/api:go_default_library",
+        "//pkg/apis/user:go_default_library",
+        "//pkg/apis/user/cockroachdb:go_default_library",
+        "//pkg/apis/user/mysql:go_default_library",
+        "//pkg/apis/user/proto:go_default_library",
+        "//pkg/encode:go_default_library",
+        "//pkg/event:go_default_library",
+        "//pkg/keys:go_default_library",
+        "//pkg/pubsub/nsq:go_default_library",
+        "//pkg/rbac:go_default_library",
+        "//vendor/github.com/go-sql-driver/mysql:go_default_library",
+        "//vendor/github.com/grpc-ecosystem/go-grpc-middleware:go_default_library",
+        "//vendor/github.com/grpc-ecosystem/go-grpc-middleware/logging/zap:go_default_library",
+        "//vendor/github.com/lib/pq:go_default_library",
+        "//vendor/github.com/nsqio/go-nsq:go_default_library",
+        "//vendor/github.com/playnet-public/flagenv:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/google.golang.org/grpc:go_default_library",
+        "//vendor/google.golang.org/grpc/reflection:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "user",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
