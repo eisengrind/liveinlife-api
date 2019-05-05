@@ -33,6 +33,6 @@ func NewRulecheck(ctrl rbac.Control, rule rbac.Rule) endpoint.MiddlewareFunc {
 			return nil, errors.New("insufficient permissions")
 		}
 
-		return nil, nil
+		return ctx, nil
 	}
 }
