@@ -82,4 +82,3 @@ k8s_objects(
         ":service",
     ],
 )
-

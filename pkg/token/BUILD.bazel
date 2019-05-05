@@ -23,6 +23,7 @@ go_test(
     srcs = ["token_test.go"],
     embed = [":go_default_library"],
     deps = [
+        "//pkg/keys:go_default_library",
         "//test:go_default_library",
         "//vendor/github.com/dgrijalva/jwt-go:go_default_library",
     ],
