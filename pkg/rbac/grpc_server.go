@@ -68,6 +68,13 @@ func (s *grpcServer) SetAccountRoles(ctx context.Context, req *pb.SetAccountRole
 	return &empty.Empty{}, s.control.SetAccountRoles(ctx, AccountID(req.GetAccountID().GetID()), accountRoles)
 }
 
-func (s *grpcServer) IsAccountAllowed(ctx context.Context, req *pb.IsAccountAllowedRequest) (*empty.Empty, error) {
-	return &empty.Empty{}, s.control.IsAccountAllowed(ctx, AccountID(req.GetAccountID().GetID()), Rule(req.GetRule().GetRule()))
+func (s *grpcServer) IsAccountAllowed(ctx context.Context, req *pb.IsAccountAllowedRequest) (*pb.IsAccountAllowedResponse, error) {
+	allowed, err := s.control.IsAccountAllowed(ctx, AccountID(req.GetAccountID().GetID()), Rule(req.GetRule().GetRule()))
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.IsAccountAllowedResponse{
+		Allowed: allowed,
+	}, nil
 }

@@ -12,7 +12,7 @@ type Control interface {
 	SetRoleRules(ctx context.Context, roleID RoleID, rules RoleRules) error
 	GetAccountRoles(ctx context.Context, accountID AccountID) (AccountRoles, error)
 	SetAccountRoles(ctx context.Context, accountID AccountID, roles AccountRoles) error
-	IsAccountAllowed(ctx context.Context, accountID AccountID, rule Rule) error
+	IsAccountAllowed(ctx context.Context, accountID AccountID, rule Rule) (bool, error)
 }
 
 type control struct {
@@ -82,23 +82,19 @@ func (m *control) SetAccountRoles(ctx context.Context, accountID AccountID, role
 }
 
 // IsAccountAllowed checks whether a account has access to a rule
-func (m *control) IsAccountAllowed(ctx context.Context, accountID AccountID, rule Rule) error {
+func (m *control) IsAccountAllowed(ctx context.Context, accountID AccountID, rule Rule) (bool, error) {
 	if accountID == "" {
-		return errEmptyAccountID
+		return false, errEmptyAccountID
 	}
 
 	if rule == "" {
-		return errEmptyRule
+		return false, errEmptyRule
 	}
 
 	count, err := m.repository.GetAccountRuleCount(ctx, accountID, rule)
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	if count == 0 {
-		return errors.New("insufficient permissions")
-	}
-
-	return nil
+	return count > 0, nil
 }

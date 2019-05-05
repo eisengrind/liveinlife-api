@@ -39,10 +39,14 @@ message IsAccountAllowedRequest {
     Rule Rule = 2;
 }
 
+message IsAccountAllowedResponse {
+    bool Allowed = 1;
+}
+
 service Control {
     rpc GetRoleRules(RoleID) returns (RoleRules) {}
     rpc SetRoleRules(SetRoleRulesRequest) returns (google.protobuf.Empty) {}
     rpc GetAccountRoles(AccountID) returns (AccountRoles) {}
     rpc SetAccountRoles(SetAccountRolesRequest) returns (google.protobuf.Empty) {}
-    rpc IsAccountAllowed(IsAccountAllowedRequest) returns (google.protobuf.Empty) {}
+    rpc IsAccountAllowed(IsAccountAllowedRequest) returns (IsAccountAllowedResponse) {}
 }

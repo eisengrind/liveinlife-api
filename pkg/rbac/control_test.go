@@ -84,26 +84,30 @@ func TestControlIsAccountAllowed(t *testing.T) {
 	repo := &mocks.FakeRepository{}
 	ctrl := rbac.NewControl(repo)
 
-	if err := ctrl.IsAccountAllowed(context.Background(), "", "ruleID"); err == nil {
+	if _, err := ctrl.IsAccountAllowed(context.Background(), "", "ruleID"); err == nil {
 		t.Fatal("empty account id")
 	}
 
-	if err := ctrl.IsAccountAllowed(context.Background(), "accountID", ""); err == nil {
+	if _, err := ctrl.IsAccountAllowed(context.Background(), "accountID", ""); err == nil {
 		t.Fatal("empty rule")
 	}
 
 	repo.GetAccountRuleCountReturns(0, errors.New("fake error"))
-	if err := ctrl.IsAccountAllowed(context.Background(), "accountID", "rule"); err == nil {
+	if _, err := ctrl.IsAccountAllowed(context.Background(), "accountID", "rule"); err == nil {
 		t.Fatal("repository returns an error")
 	}
 
 	repo.GetAccountRuleCountReturns(0, nil)
-	if err := ctrl.IsAccountAllowed(context.Background(), "accountID", "rule"); err == nil {
-		t.Fatal("the account does have no permission")
+	if allowed, err := ctrl.IsAccountAllowed(context.Background(), "accountID", "rule"); err != nil {
+		t.Fatal("there should be no error")
+	} else if allowed {
+		t.Fatal("this account is not allowed")
 	}
 
 	repo.GetAccountRuleCountReturns(1, nil)
-	if err := ctrl.IsAccountAllowed(context.Background(), "accountID", "rule"); err != nil {
+	if allowed, err := ctrl.IsAccountAllowed(context.Background(), "accountID", "rule"); err != nil {
 		t.Fatal("there should be no error")
+	} else if !allowed {
+		t.Fatal("this account has all necessary permissions")
 	}
 }

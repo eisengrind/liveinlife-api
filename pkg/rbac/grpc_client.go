@@ -90,8 +90,8 @@ func (c *grpcClient) SetAccountRoles(ctx context.Context, accountID AccountID, r
 }
 
 // IsAccountAllowed checks whether a account has access to a rule
-func (c *grpcClient) IsAccountAllowed(ctx context.Context, accountID AccountID, rule Rule) error {
-	_, err := c.client.IsAccountAllowed(ctx, &pb.IsAccountAllowedRequest{
+func (c *grpcClient) IsAccountAllowed(ctx context.Context, accountID AccountID, rule Rule) (bool, error) {
+	resp, err := c.client.IsAccountAllowed(ctx, &pb.IsAccountAllowedRequest{
 		AccountID: &pb.AccountID{
 			ID: string(accountID),
 		},
@@ -99,5 +99,9 @@ func (c *grpcClient) IsAccountAllowed(ctx context.Context, accountID AccountID, 
 			Rule: string(rule),
 		},
 	})
-	return err
+	if err != nil {
+		return false, err
+	}
+
+	return resp.GetAllowed(), nil
 }

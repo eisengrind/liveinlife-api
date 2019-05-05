@@ -63,7 +63,7 @@ type FakeControl struct {
 	setAccountRolesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	IsAccountAllowedStub        func(ctx context.Context, accountID rbac.AccountID, rule rbac.Rule) error
+	IsAccountAllowedStub        func(ctx context.Context, accountID rbac.AccountID, rule rbac.Rule) (bool, error)
 	isAccountAllowedMutex       sync.RWMutex
 	isAccountAllowedArgsForCall []struct {
 		ctx       context.Context
@@ -71,10 +71,12 @@ type FakeControl struct {
 		rule      rbac.Rule
 	}
 	isAccountAllowedReturns struct {
-		result1 error
+		result1 bool
+		result2 error
 	}
 	isAccountAllowedReturnsOnCall map[int]struct {
-		result1 error
+		result1 bool
+		result2 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
@@ -284,7 +286,7 @@ func (fake *FakeControl) SetAccountRolesReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
-func (fake *FakeControl) IsAccountAllowed(ctx context.Context, accountID rbac.AccountID, rule rbac.Rule) error {
+func (fake *FakeControl) IsAccountAllowed(ctx context.Context, accountID rbac.AccountID, rule rbac.Rule) (bool, error) {
 	fake.isAccountAllowedMutex.Lock()
 	ret, specificReturn := fake.isAccountAllowedReturnsOnCall[len(fake.isAccountAllowedArgsForCall)]
 	fake.isAccountAllowedArgsForCall = append(fake.isAccountAllowedArgsForCall, struct {
@@ -298,9 +300,9 @@ func (fake *FakeControl) IsAccountAllowed(ctx context.Context, accountID rbac.Ac
 		return fake.IsAccountAllowedStub(ctx, accountID, rule)
 	}
 	if specificReturn {
-		return ret.result1
+		return ret.result1, ret.result2
 	}
-	return fake.isAccountAllowedReturns.result1
+	return fake.isAccountAllowedReturns.result1, fake.isAccountAllowedReturns.result2
 }
 
 func (fake *FakeControl) IsAccountAllowedCallCount() int {
@@ -315,23 +317,26 @@ func (fake *FakeControl) IsAccountAllowedArgsForCall(i int) (context.Context, rb
 	return fake.isAccountAllowedArgsForCall[i].ctx, fake.isAccountAllowedArgsForCall[i].accountID, fake.isAccountAllowedArgsForCall[i].rule
 }
 
-func (fake *FakeControl) IsAccountAllowedReturns(result1 error) {
+func (fake *FakeControl) IsAccountAllowedReturns(result1 bool, result2 error) {
 	fake.IsAccountAllowedStub = nil
 	fake.isAccountAllowedReturns = struct {
-		result1 error
-	}{result1}
+		result1 bool
+		result2 error
+	}{result1, result2}
 }
 
-func (fake *FakeControl) IsAccountAllowedReturnsOnCall(i int, result1 error) {
+func (fake *FakeControl) IsAccountAllowedReturnsOnCall(i int, result1 bool, result2 error) {
 	fake.IsAccountAllowedStub = nil
 	if fake.isAccountAllowedReturnsOnCall == nil {
 		fake.isAccountAllowedReturnsOnCall = make(map[int]struct {
-			result1 error
+			result1 bool
+			result2 error
 		})
 	}
 	fake.isAccountAllowedReturnsOnCall[i] = struct {
-		result1 error
-	}{result1}
+		result1 bool
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *FakeControl) Invocations() map[string][][]interface{} {
