@@ -80,7 +80,7 @@ func (m *manager) Create(ctx context.Context, c Complete) error {
 		return err
 	}
 
-	return m.rbac.SetRoleRules(ctx, c.ID(), make(rbac.RoleRules, 0))
+	return m.rbac.SetRoleRules(ctx, c.ID(), c.Data().Rules)
 }
 
 // Delete role information
