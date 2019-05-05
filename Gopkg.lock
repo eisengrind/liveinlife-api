@@ -38,11 +38,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:070f294e857c3084f650045b3a103729588584d475052afdbd4605ba234c3f01"
+  digest = "1:fdc9ea0e723e75032421fe141f9e36d8f12f57cf65911b31ffe93720a0c932b2"
   name = "github.com/golang/protobuf"
   packages = [
     "jsonpb",
     "proto",
+    "protoc-gen-go/descriptor",
     "ptypes",
     "ptypes/any",
     "ptypes/duration",
@@ -230,7 +231,7 @@
   revision = "64821d5d210748c883cd2b809589555ae4654203"
 
 [[projects]]
-  digest = "1:31d87f39886fb38a2b6c097ff3b9f985d6960772170d64a68246f7790e955746"
+  digest = "1:56ffb0dcdcddd29a7ce902c1294be0473d0928b6baf5c1c6894f6bb71bc980b1"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -259,6 +260,8 @@
     "metadata",
     "naming",
     "peer",
+    "reflection",
+    "reflection/grpc_reflection_v1alpha",
     "resolver",
     "resolver/dns",
     "resolver/passthrough",
@@ -308,6 +311,7 @@
     "golang.org/x/crypto/blowfish",
     "golang.org/x/net/context",
     "google.golang.org/grpc",
+    "google.golang.org/grpc/reflection",
     "google.golang.org/grpc/status",
     "gopkg.in/gomail.v2",
   ]
