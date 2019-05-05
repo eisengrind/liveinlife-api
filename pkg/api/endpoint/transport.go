@@ -44,8 +44,9 @@ func (e *endpoint) WithBefore(mw MiddlewareFunc) Endpoint {
 	if e.before == nil {
 		e.before = mw
 	} else {
+		tmpBefore := e.before
 		e.before = func(ctx context.Context, r *http.Request) (context.Context, error) {
-			ctx, err := e.before(ctx, r)
+			ctx, err := tmpBefore(ctx, r)
 			if err != nil {
 				return ctx, err
 			}
@@ -61,8 +62,9 @@ func (e *endpoint) WithAfter(mw MiddlewareFunc) Endpoint {
 	if e.after == nil {
 		e.after = mw
 	} else {
+		tmpAfter := e.after
 		e.after = func(ctx context.Context, r *http.Request) (context.Context, error) {
-			ctx, err := e.after(ctx, r)
+			ctx, err := tmpAfter(ctx, r)
 			if err != nil {
 				return ctx, errors.WithStack(err)
 			}
