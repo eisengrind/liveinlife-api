@@ -150,17 +150,23 @@ func (d *db) SetRoleRules(ctx context.Context, roleID rbac.RoleID, rules rbac.Ro
                     ruleIdStr
                 ) SELECT $1
                 ON CONFLICT
-                DO NOTHING;
-                INSERT INTO rulebindings (
+                DO NOTHING;`,
+				rule,
+			); err != nil {
+				return txError(tx, err)
+			}
+
+			if _, err := tx.ExecContext(
+				ctx,
+				`INSERT INTO rulebindings (
                     roleId,
                     ruleId
                 ) SELECT role_ids.roleId,
                 rule_ids.ruleId
                 FROM role_ids,
                 rule_ids
-                WHERE role_ids.roleIdStr = $2
-                AND rule_ids.ruleIdStr = $3`,
-				rule,
+                WHERE role_ids.roleIdStr = $1
+                AND rule_ids.ruleIdStr = $2`,
 				roleID,
 				rule,
 			); err != nil {
