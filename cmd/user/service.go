@@ -177,12 +177,12 @@ func serveGrpc(l *zap.Logger, m *user.Manager) {
 	pb.RegisterManagerServer(s, user.NewGRPCServer(m))
 	reflection.Register(s)
 
-	l.Info("preparing grpc server")
 	listener, err := net.Listen("tcp", *grpcAddr)
 	if err != nil {
 		l.Fatal(err.Error())
 	}
 
+	l.Info("starting grpc server")
 	if err := s.Serve(listener); err != nil {
 		l.Fatal(err.Error())
 	}
