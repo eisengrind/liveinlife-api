@@ -4,7 +4,7 @@ import "context"
 
 // EventPayload of a token in the event system of the API.
 type EventPayload struct {
-	*tokenInfo
+	*Info
 }
 
 // EventPayloadFromContext returns a necessary event payload of token
@@ -16,7 +16,7 @@ func EventPayloadFromContext(ctx context.Context) (*EventPayload, error) {
 	}
 
 	return &EventPayload{
-		&tokenInfo{
+		&Info{
 			User: tok.Data().User,
 		},
 	}, nil

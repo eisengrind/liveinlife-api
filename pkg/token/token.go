@@ -18,7 +18,8 @@ type Token interface {
 	Data() *data
 }
 
-type tokenInfo struct {
+// Info payload of a token
+type Info struct {
 	User *User `json:"user"`
 }
 
@@ -33,7 +34,7 @@ func (u *User) String() string {
 }
 
 type data struct {
-	*tokenInfo
+	*Info
 	*jwt.StandardClaims
 }
 
@@ -59,7 +60,7 @@ func (t *token) Data() *data {
 func New(c *jwt.StandardClaims, user *User) Token {
 	return &token{
 		token: jwt.NewWithClaims(jwt.SigningMethodRS512, &data{
-			&tokenInfo{
+			&Info{
 				User: user,
 			},
 			c,
