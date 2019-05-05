@@ -30,7 +30,7 @@ func (r *wcfRepository) GetInfo(ctx context.Context, id user.WCFUserID) (*user.W
         email,
         password
         FROM wcf1_user
-        WHERE userId = $1`,
+        WHERE userId = ?`,
 		id,
 	).Scan(
 		&info.UserID,
@@ -55,7 +55,7 @@ func (r *wcfRepository) GetInfoByEmail(ctx context.Context, wcfEmail string) (*u
         email,
         password
         FROM wcf1_user
-        WHERE email = $1`,
+        WHERE email = ?`,
 		wcfEmail,
 	).Scan(
 		&info.UserID,
@@ -80,7 +80,7 @@ func (r *wcfRepository) GetInfoByUsername(ctx context.Context, username string) 
         email,
         password
         FROM wcf1_user
-        WHERE username = $1`,
+        WHERE username = ?`,
 		username,
 	).Scan(
 		&info.UserID,
