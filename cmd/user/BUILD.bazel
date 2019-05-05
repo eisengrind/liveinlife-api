@@ -61,7 +61,7 @@ k8s_deploy(
     name = "deployment",
     template = ":dpl",
     images = {
-        "eu.gcr.io/liveinlife/topgenerator:dev": ":image",
+        "eu.gcr.io/liveinlife/user:dev": ":image",
     },
 )
 
