@@ -82,6 +82,10 @@ func (e *endpoint) HandlerFunc(l *zap.Logger) http.HandlerFunc {
 		if e.before != nil {
 			ctx, err = e.before(ctx, r)
 			if err != nil {
+				l.Error(
+					"before middleware error",
+					zap.Error(err),
+				)
 				e.encodeError(w, err, l)
 				return
 			}
@@ -89,6 +93,10 @@ func (e *endpoint) HandlerFunc(l *zap.Logger) http.HandlerFunc {
 
 		v, err := e.hndl(ctx, r)
 		if err != nil {
+			l.Error(
+				"handler error",
+				zap.Error(err),
+			)
 			e.encodeError(w, err, l)
 			return
 		}
@@ -96,6 +104,10 @@ func (e *endpoint) HandlerFunc(l *zap.Logger) http.HandlerFunc {
 		if e.after != nil {
 			ctx, err = e.after(ctx, r)
 			if err != nil {
+				l.Error(
+					"after middleware error",
+					zap.Error(err),
+				)
 				e.encodeError(w, err, l)
 				return
 			}
