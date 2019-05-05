@@ -2,10 +2,10 @@ package endpoint
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"github.com/51st-state/api/pkg/encode"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"github.com/51st-state/api/pkg/problems"
@@ -64,7 +64,7 @@ func (e *endpoint) WithAfter(mw MiddlewareFunc) Endpoint {
 		e.after = func(ctx context.Context, r *http.Request) (context.Context, error) {
 			ctx, err := e.after(ctx, r)
 			if err != nil {
-				return ctx, err
+				return ctx, errors.WithStack(err)
 			}
 
 			return mw(ctx, r)
