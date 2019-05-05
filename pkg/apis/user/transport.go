@@ -123,6 +123,6 @@ func MakeSetRolesEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.C
 		return struct{}{}, m.SetRoles(ctx, newIdentifier(uuid), roles)
 	}).
 		WithBefore(token.NewMiddleware(pubKey)).
-		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("users.roles.set"))).
+		//		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("users.roles.set"))).
 		HandlerFunc(l)
 }
