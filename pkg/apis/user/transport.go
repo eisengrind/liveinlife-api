@@ -23,7 +23,7 @@ func MakeGetEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Contro
 			return nil, err
 		}
 
-		if rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.get")); err != nil {
+		if err := rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.get")); err != nil {
 			return nil, err
 		}
 
@@ -40,7 +40,7 @@ func MakeGetByGameSerialHashEndpoint(l *zap.Logger, m *Manager, e encode.Encoder
 			return nil, err
 		}
 
-		if rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.getByHash")); err != nil {
+		if err := rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.getByHash")); err != nil {
 			return nil, err
 		}
 
@@ -57,7 +57,7 @@ func MakeCreateEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Con
 			return nil, err
 		}
 
-		if rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.create")); err != nil {
+		if err := rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.create")); err != nil {
 			return nil, err
 		}
 
@@ -80,7 +80,7 @@ func MakeDeleteEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Con
 			return nil, err
 		}
 
-		if rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.delete")); err != nil {
+		if err := rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.delete")); err != nil {
 			return nil, err
 		}
 
@@ -102,7 +102,7 @@ func MakeUpdateEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Con
 			return nil, err
 		}
 
-		if rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.update")); err != nil {
+		if err := rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.update")); err != nil {
 			return nil, err
 		}
 
@@ -134,7 +134,7 @@ func MakeGetRolesEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.C
 			return nil, err
 		}
 
-		if rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.roles.get")); err != nil {
+		if err := rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.roles.get")); err != nil {
 			return nil, err
 		}
 
@@ -153,7 +153,7 @@ func MakeSetRolesEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.C
 			return nil, err
 		}
 
-		if rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.roles.set")); err != nil {
+		if err := rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("users.roles.set")); err != nil {
 			return nil, err
 		}
 

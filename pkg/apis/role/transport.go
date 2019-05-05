@@ -25,7 +25,7 @@ func MakeGetEndpoint(l *zap.Logger, m Manager, e encode.Encoder, pubKey rsa.Publ
 			return nil, err
 		}
 
-		if rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("roles.get")); err != nil {
+		if err := rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("roles.get")); err != nil {
 			return nil, err
 		}
 
@@ -43,7 +43,7 @@ func MakeSetEndpoint(l *zap.Logger, m Manager, e encode.Encoder, pubKey rsa.Publ
 			return nil, err
 		}
 
-		if rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("roles.set")); err != nil {
+		if err := rb.IsAccountAllowed(ctx, rbac.AccountID(tok.Data().User.String()), rbac.Rule("roles.set")); err != nil {
 			return nil, err
 		}
 
