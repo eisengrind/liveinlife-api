@@ -55,7 +55,6 @@ func (t *token) Data() *data {
 }
 
 // New creates a new api-friendly api token.
-// Available types are 0 = user-token, 1 = user-refresh-token.
 // More types can follow - e.g. specific API-Token in addition to user token.
 func New(c *jwt.StandardClaims, user *User) Token {
 	return &token{
@@ -69,7 +68,7 @@ func New(c *jwt.StandardClaims, user *User) Token {
 }
 
 // NewFromString parses a token object from a jwt token string
-func NewFromString(pK rsa.PublicKey, t string) (Token, error) {
+func NewFromString(pK *rsa.PublicKey, t string) (Token, error) {
 	tok, err := jwt.ParseWithClaims(
 		t,
 		&data{},

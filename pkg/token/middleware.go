@@ -22,7 +22,7 @@ func NewMiddleware(pK rsa.PublicKey) endpoint.MiddlewareFunc {
 			return ctx, err
 		}
 
-		tok, err := NewFromString(pK, tokStr)
+		tok, err := NewFromString(&pK, tokStr)
 		if err != nil {
 			return nil, err
 		}

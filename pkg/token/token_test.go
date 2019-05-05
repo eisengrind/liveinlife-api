@@ -1,9 +1,10 @@
 package token_test
 
 import (
-	"io/ioutil"
 	"testing"
 	"time"
+
+	"github.com/51st-state/api/pkg/keys"
 
 	"github.com/51st-state/api/pkg/token"
 	"github.com/51st-state/api/test"
@@ -26,17 +27,41 @@ func TestNew(t *testing.T) {
 		t.Fatal("invalid type casted")
 	}
 
-	b, err := ioutil.ReadFile(test.GetTestPrivateKey())
+	privateKey, err := keys.GetPrivateKey(test.GetTestPrivateKey())
 	if err != nil {
 		t.Fatal(err.Error())
 	}
 
-	prvKey, err := jwt.ParseRSAPrivateKeyFromPEM(b)
+	if _, err := tok.String(privateKey); err != nil {
+		t.Fatal(err.Error())
+	}
+}
+
+func TestNewFromString(t *testing.T) {
+	tok := token.New(&jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Minute * 2).Unix(),
+	}, &token.User{
+		ID:   "username",
+		Type: "user",
+	})
+
+	privateKey, err := keys.GetPrivateKey(test.GetTestPrivateKey())
 	if err != nil {
 		t.Fatal(err.Error())
 	}
 
-	if _, err := tok.String(prvKey); err != nil {
+	tokStr, err := tok.String(privateKey)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	publicKey, err := keys.GetPublicKey(test.GetTestPublicKey())
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	tok, err = token.NewFromString(publicKey, tokStr)
+	if err != nil {
 		t.Fatal(err.Error())
 	}
 }
