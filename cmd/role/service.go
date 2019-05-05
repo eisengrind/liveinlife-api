@@ -20,6 +20,8 @@ import (
 	"github.com/51st-state/api/pkg/apis/role/cockroachdb"
 	"github.com/playnet-public/flagenv"
 	"go.uber.org/zap"
+
+	_ "github.com/lib/pq"
 )
 
 var (

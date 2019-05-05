@@ -14,6 +14,7 @@ go_library(
         "//pkg/encode:go_default_library",
         "//pkg/keys:go_default_library",
         "//pkg/rbac:go_default_library",
+        "//vendor/github.com/lib/pq:go_default_library",
         "//vendor/github.com/playnet-public/flagenv:go_default_library",
         "//vendor/go.uber.org/zap:go_default_library",
         "//vendor/google.golang.org/grpc:go_default_library",
