@@ -17,5 +17,6 @@ k8s_objects(
         #        "//cmd/preselect:dev",
         "//cmd/rbac:dev",
         "//cmd/role:dev",
+        "//cmd/user:dev",
     ],
 )
