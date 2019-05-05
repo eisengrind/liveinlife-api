@@ -52,27 +52,27 @@ spec:
         - name: WCF_DB_HOST
           valueFrom:
             configMapKeyRef:
-              key: wcfDbHost
+              key: wcfDBHost
               name: "{NAME}-config"
         - name: WCF_DB_PORT
           valueFrom:
             configMapKeyRef:
-              key: wcfDbPort
+              key: wcfDBPort
               name: "{NAME}-config"
         - name: WCF_DB_USERNAME
           valueFrom:
             configMapKeyRef:
-              key: wcfDbUsername
+              key: wcfDBUsername
               name: "{NAME}-config"
         - name: WCF_DB_NAME
           valueFrom:
             configMapKeyRef:
-              key: wcfDbName
+              key: wcfDBName
               name: "{NAME}-config"
         - name: WCF_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              key: wcfDbPassword
+              key: wcfDBPassword
               name: "{NAME}-secrets"
         ports:
         - name: http
