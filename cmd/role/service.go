@@ -31,7 +31,7 @@ var (
 	dbUsername      = flagenv.String("db-username", "user", "the username of the database")
 	dbPassword      = flagenv.String("db-password", "1234", "the password of the database")
 	dbName          = flagenv.String("db-name", "preselect", "the name of the database")
-	publicKeyPath   = flagenv.String("public-key-path", "/secrets/public.key", "the public key to validate jwt token")
+	publicKeyPath   = flagenv.String("public-key-path", "/secrets/public.pem", "the public key to validate jwt token")
 	rbacGRPCAddress = flagenv.String("rbac-grpc-addr", "rbac-service:2345", "the grpc address to the rbac control")
 )
 
