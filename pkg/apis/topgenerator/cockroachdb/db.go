@@ -17,7 +17,7 @@ func CreateSchema(ctx context.Context, db *sql.DB) (err error) {
 	_, err = db.ExecContext(
 		ctx,
 		`CREATE TABLE IF NOT EXISTS tops (
-            sex bool NOT NULL DEFAULT 0,
+            sex BOOLEAN NOT NULL DEFAULT false,
             undershirtId integer NOT NULL DEFAULT 0,
             topId integer NOT NULL DEFAULT 0,
             torsoId integer NOT NULL DEFAULT 0,
@@ -31,7 +31,6 @@ func CreateSchema(ctx context.Context, db *sql.DB) (err error) {
             relativeAmount integer NOT NULL DEFAULT 1,
             UNIQUE(sex, undershirtId, topId)
         );
-        CREATE INDEX IF NOT EXISTS tops_idx_sex ON tops (sex);
         CREATE INDEX IF NOT EXISTS tops_idx_undershirtId ON tops (undershirtId);
         CREATE INDEX IF NOT EXISTS tops_idx_topId ON tops (topId);`,
 	)
