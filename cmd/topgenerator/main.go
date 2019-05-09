@@ -49,11 +49,11 @@ func main() {
 
 	a := api.New(*httpAddr, logger)
 	a.Get(
-		"/character/top-generator/tops/{sex}/{undershirtId}/{undershirtTextureId}/{overshirtId}/{overshirtTextureId}",
+		"/character/top-generator/tops/{sex}/{undershirtID}/{topID}",
 		topgenerator.MakeHTTPGetEndpoint(logger, encode.NewJSONEncoder(), m),
 	)
 	a.Patch(
-		"/character/top-generator/tops/{sex}/{undershirtId}/{undershirtTextureId}/{overshirtId}/{overshirtTextureId}",
+		"/character/top-generator/tops/{sex}/{undershirtID}/{topID}",
 		topgenerator.MakeHTTPUpsertEndpoint(logger, encode.NewJSONEncoder(), m),
 	)
 
