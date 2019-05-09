@@ -17,7 +17,7 @@ func CreateSchema(ctx context.Context, db *sql.DB) (err error) {
 	_, err = db.ExecContext(
 		ctx,
 		`CREATE TABLE IF NOT EXISTS tops (
-            sex integer NOT NULL DEFAULT 0,
+            sex bool NOT NULL DEFAULT 0,
             undershirtId integer NOT NULL DEFAULT 0,
             topId integer NOT NULL DEFAULT 0,
             torsoId integer NOT NULL DEFAULT 0,
@@ -113,9 +113,7 @@ func (r *repository) Upsert(ctx context.Context, c topgenerator.Complete) error 
         ) ON CONFLICT (
             sex,
             undershirtId,
-            undershirtTextureId,
-            topId,
-            overshirtTextureId
+            topId
         ) DO UPDATE SET clothingType = $13,
         valencyType = $14,
         status = $15,
