@@ -19,49 +19,39 @@ func CreateSchema(ctx context.Context, db *sql.DB) (err error) {
 		`CREATE TABLE IF NOT EXISTS tops (
             sex integer NOT NULL DEFAULT 0,
             undershirtId integer NOT NULL DEFAULT 0,
-            undershirtTextureId integer NOT NULL DEFAULT 0,
-            overshirtId integer NOT NULL DEFAULT 0,
-            overshirtTextureId integer NOT NULL DEFAULT 0,
+            topId integer NOT NULL DEFAULT 0,
             torsoId integer NOT NULL DEFAULT 0,
-            torsoTextureId integer NOT NULL DEFAULT 0,
             clothingType integer NOT NULL DEFAULT 0,
             valencyType integer NOT NULL DEFAULT 0,
-            name text NOT NULL DEFAULT '',
-            notice text NOT NULL DEFAULT '',
             status integer NOT NULL DEFAULT 0,
             polyesterPercentage integer NOT NULL DEFAULT 25,
             cottonPercentage integer NOT NULL DEFAULT 25,
             leatherPercentage integer NOT NULL DEFAULT 25,
             silkPercentage integer NOT NULL DEFAULT 25,
             relativeAmount integer NOT NULL DEFAULT 1,
-            UNIQUE(sex, undershirtId, undershirtTextureId, overshirtId, overshirtTextureId)
+            UNIQUE(sex, undershirtId, topId)
         );
         CREATE INDEX IF NOT EXISTS tops_idx_sex ON tops (sex);
         CREATE INDEX IF NOT EXISTS tops_idx_undershirtId ON tops (undershirtId);
-        CREATE INDEX IF NOT EXISTS tops_idx_undershirtTextureId ON tops (undershirtTextureId);
-        CREATE INDEX IF NOT EXISTS tops_idx_overshirtId ON tops (overshirtId);
-        CREATE INDEX IF NOT EXISTS tops_idx_overshirtTextureId ON tops (overshirtTextureId)`,
+        CREATE INDEX IF NOT EXISTS tops_idx_topId ON tops (topId);`,
 	)
 	return
 }
 
 // New cockroachdb repository
-func New(db *sql.DB) top.Repository {
+func New(db *sql.DB) topgenerator.Repository {
 	return &repository{db}
 }
 
-func (r *repository) Get(ctx context.Context, id top.Identifier) (top.Complete, error) {
-	inc := top.NewIncomplete("", "", 0, 0, 0, 0, 0, 25, 25, 25, 25, 1)
+func (r *repository) Get(ctx context.Context, id topgenerator.Identifier) (topgenerator.Complete, error) {
+	inc := topgenerator.NewIncomplete(0, 0, 0, 0, 25, 25, 25, 25, 1)
 
 	if err := r.db.QueryRowContext(
 		ctx,
 		`SELECT clothingType,
         valencyType,
-        name,
-        notice,
         status,
         torsoId,
-        torsoTextureId,
         polyesterPercentage,
         cottonPercentage,
         leatherPercentage,
@@ -70,22 +60,15 @@ func (r *repository) Get(ctx context.Context, id top.Identifier) (top.Complete, 
         FROM tops
         WHERE sex = $1
         AND undershirtId = $2
-        AND undershirtTextureId = $3
-        AND overshirtId = $4
-        AND overshirtTextureId = $5`,
+        AND topId = $3`,
 		id.Sex(),
 		id.UndershirtID(),
-		id.UndershirtTextureID(),
-		id.OvershirtID(),
-		id.OvershirtTextureID(),
+		id.TopID(),
 	).Scan(
 		&inc.Data().ClothingType,
 		&inc.Data().ValencyType,
-		&inc.Data().Name,
-		&inc.Data().Notice,
 		&inc.Data().Status,
 		&inc.Data().TorsoID,
-		&inc.Data().TorsoTextureID,
 		&inc.Data().PolyesterPercentage,
 		&inc.Data().CottonPercentage,
 		&inc.Data().LeatherPercentage,
@@ -98,22 +81,17 @@ func (r *repository) Get(ctx context.Context, id top.Identifier) (top.Complete, 
 	return newComplete(id, inc), nil
 }
 
-func (r *repository) Upsert(ctx context.Context, c top.Complete) error {
+func (r *repository) Upsert(ctx context.Context, c topgenerator.Complete) error {
 	_, err := r.db.ExecContext(
 		ctx,
 		`INSERT INTO tops (
             sex,
             undershirtId,
-            undershirtTextureId,
-            overshirtId,
-            overshirtTextureId,
+            topId,
             clothingType,
             valencyType,
-            name,
-            notice,
             status,
             torsoId,
-            torsoTextureId,
             polyesterPercentage,
             cottonPercentage,
             leatherPercentage,
@@ -131,42 +109,29 @@ func (r *repository) Upsert(ctx context.Context, c top.Complete) error {
             $9,
             $10,
             $11,
-            $12,
-            $13,
-            $14,
-            $15,
-            $16,
-            $17
+            $12
         ) ON CONFLICT (
             sex,
             undershirtId,
             undershirtTextureId,
-            overshirtId,
+            topId,
             overshirtTextureId
-        ) DO UPDATE SET clothingType = $18,
-        valencyType = $19,
-        name = $20,
-        notice = $21,
-        status = $22,
-        torsoId = $23,
-        torsoTextureId = $24,
-        polyesterPercentage = $25,
-        cottonPercentage = $26,
-        leatherPercentage = $27,
-        silkPercentage = $28,
-        relativeAmount = $29`,
+        ) DO UPDATE SET clothingType = $13,
+        valencyType = $14,
+        status = $15,
+        torsoId = $16,
+        polyesterPercentage = $17,
+        cottonPercentage = $18,
+        leatherPercentage = $19,
+        silkPercentage = $20,
+        relativeAmount = $21`,
 		c.Sex(),
 		c.UndershirtID(),
-		c.UndershirtTextureID(),
-		c.OvershirtID(),
-		c.OvershirtTextureID(),
+		c.TopID(),
 		c.Data().ClothingType,
 		c.Data().ValencyType,
-		c.Data().Name,
-		c.Data().Notice,
 		c.Data().Status,
 		c.Data().TorsoID,
-		c.Data().TorsoTextureID,
 		c.Data().PolyesterPercentage,
 		c.Data().CottonPercentage,
 		c.Data().LeatherPercentage,
@@ -174,11 +139,8 @@ func (r *repository) Upsert(ctx context.Context, c top.Complete) error {
 		c.Data().RelativeAmount,
 		c.Data().ClothingType,
 		c.Data().ValencyType,
-		c.Data().Name,
-		c.Data().Notice,
 		c.Data().Status,
 		c.Data().TorsoID,
-		c.Data().TorsoTextureID,
 		c.Data().PolyesterPercentage,
 		c.Data().CottonPercentage,
 		c.Data().LeatherPercentage,
@@ -189,24 +151,19 @@ func (r *repository) Upsert(ctx context.Context, c top.Complete) error {
 }
 
 type complete struct {
-	top.Identifier
-	top.Incomplete
+	topgenerator.Identifier
+	topgenerator.Incomplete
 }
 
 func (c *complete) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
-		Sex                 uint8  `json:"sex"`
-		UndershirtID        uint   `json:"undershirt_id"`
-		UndershirtTextureID uint   `json:"undershirt_texture_id"`
-		OvershirtID         uint   `json:"overshirt_id"`
-		OvershirtTextureID  uint   `json:"overshirt_texture_id"`
-		Name                string `json:"name"`
-		Notice              string `json:"notice"`
+		Sex                 bool   `json:"sex"`
+		UndershirtID        uint64 `json:"undershirt_id"`
+		TopID               uint64 `json:"top_id"`
 		ClothingType        uint8  `json:"clothing_type"`
 		ValencyType         uint8  `json:"valency_type"`
 		Status              uint8  `json:"status"`
 		TorsoID             uint   `json:"torso_id"`
-		TorsoTextureID      uint   `json:"torso_texture_id"`
 		PolyesterPercentage uint   `json:"polyester_percentage"`
 		CottonPercentage    uint   `json:"cotton_percentage"`
 		LeatherPercentage   uint   `json:"leather_percentage"`
@@ -215,16 +172,11 @@ func (c *complete) MarshalJSON() ([]byte, error) {
 	}{
 		c.Sex(),
 		c.UndershirtID(),
-		c.UndershirtTextureID(),
-		c.OvershirtID(),
-		c.OvershirtTextureID(),
-		c.Data().Name,
-		c.Data().Notice,
+		c.TopID(),
 		c.Data().ClothingType,
 		c.Data().ValencyType,
 		c.Data().Status,
 		c.Data().TorsoID,
-		c.Data().TorsoTextureID,
 		c.Data().PolyesterPercentage,
 		c.Data().CottonPercentage,
 		c.Data().LeatherPercentage,
@@ -233,7 +185,7 @@ func (c *complete) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func newComplete(id top.Identifier, inc top.Incomplete) top.Complete {
+func newComplete(id topgenerator.Identifier, inc topgenerator.Incomplete) topgenerator.Complete {
 	return &complete{
 		id,
 		inc,

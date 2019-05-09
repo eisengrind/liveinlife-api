@@ -1,4 +1,4 @@
-package top
+package topgenerator
 
 import (
 	"context"
@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/51st-state/api/pkg/problems"
-	"github.com/pkg/errors"
 )
 
 // Manager for tops
@@ -21,18 +20,10 @@ func NewManager(r Repository) *Manager {
 	}
 }
 
-var (
-	errInvalidSex = errors.New("invalid sex given")
-)
-
 var errTopNotFound = problems.New("top not found", "the given ids are not linked to a top", http.StatusNotFound)
 
 // Get top information
 func (m *Manager) Get(ctx context.Context, id Identifier) (Complete, error) {
-	if id.Sex() > 1 {
-		return nil, errInvalidSex
-	}
-
 	c, err := m.repository.Get(ctx, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -47,9 +38,5 @@ func (m *Manager) Get(ctx context.Context, id Identifier) (Complete, error) {
 
 // Upsert a top into a repository
 func (m *Manager) Upsert(ctx context.Context, c Complete) error {
-	if c.Sex() > 1 {
-		return errInvalidSex
-	}
-
 	return m.repository.Upsert(ctx, c)
 }

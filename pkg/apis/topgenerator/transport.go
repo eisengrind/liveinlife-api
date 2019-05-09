@@ -1,4 +1,4 @@
-package top
+package topgenerator
 
 import (
 	"context"
@@ -23,9 +23,7 @@ func MakeHTTPGetEndpoint(l *zap.Logger, e encode.Encoder, m *Manager) http.Handl
 		return m.Get(ctx, newIdentifier(
 			p.sex,
 			p.undershirtID,
-			p.undershirtTextureID,
-			p.overshirtID,
-			p.overshirtTextureID,
+			p.topID,
 		))
 	}).HandlerFunc(l)
 }
@@ -43,7 +41,7 @@ func MakeHTTPUpsertEndpoint(l *zap.Logger, e encode.Encoder, m *Manager) http.Ha
 			return nil, err
 		}
 
-		inc := NewIncomplete("", "", 0, 0, 0, 0, 0, 25, 25, 25, 25, 1)
+		inc := NewIncomplete(0, 0, 0, 0, 25, 25, 25, 25, 1)
 		if err := json.NewDecoder(r.Body).Decode(&inc); err != nil {
 			return nil, err
 		}
@@ -52,9 +50,7 @@ func MakeHTTPUpsertEndpoint(l *zap.Logger, e encode.Encoder, m *Manager) http.Ha
 			newIdentifier(
 				p.sex,
 				p.undershirtID,
-				p.undershirtTextureID,
-				p.overshirtID,
-				p.overshirtTextureID,
+				p.topID,
 			),
 			inc,
 		})
@@ -62,44 +58,30 @@ func MakeHTTPUpsertEndpoint(l *zap.Logger, e encode.Encoder, m *Manager) http.Ha
 }
 
 type httpRequestIDs struct {
-	sex                 uint8
-	undershirtID        uint
-	undershirtTextureID uint
-	overshirtID         uint
-	overshirtTextureID  uint
+	sex          bool
+	undershirtID uint64
+	topID        uint64
 }
 
 func parseParams(r *http.Request) (*httpRequestIDs, error) {
-	sex, err := strconv.ParseUint(chi.URLParam(r, "sex"), 10, 64)
+	sex, err := strconv.ParseBool(chi.URLParam(r, "sex"))
 	if err != nil {
 		return nil, err
 	}
 
-	undershirtID, err := strconv.ParseUint(chi.URLParam(r, "undershirtId"), 10, 64)
+	undershirtID, err := strconv.ParseUint(chi.URLParam(r, "undershirtID"), 10, 64)
 	if err != nil {
 		return nil, err
 	}
 
-	undershirtTextureID, err := strconv.ParseUint(chi.URLParam(r, "undershirtTextureId"), 10, 64)
-	if err != nil {
-		return nil, err
-	}
-
-	overshirtID, err := strconv.ParseUint(chi.URLParam(r, "overshirtId"), 10, 64)
-	if err != nil {
-		return nil, err
-	}
-
-	overshirtTextureID, err := strconv.ParseUint(chi.URLParam(r, "overshirtTextureId"), 10, 64)
+	topID, err := strconv.ParseUint(chi.URLParam(r, "topID"), 10, 64)
 	if err != nil {
 		return nil, err
 	}
 
 	return &httpRequestIDs{
-		uint8(sex),
-		uint(undershirtID),
-		uint(undershirtTextureID),
-		uint(overshirtID),
-		uint(overshirtTextureID),
+		sex,
+		undershirtID,
+		topID,
 	}, nil
 }

@@ -1,4 +1,4 @@
-package top
+package topgenerator
 
 import "context"
 

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/51st-state/api/pkg/apis/topgenerator"
 	"github.com/51st-state/api/pkg/apis/topgenerator/cockroachdb"
 	"github.com/51st-state/api/pkg/encode"
+	"github.com/51st-state/backup/pkg/apis/topgenerator"
 
 	"github.com/51st-state/api/pkg/api"
 	"github.com/playnet-public/flagenv"
@@ -45,16 +45,16 @@ func main() {
 		logger.Fatal("failed creating database scheme")
 	}
 
-	m := top.NewManager(cockroachdb.New(db))
+	m := topgenerator.NewManager(cockroachdb.New(db))
 
 	a := api.New(*httpAddr, logger)
 	a.Get(
 		"/character/top-generator/tops/{sex}/{undershirtId}/{undershirtTextureId}/{overshirtId}/{overshirtTextureId}",
-		top.MakeHTTPGetEndpoint(logger, encode.NewJSONEncoder(), m),
+		topgenerator.MakeHTTPGetEndpoint(logger, encode.NewJSONEncoder(), m),
 	)
 	a.Patch(
 		"/character/top-generator/tops/{sex}/{undershirtId}/{undershirtTextureId}/{overshirtId}/{overshirtTextureId}",
-		top.MakeHTTPUpsertEndpoint(logger, encode.NewJSONEncoder(), m),
+		topgenerator.MakeHTTPUpsertEndpoint(logger, encode.NewJSONEncoder(), m),
 	)
 
 	if err := a.Serve(); err != nil {
