@@ -15,7 +15,9 @@ go_library(
         "notify.go",
         "rows.go",
         "ssl.go",
+        "ssl_go1.7.go",
         "ssl_permissions.go",
+        "ssl_renegotiation.go",
         "ssl_windows.go",
         "url.go",
         "user_posix.go",
@@ -25,8 +27,5 @@ go_library(
     importmap = "github.com/51st-state/api/vendor/github.com/lib/pq",
     importpath = "github.com/lib/pq",
     visibility = ["//visibility:public"],
-    deps = [
-        "//vendor/github.com/lib/pq/oid:go_default_library",
-        "//vendor/github.com/lib/pq/scram:go_default_library",
-    ],
+    deps = ["//vendor/github.com/lib/pq/oid:go_default_library"],
 )
