@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/51st-state/api/pkg/apis/topgenerator"
 	"github.com/51st-state/api/pkg/apis/topgenerator/cockroachdb"
 	"github.com/51st-state/api/pkg/encode"
-	"github.com/51st-state/backup/pkg/apis/topgenerator"
 
 	"github.com/51st-state/api/pkg/api"
 	"github.com/playnet-public/flagenv"

@@ -9,12 +9,12 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//pkg/api:go_default_library",
+        "//pkg/apis/topgenerator:go_default_library",
         "//pkg/apis/topgenerator/cockroachdb:go_default_library",
         "//pkg/encode:go_default_library",
         "//vendor/github.com/lib/pq:go_default_library",
         "//vendor/github.com/playnet-public/flagenv:go_default_library",
         "//vendor/go.uber.org/zap:go_default_library",
-        "@com_github_51st_state_backup//pkg/apis/topgenerator:go_default_library",
     ],
 )
 
