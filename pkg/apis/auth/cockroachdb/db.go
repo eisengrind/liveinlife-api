@@ -22,8 +22,8 @@ func CreateSchema(ctx context.Context, db *sql.DB) (err error) {
 	_, err = db.ExecContext(
 		ctx,
 		`CREATE TABLE IF NOT EXISTS login_attempts (
-            id TEXT PRIMARY,
-            attemptedAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+            id TEXT PRIMARY KEY,
+            attemptedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
         );
         CREATE UNIQUE INDEX IF NOT EXISTS login_attempts_idx_id ON login_attempts(id, attemptedAt);`,
 	)
