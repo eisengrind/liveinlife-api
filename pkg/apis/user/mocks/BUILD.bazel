@@ -6,10 +6,14 @@ go_library(
         "complete_password.go",
         "identifier.go",
         "incomplete_password.go",
+        "manager.go",
         "repository.go",
         "wcf_repository.go",
     ],
     importpath = "github.com/51st-state/api/pkg/apis/user/mocks",
     visibility = ["//visibility:public"],
-    deps = ["//pkg/apis/user:go_default_library"],
+    deps = [
+        "//pkg/apis/user:go_default_library",
+        "//pkg/rbac:go_default_library",
+    ],
 )

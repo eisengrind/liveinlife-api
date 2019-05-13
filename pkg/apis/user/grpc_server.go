@@ -2,6 +2,10 @@ package user
 
 import (
 	"context"
+	"database/sql"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	pb "github.com/51st-state/api/pkg/apis/user/proto"
 	"github.com/51st-state/api/pkg/rbac"
@@ -11,11 +15,11 @@ import (
 
 // GRPCServer for external user management
 type GRPCServer struct {
-	manager *Manager
+	manager Manager
 }
 
 // NewGRPCServer for user management
-func NewGRPCServer(m *Manager) pb.ManagerServer {
+func NewGRPCServer(m Manager) pb.ManagerServer {
 	return &GRPCServer{m}
 }
 
@@ -60,7 +64,9 @@ func (s *GRPCServer) GetUserByWCFUserID(ctx context.Context, req *pb.GetUserByWC
 // GetUserByGameSerialHash returns a user filtered by its game serial hash
 func (s *GRPCServer) GetUserByGameSerialHash(ctx context.Context, req *pb.GetUserByGameSerialHashRequest) (*pb.User, error) {
 	c, err := s.manager.GetByGameSerialHash(ctx, req.GetHash())
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	} else if err != nil {
 		return nil, err
 	}
 
@@ -136,23 +142,9 @@ func (s *GRPCServer) CheckUserPassword(ctx context.Context, req *pb.CheckUserPas
 	)
 }
 
-// GetWCFInfoByEmail of a wcf user
-func (s *GRPCServer) GetWCFInfoByEmail(ctx context.Context, req *pb.GetWCFInfoByEmailRequest) (*pb.WCFUserInfo, error) {
-	info, err := s.manager.GetWCFInfoByEmail(ctx, req.GetEmail())
-	if err != nil {
-		return nil, err
-	}
-
-	return &pb.WCFUserInfo{
-		UserID:   uint64(info.UserID),
-		Email:    info.Email,
-		Password: info.Password.Hash(),
-	}, nil
-}
-
-// GetWCFInfoByUsername of a wcf user
-func (s *GRPCServer) GetWCFInfoByUsername(ctx context.Context, req *pb.GetWCFInfoByUsernameRequest) (*pb.WCFUserInfo, error) {
-	info, err := s.manager.GetWCFInfoByUsername(ctx, req.GetUsername())
+// GetWCFInfo of a wcf user
+func (s *GRPCServer) GetWCFInfo(ctx context.Context, req *pb.GetWCFInfoRequest) (*pb.WCFUserInfo, error) {
+	info, err := s.manager.GetWCFInfo(ctx, req.GetName())
 	if err != nil {
 		return nil, err
 	}

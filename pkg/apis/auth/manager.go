@@ -5,31 +5,37 @@ import (
 	"crypto/rsa"
 	"database/sql"
 	"errors"
-	"regexp"
+	"fmt"
 	"time"
 
+	"github.com/51st-state/api/pkg/problems"
+
 	"github.com/51st-state/api/pkg/apis/user"
+	"github.com/51st-state/api/pkg/recaptcha"
 	"github.com/51st-state/api/pkg/token"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
 // Manager for authenticating a user
 type Manager struct {
-	pK   *rsa.PrivateKey
-	user *user.GRPCClient
+	pK                *rsa.PrivateKey
+	repo              Repository
+	user              user.Manager
+	recaptchaVerifier *recaptcha.Verifier
 }
 
 // NewManager for user authentication
-func NewManager(prvKey *rsa.PrivateKey, u *user.GRPCClient) *Manager {
+func NewManager(prvKey *rsa.PrivateKey, r Repository, u user.Manager, v *recaptcha.Verifier) *Manager {
 	return &Manager{
 		prvKey,
+		r,
 		u,
+		v,
 	}
 }
 
 var (
 	errInvalidEmailFormat = errors.New("invalid email format")
-	emailRegexp           = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 )
 
 type incompletePassword struct {
@@ -40,38 +46,63 @@ func (i *incompletePassword) Password() string {
 	return i.password
 }
 
-// LoginWCFUser logs a user in with their connected wcf user credentials
-func (m *Manager) LoginWCFUser(ctx context.Context, c Credentials) (*Token, error) {
-	var (
-		err  error
-		info *user.WCFUserInfo
-	)
+// RecaptchaLogin logs a user in with a check for recaptcha
+func (m *Manager) RecaptchaLogin(ctx context.Context, c Credentials) (*Token, error) {
+	responseToken := recaptchaRespFromCtx(ctx)
+	verifyResp, err := m.recaptchaVerifier.Verify(responseToken, "")
+	if err != nil {
+		return nil, err
+	}
 
-	if emailRegexp.MatchString(c.Username()) {
-		info, err = m.user.GetWCFInfoByEmail(ctx, c.Username())
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		info, err = m.user.GetWCFInfoByUsername(ctx, c.Username())
-		if err != nil {
-			return nil, err
-		}
+	if len(verifyResp.ErrorCodes) != 0 {
+		return nil, errors.New("recaptcha validation errored")
+	}
+
+	return m.login(ctx, c)
+}
+
+var errTooManyAttempts = problems.New("too many login attempts", "a login request has to provide a recaptcha", 425)
+
+// Login logs a user in with their connected wcf user credentials
+func (m *Manager) Login(ctx context.Context, c Credentials) (*Token, error) {
+	attempts, err := m.repo.LoginAttemptsCountSince(
+		ctx,
+		fmt.Sprintf("user/%s", c.Username()),
+		time.Now().Add(-(time.Hour * 24)),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if attempts > 0 {
+		return nil, errTooManyAttempts
+	}
+
+	return m.login(ctx, c)
+}
+
+func (m *Manager) login(ctx context.Context, c Credentials) (*Token, error) {
+	info, err := m.user.GetWCFInfo(ctx, c.Username())
+	if err != nil {
+		return nil, err
 	}
 
 	u, err := m.user.GetByWCFUserID(ctx, info.UserID)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			u, err = m.user.Create(ctx, user.NewIncomplete(info.UserID, "", false))
-			if err != nil {
-				return nil, err
-			}
-		} else {
+	if err == sql.ErrNoRows {
+		u, err = m.user.Create(ctx, user.NewIncomplete(info.UserID, "", false))
+		if err != nil {
 			return nil, err
 		}
+	} else if err != nil {
+		return nil, err
 	}
 
 	if err := m.user.CheckPassword(ctx, u, c); err != nil {
+		// TODO: get exact status code of the error since the error also could be a timeout error
+		if err := m.repo.AddLoginAttempt(ctx, c.Username(), time.Now()); err != nil {
+			return nil, err
+		}
+
 		return nil, err
 	}
 
@@ -98,12 +129,39 @@ func (m *Manager) LoginWCFUser(ctx context.Context, c Credentials) (*Token, erro
 	}, nil
 }
 
-// LoginOnGameServer logs in a user whereas the server fetches the client token
-func (m *Manager) LoginOnGameServer(ctx context.Context, c ServerCredentials) (*Token, error) {
-	return nil, nil
-}
-
 // RefreshToken returns a new access and refresh token
 func (m *Manager) RefreshToken(ctx context.Context, accessToken token.Token, refreshToken token.Token) (*Token, error) {
-	return nil, nil
+	if accessToken.Data().Audience != "default" {
+		return nil, errors.New("access token has an invalid audience")
+	}
+
+	if refreshToken.Data().Audience != "auth/refresh" {
+		return nil, errors.New("refresh token has an invalid audience")
+	}
+
+	if accessToken.Data().User.String() != refreshToken.Data().User.String() {
+		return nil, errors.New("the UUIDs are not equal")
+	}
+
+	aT := token.New(&jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Minute * 5).UnixNano(),
+		Audience:  "default",
+	}, &token.User{
+		ID:   accessToken.Data().User.ID,
+		Type: accessToken.Data().User.Type,
+	})
+
+	rT := token.New(&jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Hour * 48).UnixNano(),
+		Audience:  "auth/refresh",
+	}, &token.User{
+		ID:   accessToken.Data().User.ID,
+		Type: accessToken.Data().User.Type,
+	})
+
+	return &Token{
+		m.pK,
+		aT,
+		rT,
+	}, nil
 }

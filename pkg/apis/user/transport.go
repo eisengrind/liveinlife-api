@@ -17,7 +17,7 @@ import (
 
 // MakeGetEndpoint for the user service
 // API-Path: /users/{uuid}
-func MakeGetEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
+func MakeGetEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		return m.Get(ctx, newIdentifier(chi.URLParam(r, "uuid")))
 	}).
@@ -28,7 +28,7 @@ func MakeGetEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Contro
 
 // MakeGetByGameSerialHashEndpoint for the user service
 // API-Path: /users/hash/{hash}
-func MakeGetByGameSerialHashEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
+func MakeGetByGameSerialHashEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		return m.GetByGameSerialHash(ctx, chi.URLParam(r, "hash"))
 	}).
@@ -39,7 +39,7 @@ func MakeGetByGameSerialHashEndpoint(l *zap.Logger, m *Manager, e encode.Encoder
 
 // MakeCreateEndpoint for the user service
 // API-Path: /users
-func MakeCreateEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
+func MakeCreateEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		inc := NewIncomplete(0, "", false)
 
@@ -56,7 +56,7 @@ func MakeCreateEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Con
 
 // MakeDeleteEndpoint for the user service
 // API-Path: /users/{uuid}
-func MakeDeleteEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
+func MakeDeleteEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		uuid := chi.URLParam(r, "uuid")
 		return struct {
@@ -72,7 +72,7 @@ func MakeDeleteEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Con
 
 // MakeUpdateEndpoint for the user service
 // API-Path: /users/{uuid}
-func MakeUpdateEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
+func MakeUpdateEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		uuid := chi.URLParam(r, "uuid")
 
@@ -98,7 +98,7 @@ func MakeUpdateEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Con
 
 // MakeGetRolesEndpoint for the user service
 // API-Endpoint: GET /users/{uuid}/roles
-func MakeGetRolesEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
+func MakeGetRolesEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		uuid := chi.URLParam(r, "uuid")
 
@@ -111,7 +111,7 @@ func MakeGetRolesEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.C
 
 // MakeSetRolesEndpoint for the user service
 // API-Endpoint: PATCH /users/{uuid}/roles
-func MakeSetRolesEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
+func MakeSetRolesEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		uuid := chi.URLParam(r, "uuid")
 

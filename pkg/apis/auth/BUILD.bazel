@@ -1,16 +1,39 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "go_default_library",
     srcs = [
-        "auth.go",
         "manager.go",
+        "recaptcha.go",
+        "repository.go",
+        "transport.go",
+        "types.go",
     ],
     importpath = "github.com/51st-state/api/pkg/apis/auth",
     visibility = ["//visibility:public"],
     deps = [
+        "//pkg/api/endpoint:go_default_library",
         "//pkg/apis/user:go_default_library",
+        "//pkg/encode:go_default_library",
+        "//pkg/problems:go_default_library",
+        "//pkg/recaptcha:go_default_library",
         "//pkg/token:go_default_library",
+        "//vendor/github.com/dgrijalva/jwt-go:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["manager_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//pkg/apis/auth/mocks:go_default_library",
+        "//pkg/apis/user:go_default_library",
+        "//pkg/apis/user/mocks:go_default_library",
+        "//pkg/keys:go_default_library",
+        "//pkg/token:go_default_library",
+        "//test:go_default_library",
         "//vendor/github.com/dgrijalva/jwt-go:go_default_library",
     ],
 )

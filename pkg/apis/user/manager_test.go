@@ -105,26 +105,14 @@ func TestManagerGetByWCFUserID(t *testing.T) {
 	}
 }
 
-func TestManagerGetWCFInfoByEmail(t *testing.T) {
+func TestManagerGetWCFInfo(t *testing.T) {
 	repo := &mocks.FakeRepository{}
 	wcfRepo := &mocks.FakeWCFRepository{}
 	rbControl := &rbacMocks.FakeControl{}
 
 	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
 
-	if _, err := m.GetWCFInfoByEmail(context.Background(), "test@email.com"); err != nil {
-		t.Fatal("there should be no error")
-	}
-}
-
-func TestManagerGetWCFInfoByUsername(t *testing.T) {
-	repo := &mocks.FakeRepository{}
-	wcfRepo := &mocks.FakeWCFRepository{}
-	rbControl := &rbacMocks.FakeControl{}
-
-	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
-
-	if _, err := m.GetWCFInfoByUsername(context.Background(), "testUsername"); err != nil {
+	if _, err := m.GetWCFInfo(context.Background(), "test@email.com"); err != nil {
 		t.Fatal("there should be no error")
 	}
 }

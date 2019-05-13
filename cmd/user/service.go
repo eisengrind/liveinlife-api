@@ -164,7 +164,7 @@ func makeNSQEventProducer() (*event.Producer, error) {
 	return event.NewProducer(pubsubNSQ.NewProducer(p, "events")), nil
 }
 
-func serveGrpc(l *zap.Logger, m *user.Manager) {
+func serveGrpc(l *zap.Logger, m user.Manager) {
 	l.Info("preparing grpc server")
 	s := grpc.NewServer(
 		grpc.StreamInterceptor(grpcMiddleware.ChainStreamServer(

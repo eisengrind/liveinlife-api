@@ -56,14 +56,9 @@ message WCFUserInfo {
     bytes Password = 3;
 }
 
-message GetWCFInfoByEmailRequest {
-    string Email = 1;
+message GetWCFInfoRequest {
+    string Name = 1;
 }
-
-message GetWCFInfoByUsernameRequest {
-    string Username = 1;
-}
-
 message GetUserByGameSerialHashRequest {
     string Hash = 1;
 }
@@ -85,8 +80,7 @@ service Manager {
     rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {}
     rpc UpdateUser(UpdateUserRequest) returns (google.protobuf.Empty) {}
     rpc CheckUserPassword(CheckUserPasswordRequest) returns (google.protobuf.Empty) {}
-    rpc GetWCFInfoByEmail(GetWCFInfoByEmailRequest) returns (WCFUserInfo) {}
-    rpc GetWCFInfoByUsername(GetWCFInfoByUsernameRequest) returns (WCFUserInfo) {}
+    rpc GetWCFInfo(GetWCFInfoRequest) returns (WCFUserInfo) {}
     rpc GetUserRoles(UUID) returns (rbac.AccountRoles) {}
     rpc SetUserRoles(SetUserRolesRequest) returns (google.protobuf.Empty) {}
 }

@@ -14,7 +14,21 @@ import (
 )
 
 // Manager of user objects
-type Manager struct {
+//go:generate counterfeiter -o ./mocks/manager.go . Manager
+type Manager interface {
+	Get(ctx context.Context, id Identifier) (Complete, error)
+	GetByGameSerialHash(ctx context.Context, hash string) (Complete, error)
+	GetByWCFUserID(ctx context.Context, wcfUserID WCFUserID) (Complete, error)
+	Create(ctx context.Context, inc Incomplete) (Complete, error)
+	Delete(ctx context.Context, id Identifier) error
+	GetWCFInfo(ctx context.Context, name string) (*WCFUserInfo, error)
+	Update(ctx context.Context, c Complete) error
+	CheckPassword(ctx context.Context, id Identifier, incPw IncompletePassword) error
+	GetRoles(ctx context.Context, id Identifier) (rbac.AccountRoles, error)
+	SetRoles(ctx context.Context, id Identifier, roles rbac.AccountRoles) error
+}
+
+type manager struct {
 	repository    Repository
 	wcfRepository WCFRepository
 	event         *event.Producer
@@ -23,8 +37,8 @@ type Manager struct {
 
 // NewManager for user objects
 //go:generate protoc -I./../../../../../../  -I ./proto --go_out=plugins=grpc:./proto ./proto/manager.proto
-func NewManager(r Repository, wcf WCFRepository, prod *event.Producer, rb rbac.Control) *Manager {
-	return &Manager{
+func NewManager(r Repository, wcf WCFRepository, prod *event.Producer, rb rbac.Control) Manager {
+	return &manager{
 		r,
 		wcf,
 		prod,
@@ -35,7 +49,7 @@ func NewManager(r Repository, wcf WCFRepository, prod *event.Producer, rb rbac.C
 var errInvalidUUID = errors.New("invalid user uuid given")
 
 // Get an user object
-func (m *Manager) Get(ctx context.Context, id Identifier) (Complete, error) {
+func (m *manager) Get(ctx context.Context, id Identifier) (Complete, error) {
 	if id.UUID() == "" {
 		return nil, errInvalidUUID
 	}
@@ -44,7 +58,7 @@ func (m *Manager) Get(ctx context.Context, id Identifier) (Complete, error) {
 }
 
 // GetByGameSerialHash returns a user filtered by its unique game serial hash
-func (m *Manager) GetByGameSerialHash(ctx context.Context, hash string) (Complete, error) {
+func (m *manager) GetByGameSerialHash(ctx context.Context, hash string) (Complete, error) {
 	if hash == "" {
 		return nil, errInvalidGameSerialHash
 	}
@@ -53,7 +67,7 @@ func (m *Manager) GetByGameSerialHash(ctx context.Context, hash string) (Complet
 }
 
 // GetByWCFUserID returns an user filtered by its wcf user id
-func (m *Manager) GetByWCFUserID(ctx context.Context, wcfUserID WCFUserID) (Complete, error) {
+func (m *manager) GetByWCFUserID(ctx context.Context, wcfUserID WCFUserID) (Complete, error) {
 	if wcfUserID == 0 {
 		return nil, errInvalidWCFUserID
 	}
@@ -64,7 +78,7 @@ func (m *Manager) GetByWCFUserID(ctx context.Context, wcfUserID WCFUserID) (Comp
 var errInvalidWCFUserID = errors.New("invalid woltlab community framework user id")
 
 // Create an user object
-func (m *Manager) Create(ctx context.Context, inc Incomplete) (Complete, error) {
+func (m *manager) Create(ctx context.Context, inc Incomplete) (Complete, error) {
 	if inc.Data().WCFUserID == 0 {
 		return nil, errInvalidWCFUserID
 	}
@@ -91,7 +105,7 @@ var (
 	emailRegexp           = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 )
 
-func (m *Manager) checkEmail(ctx context.Context, email string) error {
+func (m *manager) checkEmail(ctx context.Context, email string) error {
 	if !emailRegexp.MatchString(email) {
 		return errInvalidEmailFormat
 	}
@@ -100,7 +114,7 @@ func (m *Manager) checkEmail(ctx context.Context, email string) error {
 }
 
 // Delete an user object
-func (m *Manager) Delete(ctx context.Context, id Identifier) error {
+func (m *manager) Delete(ctx context.Context, id Identifier) error {
 	if id.UUID() == "" {
 		return errInvalidUUID
 	}
@@ -117,20 +131,19 @@ func (m *Manager) Delete(ctx context.Context, id Identifier) error {
 	})
 }
 
-// GetWCFInfoByEmail of a wcf user
-func (m *Manager) GetWCFInfoByEmail(ctx context.Context, email string) (*WCFUserInfo, error) {
-	return m.wcfRepository.GetInfoByEmail(ctx, email)
-}
+// GetWCFInfo returns the info of a wcf user object
+func (m *manager) GetWCFInfo(ctx context.Context, name string) (*WCFUserInfo, error) {
+	if emailRegexp.MatchString(name) {
+		return m.wcfRepository.GetInfoByEmail(ctx, name)
+	}
 
-// GetWCFInfoByUsername of a wcf user
-func (m *Manager) GetWCFInfoByUsername(ctx context.Context, username string) (*WCFUserInfo, error) {
-	return m.wcfRepository.GetInfoByUsername(ctx, username)
+	return m.wcfRepository.GetInfoByUsername(ctx, name)
 }
 
 var errInvalidGameSerialHash = errors.New("invalid game serial hash")
 
 // Update an user objects data
-func (m *Manager) Update(ctx context.Context, c Complete) error {
+func (m *manager) Update(ctx context.Context, c Complete) error {
 	if c.UUID() == "" {
 		return errInvalidUUID
 	}
@@ -156,7 +169,7 @@ func (m *Manager) Update(ctx context.Context, c Complete) error {
 }
 
 // CheckPassword of a user
-func (m *Manager) CheckPassword(ctx context.Context, id Identifier, incPw IncompletePassword) error {
+func (m *manager) CheckPassword(ctx context.Context, id Identifier, incPw IncompletePassword) error {
 	if id.UUID() == "" {
 		return errInvalidUUID
 	}
@@ -205,7 +218,7 @@ func getFirstPasswordHash(hash, password []byte) ([]byte, error) {
 }
 
 // GetRoles of a user
-func (m *Manager) GetRoles(ctx context.Context, id Identifier) (rbac.AccountRoles, error) {
+func (m *manager) GetRoles(ctx context.Context, id Identifier) (rbac.AccountRoles, error) {
 	if id.UUID() == "" {
 		return nil, errInvalidUUID
 	}
@@ -222,7 +235,7 @@ func (m *Manager) GetRoles(ctx context.Context, id Identifier) (rbac.AccountRole
 }
 
 // SetRoles of a user
-func (m *Manager) SetRoles(ctx context.Context, id Identifier, roles rbac.AccountRoles) error {
+func (m *manager) SetRoles(ctx context.Context, id Identifier, roles rbac.AccountRoles) error {
 	if id.UUID() == "" {
 		return errInvalidUUID
 	}

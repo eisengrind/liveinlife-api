@@ -30,6 +30,21 @@ func (c *credentials) Password() string {
 	return c.password
 }
 
+func (c *credentials) UnmarshalJSON(b []byte) error {
+	var req struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	if err := json.Unmarshal(b, &req); err != nil {
+		return err
+	}
+
+	c.username = req.Username
+	c.password = req.Password
+
+	return nil
+}
+
 // ServerCredentials for logins on the server
 type ServerCredentials interface {
 	GameSerialHash() string
