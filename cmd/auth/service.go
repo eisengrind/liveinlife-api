@@ -30,7 +30,7 @@ var (
 	httpAddr       = flagenv.String("http-addr", ":8080", "the http addr of the service")
 	publicKeyPath  = flagenv.String("public-key-path", "/secrets/public.pem", "the public key to validate jwt token")
 	privateKeyPath = flagenv.String("private-key-path", "/secrets/private.pem", "the private key to sign valid access token")
-	grpcUserAddr   = flagenv.String("user-addr", "user:2345", "the grpc address to the user microservice")
+	grpcUserAddr   = flagenv.String("user-addr", "user-service:2345", "the grpc address to the user microservice")
 
 	recaptchaPrivateKey = flagenv.String("recaptcha-private-key", "", "the private key for authenticating with a recaptcha")
 
