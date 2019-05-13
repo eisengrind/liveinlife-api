@@ -99,7 +99,11 @@ func (m *Manager) login(ctx context.Context, c Credentials) (*Token, error) {
 
 	if err := m.user.CheckPassword(ctx, u, c); err != nil {
 		// TODO: get exact status code of the error since the error also could be a timeout error
-		if err := m.repo.AddLoginAttempt(ctx, c.Username(), time.Now()); err != nil {
+		if err := m.repo.AddLoginAttempt(
+			ctx,
+			fmt.Sprintf("user/%s", c.Username()),
+			time.Now(),
+		); err != nil {
 			return nil, err
 		}
 
