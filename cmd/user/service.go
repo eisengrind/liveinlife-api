@@ -102,7 +102,7 @@ func main() {
 
 	a := api.New(*httpAddr, l)
 	a.Get("/users/{uuid}", user.MakeGetEndpoint(l, m, encode.NewJSONEncoder(), rbacCtrl, *publicKey))
-	a.Get("/users/hash/{uuid}", user.MakeGetByGameSerialHashEndpoint(l, m, encode.NewJSONEncoder(), rbacCtrl, *publicKey))
+	a.Get("/users/hash/{hash}", user.MakeGetByGameSerialHashEndpoint(l, m, encode.NewJSONEncoder(), rbacCtrl, *publicKey))
 	a.Post("/users", user.MakeCreateEndpoint(l, m, encode.NewJSONEncoder(), rbacCtrl, *publicKey))
 	a.Delete("/users/{uuid}", user.MakeDeleteEndpoint(l, m, encode.NewJSONEncoder(), rbacCtrl, *publicKey))
 	a.Patch("/users/{uuid}", user.MakeUpdateEndpoint(l, m, encode.NewJSONEncoder(), rbacCtrl, *publicKey))
