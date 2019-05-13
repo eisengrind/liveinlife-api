@@ -25,7 +25,7 @@ func MakeGetEndpoint(l *zap.Logger, m Manager, e encode.Encoder, pubKey rsa.Publ
 		return m.Get(ctx, newIdentifier(rbac.RoleID(id)))
 	}).
 		WithBefore(token.NewMiddleware(pubKey)).
-		//		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("roles.get"))).
+		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("roles.get"))).
 		HandlerFunc(l)
 }
 
@@ -68,7 +68,7 @@ func MakeCreateEndpoint(l *zap.Logger, m Manager, e encode.Encoder, pubKey rsa.P
 		})
 	}).
 		WithBefore(token.NewMiddleware(pubKey)).
-		//	    WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("roles.create"))).
+		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("roles.create"))).
 		HandlerFunc(l)
 }
 
@@ -81,6 +81,6 @@ func MakeDeleteEndpoint(l *zap.Logger, m Manager, e encode.Encoder, pubKey rsa.P
 		return struct{}{}, m.Delete(ctx, newIdentifier(rbac.RoleID(id)))
 	}).
 		WithBefore(token.NewMiddleware(pubKey)).
-		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("roles.create"))).
+		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("roles.delete"))).
 		HandlerFunc(l)
 }

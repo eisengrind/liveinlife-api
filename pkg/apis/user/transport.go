@@ -50,7 +50,7 @@ func MakeCreateEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Cont
 		return m.Create(ctx, inc)
 	}).
 		WithBefore(token.NewMiddleware(pubKey)).
-		//		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("users.create"))).
+		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("users.create"))).
 		HandlerFunc(l)
 }
 
@@ -123,6 +123,6 @@ func MakeSetRolesEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Co
 		return struct{}{}, m.SetRoles(ctx, newIdentifier(uuid), roles)
 	}).
 		WithBefore(token.NewMiddleware(pubKey)).
-		//		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("users.roles.set"))).
+		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("users.roles.set"))).
 		HandlerFunc(l)
 }
