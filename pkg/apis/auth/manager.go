@@ -111,7 +111,7 @@ func (m *Manager) login(ctx context.Context, c Credentials) (*Token, error) {
 	}
 
 	aT := token.New(&jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Minute * 5).UnixNano(),
+		ExpiresAt: time.Now().Add(time.Minute * 5).Unix(),
 		Audience:  "default",
 	}, &token.User{
 		ID:   u.UUID(),
@@ -119,7 +119,7 @@ func (m *Manager) login(ctx context.Context, c Credentials) (*Token, error) {
 	})
 
 	rT := token.New(&jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Hour * 48).UnixNano(),
+		ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
 		Audience:  "auth/refresh",
 	}, &token.User{
 		ID:   u.UUID(),
