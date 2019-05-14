@@ -9,12 +9,12 @@ import (
 
 // Credentials to login and to fetch access and refresh token
 type Credentials interface {
-	Username() string
+	Name() string
 	Password() string
 }
 
 type credentials struct {
-	username string
+	name     string
 	password string
 }
 
@@ -22,8 +22,8 @@ func newCredentials(u, p string) Credentials {
 	return &credentials{u, p}
 }
 
-func (c *credentials) Username() string {
-	return c.username
+func (c *credentials) Name() string {
+	return c.name
 }
 
 func (c *credentials) Password() string {
@@ -32,14 +32,14 @@ func (c *credentials) Password() string {
 
 func (c *credentials) UnmarshalJSON(b []byte) error {
 	var req struct {
-		Username string `json:"username"`
+		Name     string `json:"name"`
 		Password string `json:"password"`
 	}
 	if err := json.Unmarshal(b, &req); err != nil {
 		return err
 	}
 
-	c.username = req.Username
+	c.name = req.Name
 	c.password = req.Password
 
 	return nil

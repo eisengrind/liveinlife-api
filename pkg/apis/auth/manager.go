@@ -67,7 +67,7 @@ var errTooManyAttempts = problems.New("too many login attempts", "a login reques
 func (m *Manager) Login(ctx context.Context, c Credentials) (*Token, error) {
 	attempts, err := m.repo.LoginAttemptsCountSince(
 		ctx,
-		fmt.Sprintf("user/%s", c.Username()),
+		fmt.Sprintf("user/%s", c.Name()),
 		time.Now().Add(-(time.Hour * 24)),
 	)
 	if err != nil {
@@ -82,7 +82,7 @@ func (m *Manager) Login(ctx context.Context, c Credentials) (*Token, error) {
 }
 
 func (m *Manager) login(ctx context.Context, c Credentials) (*Token, error) {
-	info, err := m.user.GetWCFInfo(ctx, c.Username())
+	info, err := m.user.GetWCFInfo(ctx, c.Name())
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (m *Manager) login(ctx context.Context, c Credentials) (*Token, error) {
 		// TODO: get exact status code of the error since the error also could be a timeout error
 		if err := m.repo.AddLoginAttempt(
 			ctx,
-			fmt.Sprintf("user/%s", c.Username()),
+			fmt.Sprintf("user/%s", c.Name()),
 			time.Now(),
 		); err != nil {
 			return nil, err

@@ -33,12 +33,12 @@ func TestNewManager(t *testing.T) {
 }
 
 type testCredentials struct {
-	username string
+	name     string
 	password string
 }
 
-func (t *testCredentials) Username() string {
-	return t.username
+func (t *testCredentials) Name() string {
+	return t.name
 }
 
 func (t *testCredentials) Password() string {
