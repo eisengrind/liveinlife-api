@@ -5,9 +5,7 @@ info:
   contact: {}
   version: '1.0'
 servers:
-  - url: 'https://dex.api.eisengrind.de/'
-    variables: {}
-  - url: 'http://api.eisengrind.de/'
+  - url: 'https://api.test.51st.de/'
     variables: {}
 paths:
   '/auth/login':
@@ -35,6 +33,81 @@ paths:
                 $ref: '#/components/schemas/TokenPair'
         '425':
           description: 'Is returned if there were too many login attempts. Try using a recaptcha login to continue.'
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: 'A problem occurred'
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  '/auth/login/recaptcha':
+    post:
+      summary: Login into the API with a recaptcha token
+      description: Retrieves an access- and refresh token keypair to use api resources.
+      operationId: RecaptchaLogin
+      security: []
+      parameters:
+      - in: header
+        name: X-Recaptcha-Response-Token
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - auth
+      requestBody:
+        description: 'the login credentials to login with'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+        '500':
+          description: 'A problem occurred'
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  '/auth/refresh':
+    post:
+      summary: Login into the API with a recaptcha token
+      description: Retrieves an access- and refresh token keypair to use api resources.
+      operationId: RefreshToken
+      security:
+      - BearerAuth: []
+      tags:
+      - auth
+      requestBody:
+        description: 'the refresh token to be used'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshToken'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+        '500':
+          description: 'A problem occurred'
           headers: {}
           content:
             application/json:
@@ -153,10 +226,17 @@ paths:
 components:
   securitySchemes:
     BearerAuth:
-      type: https
+      type: http
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    RefreshToken:
+      title: Refresh Token object
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          description: A valid refresh token which has the same user id as the Authorization token.
     Empty:
       title: Empty object
       type: object
