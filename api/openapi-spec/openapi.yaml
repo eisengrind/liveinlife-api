@@ -225,7 +225,7 @@ paths:
               example:
 components:
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
@@ -354,4 +354,4 @@ components:
           description: A JWT token to refresh the access token to get a new token after expiration.
 tags: []
 security:
-  - BearerAuth: []
+- bearerAuth: []
