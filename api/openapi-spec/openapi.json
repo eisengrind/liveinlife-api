@@ -1,0 +1,1188 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "51st-state API",
+		"description": "The OpenAPI specification of the 51st-state API.",
+		"contact": {},
+		"version": "1.0"
+	},
+	"servers": [
+		{
+			"url": "https://api.test.51st.de/",
+			"variables": {}
+		}
+	],
+	"paths": {
+        "/roles/{id}": {
+            "get": {
+                "summary": "Create a role",
+                "description": "Create a role and add it to the rbac system",
+                "operationId": "GetRole",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "roles"
+                ],
+                "parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "The id of the role object",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteRole"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+            },
+            "patch": {
+                "summary": "Create a role",
+                "description": "Create a role and add it to the rbac system",
+                "operationId": "SetRole",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "roles"
+                ],
+                "parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "The id of the role object",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "The role information.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IncompleteRole"
+							}
+						}
+					}
+				},
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+            },
+            "post": {
+                "summary": "Create a role",
+                "description": "Create a role and add it to the rbac system",
+                "operationId": "CreateRole",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "roles"
+                ],
+                "parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "The id of the role object",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "The role information.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IncompleteRole"
+							}
+						}
+					}
+				},
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+            },
+            "delete": {
+                "summary": "Delete a role",
+                "description": "Delete a role from the rbac system",
+                "operationId": "DeleteRole",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "roles"
+                ],
+                "parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "The id of the role object",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+            }
+        },
+        "/users/{uuid}": {
+            "get": {
+                "summary": "Get a user object of an UUID.",
+                "description": "Returns an user object by a given UUID.",
+                "operationId": "GetUser",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "The UUID of the user object",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteUser"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+            },
+            "patch": {
+                "summary": "Sets user information",
+                "description": "Set information on an user object by a given UUID.",
+                "operationId": "SetUser",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+				"requestBody": {
+					"description": "The information to create a user.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IncompleteUser"
+							}
+						}
+					}
+				},
+                "parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "The UUID of the user object",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteUser"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+            },
+            "delete": {
+                "summary": "Delete an user",
+                "description": "Deletes a user object from the API",
+                "operationId": "DeleteUser",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "The UUID of the user object",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+            }
+        },
+		"/users/{uuid}/roles": {
+            "get": {
+                "summary": "Get the roles of a user",
+                "description": "Returns the roles of a user from a given UUID.",
+                "operationId": "GetUserRoles",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "The UUID of the user object",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserRoles"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+            },
+			"patch": {
+				"summary": "Set the roles of a user",
+				"description": "Sets the roles of a user object",
+				"operationId": "SetUserRoles",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": [
+					"users"
+				],
+				"requestBody": {
+					"description": "The information to create a user.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserRoles"
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "The UUID of the user object",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/hash/{hash}": {
+			"get": {
+				"summary": "Get a user by its game hash",
+				"description": "Returns a user object by a given game hash",
+				"operationId": "GetUserByHash",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": [
+					"users"
+				],
+				"parameters": [
+					{
+						"name": "hash",
+						"in": "path",
+						"description": "The game hash bind to the user profile",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteUser"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users": {
+			"post": {
+				"summary": "Create a user",
+				"description": "Creates a user with given information.",
+				"operationId": "CreateUser",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": [
+					"users"
+				],
+				"requestBody": {
+					"description": "The information to create a user.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IncompleteUser"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteUser"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"summary": "Login into the API",
+				"description": "Retrieves an access- and refresh token keypair to use api resources.",
+				"operationId": "Login",
+				"security": [],
+				"tags": [
+					"auth"
+				],
+				"requestBody": {
+					"description": "the login credentials to login with",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCredentials"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TokenPair"
+								}
+							}
+						}
+					},
+					"425": {
+						"description": "Is returned if there were too many login attempts. Try using a recaptcha login to continue.",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login/recaptcha": {
+			"post": {
+				"summary": "Login into the API with a recaptcha token",
+				"description": "Retrieves an access- and refresh token keypair to use api resources.",
+				"operationId": "RecaptchaLogin",
+				"security": [],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "X-Recaptcha-Response-Token",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"required": true
+					}
+				],
+				"tags": [
+					"auth"
+				],
+				"requestBody": {
+					"description": "the login credentials to login with",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCredentials"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TokenPair"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/refresh": {
+			"post": {
+				"summary": "Login into the API with a recaptcha token",
+				"description": "Retrieves an access- and refresh token keypair to use api resources.",
+				"operationId": "RefreshToken",
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				],
+				"tags": [
+					"auth"
+				],
+				"requestBody": {
+					"description": "the refresh token to be used",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefreshToken"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TokenPair"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/character/top-generator/tops/{sex}/{undershirtId}/{topId}": {
+			"get": {
+				"summary": "Get Top",
+				"description": "",
+				"operationId": "GetTop",
+				"security": [],
+				"tags": [
+					"top-generator"
+				],
+				"parameters": [
+					{
+						"name": "sex",
+						"in": "path",
+						"description": "the sex id of the top",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "number",
+							"format": "double",
+							"example": 1
+						}
+					},
+					{
+						"name": "undershirtId",
+						"in": "path",
+						"description": "unique id of an undershirt",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "number",
+							"format": "double",
+							"example": 1
+						}
+					},
+					{
+						"name": "topId",
+						"in": "path",
+						"description": "unique id of a shirt",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "number",
+							"format": "double",
+							"example": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Top"
+								},
+								"example": null
+							}
+						}
+					},
+					"404": {
+						"description": "the given resource is not existing in the database",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+				},
+				"deprecated": false
+			},
+			"patch": {
+				"summary": "Set Top",
+				"description": "",
+				"operationId": "SetTop",
+				"security": [],
+				"tags": [
+					"top-generator"
+				],
+				"parameters": [
+					{
+						"name": "sex",
+						"in": "path",
+						"description": "the sex id of the top",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "number",
+							"format": "double",
+							"example": 1
+						}
+					},
+					{
+						"name": "undershirtId",
+						"in": "path",
+						"description": "unique id of an undershirt",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "number",
+							"format": "double",
+							"example": 1
+						}
+					},
+					{
+						"name": "topId",
+						"in": "path",
+						"description": "unique id of a shirt",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "number",
+							"format": "double",
+							"example": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TopRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Top"
+								},
+								"example": null
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
+		"schemas": {
+			"RefreshToken": {
+				"title": "Refresh Token object",
+				"type": "object",
+				"properties": {
+					"refresh_token": {
+						"type": "string",
+						"description": "A valid refresh token which has the same user id as the Authorization token."
+					}
+				}
+            },
+            "IncompleteRole": {
+                "title": "Incomplete role",
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "The title of the role"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the role."
+                    },
+                    "rules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "CompleteRole": {
+                "title": "Complete role",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "The id of the role"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "The title of the role"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the role."
+                    },
+                    "rules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "CompleteUser": {
+                "title": "A complete user object",
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string",
+                        "description": "The UUID of the user"
+                    },
+                    "wcf_user_id": {
+                        "type": "number",
+                        "description": "The WCF user id bind to the user."
+                    },
+                    "game_serial_hash": {
+                        "type": "string",
+                        "description": "The game serial hash bind to the user."
+                    },
+                    "banned": {
+                        "type": "boolean",
+                        "description": "The banned status of the user."
+                    }
+                }
+            },
+            "IncompleteUser": {
+                "title": "An incomplete user object",
+                "type": "object",
+                "properties": {
+                    "wcf_user_id": {
+                        "type": "number",
+                        "description": "The WCF user id bind to the user."
+                    },
+                    "game_serial_hash": {
+                        "type": "string",
+                        "description": "The game serial hash bind to the user."
+                    },
+                    "banned": {
+                        "type": "boolean",
+                        "description": "The banned status of the user."
+                    }
+                }
+            },
+            "UserRoles": {
+                "title": "Roles of a user",
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+			"Empty": {
+				"title": "Empty object",
+				"type": "object"
+			},
+			"Top": {
+				"title": "Top",
+				"type": "object",
+				"properties": {
+					"sex": {
+						"type": "number",
+						"description": "the sex of the clothing"
+					},
+					"top_id": {
+						"type": "number",
+						"description": "the number of the top id"
+					},
+					"undershirt_id": {
+						"type": "number",
+						"description": "the number of the undershirt id"
+					},
+					"status": {
+						"type": "number",
+						"description": "the current status of this item. 0 = unset; 1 = accepted; 2 = not accepted; 3 = pending"
+					},
+					"torso_id": {
+						"type": "number",
+						"description": "the number of the torso id"
+					},
+					"valency_type": {
+						"type": "number",
+						"description": "the valency type category"
+					},
+					"clothing_type": {
+						"type": "number",
+						"description": "the clothing type of this item"
+					},
+					"polyester_percentage": {
+						"type": "number",
+						"description": "the percentage of polyester of a top"
+					},
+					"cotton_percentage": {
+						"type": "number",
+						"description": "the cotton percentage of a top"
+					},
+					"leather_percentage": {
+						"type": "number",
+						"description": "the leather percentage of a top"
+					},
+					"silk_percentage": {
+						"type": "number",
+						"description": "the silk percentage of a top"
+					},
+					"relative_amount": {
+						"type": "number",
+						"description": "the relative amount of items needed"
+					}
+				}
+			},
+			"TopRequest": {
+				"title": "TopRequest",
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "number",
+						"description": "the current status of this item. 0 = unset; 1 = accepted; 2 = not accepted; 3 = pending"
+					},
+					"torso_id": {
+						"type": "number",
+						"description": "the number of the torso id"
+					},
+					"valency_type": {
+						"type": "number",
+						"description": "the valency type category"
+					},
+					"clothing_type": {
+						"type": "number",
+						"description": "the clothing type of this item"
+					},
+					"polyester_percentage": {
+						"type": "number",
+						"description": "the percentage of polyester of a top"
+					},
+					"cotton_percentage": {
+						"type": "number",
+						"description": "the cotton percentage of a top"
+					},
+					"leather_percentage": {
+						"type": "number",
+						"description": "the leather percentage of a top"
+					},
+					"silk_percentage": {
+						"type": "number",
+						"description": "the silk percentage of a top"
+					},
+					"relative_amount": {
+						"type": "number",
+						"description": "the relative amount of items needed"
+					}
+				}
+			},
+			"Problem": {
+				"title": "Problem",
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string",
+						"description": "the title of the occurred problem"
+					},
+					"detail": {
+						"type": "string",
+						"description": "the more detailed information of the problem"
+					},
+					"type": {
+						"type": "string",
+						"description": "the type of the problem"
+					},
+					"instance": {
+						"type": "string",
+						"description": "the instance where the problem occurred"
+					},
+					"status": {
+						"type": "number",
+						"description": "the returned http status code for older browsers"
+					}
+				}
+			},
+			"UserCredentials": {
+				"title": "User Credentials",
+				"description": "The credentials a user has to pass to login to the API",
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "The name of the user. Can be a username or an email address"
+					},
+					"password": {
+						"type": "string",
+						"description": "The plain password of the user."
+					}
+				}
+			},
+			"TokenPair": {
+				"title": "Token Pair",
+				"description": "An access- and refresh token pair.",
+				"type": "object",
+				"properties": {
+					"access_token": {
+						"type": "string",
+						"description": "A JWT token to access the API"
+					},
+					"refresh_token": {
+						"type": "string",
+						"description": "A JWT token to refresh the access token to get a new token after expiration."
+					}
+				}
+			}
+		}
+	},
+	"tags": [],
+	"security": [
+		{
+			"bearerAuth": []
+		}
+	]
+}
