@@ -45,7 +45,9 @@ func (s *GRPCServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.U
 // GetUserByWCFUserID returns a user filtered by its wcf user id
 func (s *GRPCServer) GetUserByWCFUserID(ctx context.Context, req *pb.GetUserByWCFUserIDRequest) (*pb.User, error) {
 	c, err := s.manager.GetByWCFUserID(ctx, WCFUserID(req.GetWCFUserID()))
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	} else if err != nil {
 		return nil, err
 	}
 

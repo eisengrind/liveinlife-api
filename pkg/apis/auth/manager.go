@@ -3,7 +3,6 @@ package auth
 import (
 	"context"
 	"crypto/rsa"
-	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -88,7 +87,7 @@ func (m *Manager) login(ctx context.Context, c Credentials) (*Token, error) {
 	}
 
 	u, err := m.user.GetByWCFUserID(ctx, info.UserID)
-	if err == sql.ErrNoRows {
+	if err == user.ErrNotFound {
 		u, err = m.user.Create(ctx, user.NewIncomplete(info.UserID, "", false))
 		if err != nil {
 			return nil, err

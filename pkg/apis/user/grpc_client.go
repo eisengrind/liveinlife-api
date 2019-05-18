@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"database/sql"
 
 	"google.golang.org/grpc/codes"
 
@@ -55,8 +54,8 @@ func (cli *grpcClient) GetByWCFUserID(ctx context.Context, wcfUserID WCFUserID) 
 	})
 	if err != nil {
 		st := status.Convert(err)
-		if st.Message() == sql.ErrNoRows.Error() {
-			return nil, sql.ErrNoRows
+		if st.Code() == codes.NotFound {
+			return nil, ErrNotFound
 		}
 
 		return nil, err
