@@ -63,7 +63,11 @@ func MakeRefreshTokenEndpoint(l *zap.Logger, m *Manager, e encode.Encoder, pubKe
 		}
 
 		return m.RefreshToken(ctx, accessToken, refreshToken)
-	}).
+    }).
+        WithBefore(func(ctx context.Context, r *http.Request) (context.Context, error) {
+            l.Info("access token: ", zap.String("access_token", r.Header.Get("Authorization")))
+            return ctx, nil
+        }).
 		WithBefore(token.NewMiddleware(pubKey)).
 		HandlerFunc(l)
 }
