@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"database/sql"
 
 	"google.golang.org/grpc/codes"
 
@@ -53,6 +54,11 @@ func (cli *grpcClient) GetByWCFUserID(ctx context.Context, wcfUserID WCFUserID) 
 		WCFUserID: uint64(wcfUserID),
 	})
 	if err != nil {
+		st := status.Convert(err)
+		if st.Message() == sql.ErrNoRows.Error() {
+			return nil, sql.ErrNoRows
+		}
+
 		return nil, err
 	}
 
