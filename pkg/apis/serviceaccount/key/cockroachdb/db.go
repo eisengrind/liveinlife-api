@@ -126,11 +126,11 @@ func (d *db) Create(ctx context.Context, inc key.Incomplete) (key.Complete, erro
 	if _, err := d.database.ExecContext(
 		ctx,
 		`INSERT INTO service_account_keys (
-            guid UUID PRIMARY KEY,
-            serviceAccountGUID UUID NOT NULL,
-            name TEXT NOT NULL DEFAULT '',
-            description TEXT NOT NULL DEFAULT '',
-            pemPublicKey TEXT NOT NULL DEFAULT ''
+            guid,
+            serviceAccountGUID,
+            name,
+            description,
+            pemPublicKey
         ) SELECT $1,
         $2,
         $3,
