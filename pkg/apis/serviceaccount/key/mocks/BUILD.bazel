@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "identifier.go",
+        "manager.go",
         "repository.go",
     ],
     importpath = "github.com/51st-state/api/pkg/apis/serviceaccount/key/mocks",
