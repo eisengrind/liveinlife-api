@@ -36,7 +36,7 @@ func NewRepository(d *sql.DB) serviceaccount.Repository {
 
 func (d *db) Get(ctx context.Context, id serviceaccount.Identifier) (serviceaccount.Complete, error) {
 	c := &complete{
-		key.NewIdentifier(id.GUID()),
+		id,
 		serviceaccount.NewIncomplete("", ""),
 	}
 	if err := d.db.QueryRowContext(
