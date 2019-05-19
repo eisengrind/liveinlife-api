@@ -42,8 +42,8 @@ type complete struct {
 }
 
 type data struct {
-	Name        string
-	Description string
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 // NewIncomplete creates a new incomplete service account object
