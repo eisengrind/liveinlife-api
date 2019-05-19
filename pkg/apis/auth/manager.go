@@ -146,6 +146,8 @@ func (m *Manager) loginUser(ctx context.Context, c Credentials) (*Token, error) 
 	}, nil
 }
 
+var errServiceAccountGUIDNotEqual = errors.New("the service account guid's are not equal")
+
 func (m *Manager) loginServiceAccount(ctx context.Context, c Credentials) (*Token, error) {
 	var jsonKey key.ClientKey
 	if err := json.Unmarshal([]byte(c.Password()), &jsonKey); err != nil {
@@ -155,6 +157,10 @@ func (m *Manager) loginServiceAccount(ctx context.Context, c Credentials) (*Toke
 	k, err := m.saKey.Get(ctx, key.NewIdentifier(jsonKey.GUID))
 	if err != nil {
 		return nil, err
+	}
+
+	if k.Data().ServiceAccountGUID != jsonKey.ServiceAccountGUID {
+		return nil, errServiceAccountGUIDNotEqual
 	}
 
 	if err := validateKeypair(jsonKey.GUID, jsonKey.PrivateKey, k.Data().PublicKey); err != nil {
