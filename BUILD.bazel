@@ -18,5 +18,6 @@ k8s_objects(
         "//cmd/role:dev",
         "//cmd/user:dev",
         "//cmd/auth:dev",
+        "//cmd/serviceaccount:dev",
     ],
 )
