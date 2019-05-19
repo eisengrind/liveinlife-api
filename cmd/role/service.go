@@ -25,7 +25,7 @@ import (
 )
 
 var (
-	httpAddr        = flagenv.String("http-addr", ":8080", "the http addr of the service")
+	httpAddr        = flagenv.String("http-addr", ":8080", "the http address of the service")
 	dbHost          = flagenv.String("db-host", "localhost", "the host of the database")
 	dbPort          = flagenv.Int("db-port", 1234, "the port of the database")
 	dbUsername      = flagenv.String("db-username", "user", "the username of the database")
