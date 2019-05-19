@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package serviceaccount;
+
+message Identifier {
+    string GUID = 1;
+}
+
+message Incomplete {
+    string Name = 1;
+    string Description = 2;
+}
+
+message Complete {
+    Identifier Identifier = 1;
+    Incomplete Incomplete = 2;
+}
+
+service Manager {
+    rpc Get(Identifier) returns (Complete) {}
+    rpc Create(Incomplete) returns (Complete) {}
+    rpc Update(Complete) returns (google.protobuf.Empty) {}
+    rpc Delete(Identifier) returns (google.protobuf.Empty) {}
+}
