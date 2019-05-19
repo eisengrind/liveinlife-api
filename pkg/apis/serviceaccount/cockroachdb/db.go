@@ -20,7 +20,7 @@ func CreateSchema(ctx context.Context, db *sql.DB) (err error) {
             name TEXT NOT NULL DEFAULT '',
             description TEXT NOT NULL DEFAULT ''
         );
-        CREATE UNIQUE INDEX IF NOT service_accounts_idx_guid ON service_accounts (guid);`,
+        CREATE UNIQUE INDEX IF NOT EXISTS service_accounts_idx_guid ON service_accounts (guid);`,
 	)
 	return
 }
