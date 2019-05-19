@@ -1,6 +1,7 @@
 package key
 
 //go:generate protoc -I ./proto --go_out=plugins=grpc:./proto ./proto/manager.proto
+//go:generate counterfeiter -o ./mocks/manager.go . Manager
 
 import (
 	"context"
