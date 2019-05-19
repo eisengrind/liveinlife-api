@@ -34,10 +34,11 @@ func (g *grpcClient) Get(ctx context.Context, id Identifier) (Complete, error) {
 	}
 
 	inc := NewIncomplete(
-		resp.GetIncomplete().Name,
-		resp.GetIncomplete().Description,
+		resp.GetIncomplete().GetName(),
+		resp.GetIncomplete().GetDescription(),
 	)
 	inc.Data().PublicKey = &publicKey
+	inc.Data().ServiceAccountGUID = resp.GetIncomplete().GetServiceAccountGUID()
 
 	return &complete{
 		&identifier{
