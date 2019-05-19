@@ -2,13 +2,18 @@ package auth
 
 import (
 	"context"
+	"crypto"
+	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha256"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
 
 	"github.com/51st-state/api/pkg/problems"
 
+	"github.com/51st-state/api/pkg/apis/serviceaccount/key"
 	"github.com/51st-state/api/pkg/apis/user"
 	"github.com/51st-state/api/pkg/recaptcha"
 	"github.com/51st-state/api/pkg/token"
@@ -21,15 +26,17 @@ type Manager struct {
 	repo              Repository
 	user              user.Manager
 	recaptchaVerifier *recaptcha.Verifier
+	saKey             key.Manager
 }
 
 // NewManager for user authentication
-func NewManager(prvKey *rsa.PrivateKey, r Repository, u user.Manager, v *recaptcha.Verifier) *Manager {
+func NewManager(prvKey *rsa.PrivateKey, r Repository, u user.Manager, v *recaptcha.Verifier, saKey key.Manager) *Manager {
 	return &Manager{
 		prvKey,
 		r,
 		u,
 		v,
+		saKey,
 	}
 }
 
@@ -46,6 +53,7 @@ func (i *incompletePassword) Password() string {
 }
 
 // RecaptchaLogin logs a user in with a check for recaptcha
+// A recaptcha login is only available for default user logins
 func (m *Manager) RecaptchaLogin(ctx context.Context, c Credentials) (*Token, error) {
 	responseToken := recaptchaRespFromCtx(ctx)
 	verifyResp, err := m.recaptchaVerifier.Verify(responseToken, "")
@@ -57,13 +65,19 @@ func (m *Manager) RecaptchaLogin(ctx context.Context, c Credentials) (*Token, er
 		return nil, errors.New("recaptcha validation errored")
 	}
 
-	return m.login(ctx, c)
+	return m.loginUser(ctx, c)
 }
 
 var errTooManyAttempts = problems.New("too many login attempts", "a login request has to provide a recaptcha", 425)
 
+const serviceAccountLoginName = "_json_key"
+
 // Login logs a user in with their connected wcf user credentials
 func (m *Manager) Login(ctx context.Context, c Credentials) (*Token, error) {
+	if c.Name() == serviceAccountLoginName {
+		return m.loginServiceAccount(ctx, c)
+	}
+
 	attempts, err := m.repo.LoginAttemptsCountSince(
 		ctx,
 		fmt.Sprintf("user/%s", c.Name()),
@@ -77,10 +91,10 @@ func (m *Manager) Login(ctx context.Context, c Credentials) (*Token, error) {
 		return nil, errTooManyAttempts
 	}
 
-	return m.login(ctx, c)
+	return m.loginUser(ctx, c)
 }
 
-func (m *Manager) login(ctx context.Context, c Credentials) (*Token, error) {
+func (m *Manager) loginUser(ctx context.Context, c Credentials) (*Token, error) {
 	info, err := m.user.GetWCFInfo(ctx, c.Name())
 	if err != nil {
 		return nil, err
@@ -130,6 +144,59 @@ func (m *Manager) login(ctx context.Context, c Credentials) (*Token, error) {
 		aT,
 		rT,
 	}, nil
+}
+
+func (m *Manager) loginServiceAccount(ctx context.Context, c Credentials) (*Token, error) {
+	var jsonKey key.ClientKey
+	if err := json.Unmarshal([]byte(c.Password()), &jsonKey); err != nil {
+		return nil, err
+	}
+
+	k, err := m.saKey.Get(ctx, key.NewIdentifier(jsonKey.GUID))
+	if err != nil {
+		return nil, err
+	}
+
+	if err := validateKeypair(jsonKey.GUID, jsonKey.PrivateKey, k.Data().PublicKey); err != nil {
+		return nil, err
+	}
+
+	aT := token.New(&jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Minute * 5).Unix(),
+		Audience:  "default",
+	}, &token.User{
+		ID:   jsonKey.ServiceAccountGUID,
+		Type: "service_account",
+	})
+
+	rT := token.New(&jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
+		Audience:  "auth/refresh",
+	}, &token.User{
+		ID:   jsonKey.ServiceAccountGUID,
+		Type: "service_account",
+	})
+
+	return &Token{
+		m.pK,
+		aT,
+		rT,
+	}, nil
+}
+
+var errKeypairNotMatching = errors.New("the given keypair does not match")
+
+func validateKeypair(verificationText string, privateKey *rsa.PrivateKey, publicKey *rsa.PublicKey) error {
+	h := sha256.New()
+	h.Write([]byte(verificationText))
+	digest := h.Sum(nil)
+
+	sig, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, digest)
+	if err != nil {
+		return err
+	}
+
+	return rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, digest, sig)
 }
 
 // RefreshToken returns a new access and refresh token
