@@ -7,6 +7,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/51st-state/api/pkg/apis/serviceaccount/key"
+
 	"github.com/51st-state/api/pkg/recaptcha"
 
 	"github.com/51st-state/api/pkg/encode"
@@ -27,10 +29,11 @@ import (
 )
 
 var (
-	httpAddr       = flagenv.String("http-addr", ":8080", "the http addr of the service")
-	publicKeyPath  = flagenv.String("public-key-path", "/secrets/public.pem", "the public key to validate jwt token")
-	privateKeyPath = flagenv.String("private-key-path", "/secrets/private.pem", "the private key to sign valid access token")
-	grpcUserAddr   = flagenv.String("user-addr", "user-service:2345", "the grpc address to the user microservice")
+	httpAddr               = flagenv.String("http-addr", ":8080", "the http addr of the service")
+	publicKeyPath          = flagenv.String("public-key-path", "/secrets/public.pem", "the public key to validate jwt token")
+	privateKeyPath         = flagenv.String("private-key-path", "/secrets/private.pem", "the private key to sign valid access token")
+	grpcUserAddr           = flagenv.String("user-addr", "user-service:2345", "the grpc address to the user microservice")
+	grpcServiceAccountAddr = flagenv.String("serviceaccount-addr", "serviceaccount-service:2345", "the grpc address to the serviceaccount service")
 
 	recaptchaPrivateKey = flagenv.String("recaptcha-private-key", "", "the private key for authenticating with a recaptcha")
 
@@ -69,18 +72,28 @@ func main() {
 		l.Fatal(err.Error())
 	}
 
-	l.Info("creating rbac grpc connection")
+	l.Info("creating user grpc connection")
 	userMgr, userMgrConn, err := makeUserManager()
 	if err != nil {
 		l.Fatal(err.Error())
 	}
 	defer userMgrConn.Close()
 
+	l.Info("creating serviceaccount grpc connection")
+	saKeyManager, saKeyManagerConn, err := makeServiceAccountKeysManager()
+	if err != nil {
+		l.Fatal(err.Error())
+	}
+	defer saKeyManagerConn.Close()
+
 	m := auth.NewManager(
 		privateKey,
 		cockroachdb.NewRepository(db),
 		userMgr,
-		&recaptcha.Verifier{*recaptchaPrivateKey},
+		&recaptcha.Verifier{
+			Secret: *recaptchaPrivateKey,
+		},
+		saKeyManager,
 	)
 
 	a := api.New(*httpAddr, l)
@@ -119,4 +132,13 @@ func makeUserManager() (user.Manager, *grpc.ClientConn, error) {
 	}
 
 	return user.NewGRPCClient(conn), conn, nil
+}
+
+func makeServiceAccountKeysManager() (key.Manager, *grpc.ClientConn, error) {
+	conn, err := makeGRPCConn(*grpcServiceAccountAddr)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return key.NewGRPCClient(conn), conn, nil
 }
