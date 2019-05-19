@@ -11,6 +11,7 @@ go_library(
         "//pkg/api:go_default_library",
         "//pkg/apis/auth:go_default_library",
         "//pkg/apis/auth/cockroachdb:go_default_library",
+        "//pkg/apis/serviceaccount/key:go_default_library",
         "//pkg/apis/user:go_default_library",
         "//pkg/encode:go_default_library",
         "//pkg/keys:go_default_library",
