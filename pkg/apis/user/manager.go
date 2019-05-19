@@ -36,7 +36,7 @@ type manager struct {
 }
 
 // NewManager for user objects
-//go:generate protoc -I./../../../../../../  -I ./proto --go_out=plugins=grpc:./proto ./proto/manager.proto
+//go:generate protoc -I./../../../../../../ -I ./proto --go_out=plugins=grpc:./proto ./proto/manager.proto
 func NewManager(r Repository, wcf WCFRepository, prod *event.Producer, rb rbac.Control) Manager {
 	return &manager{
 		r,

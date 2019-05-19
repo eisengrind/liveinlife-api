@@ -188,7 +188,7 @@ func (cli *grpcClient) GetRoles(ctx context.Context, id Identifier) (rbac.Accoun
 		roles = append(roles, rbac.RoleID(v))
 	}
 
-	return nil, nil
+	return roles, nil
 }
 
 // SetRoles of a user
