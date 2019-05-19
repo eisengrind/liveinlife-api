@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/51st-state/api/pkg/apis/serviceaccount"
+	"github.com/51st-state/api/pkg/rbac"
 )
 
 type FakeManager struct {
@@ -59,6 +60,33 @@ type FakeManager struct {
 		result1 error
 	}
 	deleteReturnsOnCall map[int]struct {
+		result1 error
+	}
+	GetRolesStub        func(context.Context, serviceaccount.Identifier) (rbac.AccountRoles, error)
+	getRolesMutex       sync.RWMutex
+	getRolesArgsForCall []struct {
+		arg1 context.Context
+		arg2 serviceaccount.Identifier
+	}
+	getRolesReturns struct {
+		result1 rbac.AccountRoles
+		result2 error
+	}
+	getRolesReturnsOnCall map[int]struct {
+		result1 rbac.AccountRoles
+		result2 error
+	}
+	SetRolesStub        func(context.Context, serviceaccount.Identifier, rbac.AccountRoles) error
+	setRolesMutex       sync.RWMutex
+	setRolesArgsForCall []struct {
+		arg1 context.Context
+		arg2 serviceaccount.Identifier
+		arg3 rbac.AccountRoles
+	}
+	setRolesReturns struct {
+		result1 error
+	}
+	setRolesReturnsOnCall map[int]struct {
 		result1 error
 	}
 	invocations      map[string][][]interface{}
@@ -267,6 +295,108 @@ func (fake *FakeManager) DeleteReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
+func (fake *FakeManager) GetRoles(arg1 context.Context, arg2 serviceaccount.Identifier) (rbac.AccountRoles, error) {
+	fake.getRolesMutex.Lock()
+	ret, specificReturn := fake.getRolesReturnsOnCall[len(fake.getRolesArgsForCall)]
+	fake.getRolesArgsForCall = append(fake.getRolesArgsForCall, struct {
+		arg1 context.Context
+		arg2 serviceaccount.Identifier
+	}{arg1, arg2})
+	fake.recordInvocation("GetRoles", []interface{}{arg1, arg2})
+	fake.getRolesMutex.Unlock()
+	if fake.GetRolesStub != nil {
+		return fake.GetRolesStub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fake.getRolesReturns.result1, fake.getRolesReturns.result2
+}
+
+func (fake *FakeManager) GetRolesCallCount() int {
+	fake.getRolesMutex.RLock()
+	defer fake.getRolesMutex.RUnlock()
+	return len(fake.getRolesArgsForCall)
+}
+
+func (fake *FakeManager) GetRolesArgsForCall(i int) (context.Context, serviceaccount.Identifier) {
+	fake.getRolesMutex.RLock()
+	defer fake.getRolesMutex.RUnlock()
+	return fake.getRolesArgsForCall[i].arg1, fake.getRolesArgsForCall[i].arg2
+}
+
+func (fake *FakeManager) GetRolesReturns(result1 rbac.AccountRoles, result2 error) {
+	fake.GetRolesStub = nil
+	fake.getRolesReturns = struct {
+		result1 rbac.AccountRoles
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeManager) GetRolesReturnsOnCall(i int, result1 rbac.AccountRoles, result2 error) {
+	fake.GetRolesStub = nil
+	if fake.getRolesReturnsOnCall == nil {
+		fake.getRolesReturnsOnCall = make(map[int]struct {
+			result1 rbac.AccountRoles
+			result2 error
+		})
+	}
+	fake.getRolesReturnsOnCall[i] = struct {
+		result1 rbac.AccountRoles
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeManager) SetRoles(arg1 context.Context, arg2 serviceaccount.Identifier, arg3 rbac.AccountRoles) error {
+	fake.setRolesMutex.Lock()
+	ret, specificReturn := fake.setRolesReturnsOnCall[len(fake.setRolesArgsForCall)]
+	fake.setRolesArgsForCall = append(fake.setRolesArgsForCall, struct {
+		arg1 context.Context
+		arg2 serviceaccount.Identifier
+		arg3 rbac.AccountRoles
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("SetRoles", []interface{}{arg1, arg2, arg3})
+	fake.setRolesMutex.Unlock()
+	if fake.SetRolesStub != nil {
+		return fake.SetRolesStub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fake.setRolesReturns.result1
+}
+
+func (fake *FakeManager) SetRolesCallCount() int {
+	fake.setRolesMutex.RLock()
+	defer fake.setRolesMutex.RUnlock()
+	return len(fake.setRolesArgsForCall)
+}
+
+func (fake *FakeManager) SetRolesArgsForCall(i int) (context.Context, serviceaccount.Identifier, rbac.AccountRoles) {
+	fake.setRolesMutex.RLock()
+	defer fake.setRolesMutex.RUnlock()
+	return fake.setRolesArgsForCall[i].arg1, fake.setRolesArgsForCall[i].arg2, fake.setRolesArgsForCall[i].arg3
+}
+
+func (fake *FakeManager) SetRolesReturns(result1 error) {
+	fake.SetRolesStub = nil
+	fake.setRolesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeManager) SetRolesReturnsOnCall(i int, result1 error) {
+	fake.SetRolesStub = nil
+	if fake.setRolesReturnsOnCall == nil {
+		fake.setRolesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.setRolesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeManager) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
@@ -278,6 +408,10 @@ func (fake *FakeManager) Invocations() map[string][][]interface{} {
 	defer fake.updateMutex.RUnlock()
 	fake.deleteMutex.RLock()
 	defer fake.deleteMutex.RUnlock()
+	fake.getRolesMutex.RLock()
+	defer fake.getRolesMutex.RUnlock()
+	fake.setRolesMutex.RLock()
+	defer fake.setRolesMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value

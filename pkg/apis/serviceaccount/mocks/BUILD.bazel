@@ -9,5 +9,8 @@ go_library(
     ],
     importpath = "github.com/51st-state/api/pkg/apis/serviceaccount/mocks",
     visibility = ["//visibility:public"],
-    deps = ["//pkg/apis/serviceaccount:go_default_library"],
+    deps = [
+        "//pkg/apis/serviceaccount:go_default_library",
+        "//pkg/rbac:go_default_library",
+    ],
 )

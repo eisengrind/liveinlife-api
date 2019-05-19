@@ -76,3 +76,30 @@ func MakeDeleteEndpoint(l *zap.Logger, e encode.Encoder, publicKey *rsa.PublicKe
 		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("serviceaccounts.delete"))).
 		HandlerFunc(l)
 }
+
+// MakeGetRolesEndpoint creates a new http endpoint to return roles of a service account
+func MakeGetRolesEndpoint(l *zap.Logger, e encode.Encoder, publicKey *rsa.PublicKey, m Manager, rb rbac.Control) http.HandlerFunc {
+	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
+		guid := chi.URLParam(r, "guid")
+		return m.GetRoles(ctx, &identifier{guid})
+	}).
+		WithBefore(token.NewMiddleware(*publicKey)).
+		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("serviceaccounts.roles.get"))).
+		HandlerFunc(l)
+}
+
+// MakeSetRolesEndpoint creates a new http endpoint to set roles of a service account
+func MakeSetRolesEndpoint(l *zap.Logger, e encode.Encoder, publicKey *rsa.PublicKey, m Manager, rb rbac.Control) http.HandlerFunc {
+	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
+		guid := chi.URLParam(r, "guid")
+		roles := make(rbac.AccountRoles, 0)
+		if err := json.NewDecoder(r.Body).Decode(&roles); err != nil {
+			return nil, err
+		}
+
+		return struct{}{}, m.SetRoles(ctx, &identifier{guid}, roles)
+	}).
+		WithBefore(token.NewMiddleware(*publicKey)).
+		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("serviceaccounts.roles.set"))).
+		HandlerFunc(l)
+}

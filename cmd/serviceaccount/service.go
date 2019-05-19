@@ -74,7 +74,7 @@ func main() {
 	}
 	defer rbacConn.Close()
 
-	manager := serviceaccount.NewManager(cockroachdb.NewRepository(db))
+	manager := serviceaccount.NewManager(cockroachdb.NewRepository(db), rbacCtrl)
 	keyManager := key.NewManager(keyCockroachdb.NewRepository(db), manager)
 
 	a := api.New(*httpAddr, l)
@@ -83,6 +83,8 @@ func main() {
 	a.Patch("/serviceaccounts/{guid}", serviceaccount.MakeUpdateEndpoint(l, encode.NewJSONEncoder(), publicKey, manager, rbacCtrl))
 	a.Delete("/serviceaccounts/{guid}", serviceaccount.MakeDeleteEndpoint(l, encode.NewJSONEncoder(), publicKey, manager, rbacCtrl))
 	a.Post("/serviceaccounts", serviceaccount.MakeCreateEndpoint(l, encode.NewJSONEncoder(), publicKey, manager, rbacCtrl))
+	a.Get("/serviceaccounts/{guid}/roles", serviceaccount.MakeGetRolesEndpoint(l, encode.NewJSONEncoder(), publicKey, manager, rbacCtrl))
+	a.Patch("/serviceaccounts/{guid}/roles", serviceaccount.MakeSetRolesEndpoint(l, encode.NewJSONEncoder(), publicKey, manager, rbacCtrl))
 
 	a.Get("/serviceaccounts/keys/{guid}", key.MakeGetEndpoint(l, encode.NewJSONEncoder(), publicKey, keyManager, rbacCtrl))
 	a.Patch("/serviceaccounts/keys/{guid}", key.MakeSetEndpoint(l, encode.NewJSONEncoder(), publicKey, keyManager, rbacCtrl))

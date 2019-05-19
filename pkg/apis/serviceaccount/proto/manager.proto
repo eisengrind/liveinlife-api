@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "github.com/51st-state/api/pkg/rbac/proto/control.proto";
 
 package serviceaccount;
 
@@ -18,9 +19,16 @@ message Complete {
     Incomplete Incomplete = 2;
 }
 
+message SetRolesRequest {
+    Identifier Identifier = 1;
+    rbac.AccountRoles Roles = 2;
+}
+
 service Manager {
     rpc Get(Identifier) returns (Complete) {}
     rpc Create(Incomplete) returns (Complete) {}
     rpc Update(Complete) returns (google.protobuf.Empty) {}
     rpc Delete(Identifier) returns (google.protobuf.Empty) {}
+    rpc GetRoles(Identifier) returns (rbac.AccountRoles) {}
+    rpc SetRoles(SetRolesRequest) returns (google.protobuf.Empty) {}
 }

@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/51st-state/api/pkg/apis/serviceaccount/proto",
     visibility = ["//visibility:public"],
     deps = [
+        "//pkg/rbac/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes/empty:go_default_library",
         "//vendor/golang.org/x/net/context:go_default_library",
