@@ -13,6 +13,539 @@
 		}
 	],
 	"paths": {
+        
+        "/serviceaccounts": {
+            "post": {
+                "summary": "Create a service account",
+                "description": "Creates a service account",
+                "operationId": "CreateServiceAccount",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+				"requestBody": {
+					"description": "The role information.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IncompleteServiceAccount"
+							}
+						}
+					}
+				},
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteServiceAccount"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            }
+        },
+        "/serviceaccounts/{guid}": {
+            "get": {
+                "summary": "Get a service account",
+                "description": "Returns a service account",
+                "operationId": "GetServiceAccount",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the service account",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteServiceAccount"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            },
+            "patch": {
+                "summary": "Update service account",
+                "description": "Update information of a service account",
+                "operationId": "UpdateServiceAccount",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the service account",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+				"requestBody": {
+					"description": "The service account information",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IncompleteServiceAccount"
+							}
+						}
+					}
+				},
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteServiceAccount"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            },
+            "delete": {
+                "summary": "Delete service account",
+                "description": "Delete a service account",
+                "operationId": "DeleteServiceAccount",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the service account",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            }
+        },
+        "/serviceaccounts/{guid}/roles": {
+            "get": {
+                "summary": "Get service account roles",
+                "description": "Retrieves the roles of a service account",
+                "operationId": "GetServiceAccountRoles",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the service account",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceAccountRoles"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            },
+            "post": {
+                "summary": "Set service account roles",
+                "description": "Set the roles of a service account",
+                "operationId": "SetServiceAccountRoles",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the service account",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+				"requestBody": {
+					"description": "The roles to set on a service account",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ServiceAccountRoles"
+							}
+						}
+					}
+				},
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceAccountRoles"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            }
+        },
+        "/serviceaccounts/{guid}/keys": {
+            "post": {
+                "summary": "Create a service account authentication key",
+                "description": "Creates a service account authenticiation key to login with",
+                "operationId": "CreateServiceAccountKey",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the service account",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+					"description": "The roles to set on a service account",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IncompleteServiceAccountKey"
+							}
+						}
+					}
+                },
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteServiceAccountKey"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            }
+        },
+        "/serviceaccounts/keys/{guid}": {
+            "get": {
+                "summary": "Get service account key",
+                "description": "Returns a service account key by a given guid",
+                "operationId": "GetServiceAccountKey",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the service account key",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompleteServiceAccountKey"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            },
+            "patch": {
+                "summary": "Update service account key information",
+                "description": "Updates the service account key information such as name and description.",
+                "operationId": "UpdateServiceAccountKey",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the service account key",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+					"description": "The roles to set on a service account",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IncompleteServiceAccountKey"
+							}
+						}
+					}
+                },
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            },
+            "delete": {
+                "summary": "Delete service account key",
+                "description": "Deletes a service account key",
+                "operationId": "DeleteServiceAccountKey",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "serviceaccounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the service account key",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            }
+        },
         "/roles/{id}": {
             "get": {
                 "summary": "Create a role",
@@ -912,6 +1445,82 @@
 		}
 	},
 	"components": {
+        
+        "IncompleteServiceAccount": {
+            "title": "Incomplete service account object",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the service account"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "The description of the service account"
+                }
+            }
+        },
+        "CompleteServiceAccount": {
+            "title": "Complete service account object",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the service account"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "The description of the service account"
+                },
+                "guid": {
+                    "type": "string",
+                    "description": "The GUID of the service account"
+                }
+            }
+        },
+        "ServiceAccountRoles": {
+            "title": "Service account key roles",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "IncompleteServiceAccountKey": {
+            "title": "Incomplete service account key object",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the service account key"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the service account key"
+                }
+            }
+        },
+        "CompleteServiceAccountKey": {
+            "title": "Complete service account key object",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the service account key"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the service account key"
+                },
+                "service_account_guid": {
+                    "type": "string",
+                    "description": "The service account guid the key is connected to"
+                },
+                "guid": {
+                    "type": "string",
+                    "description": "The GUID of the service account key"
+                }
+            }
+        },
 		"securitySchemes": {
 			"bearerAuth": {
 				"type": "http",
