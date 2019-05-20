@@ -8,7 +8,11 @@
 	},
 	"servers": [
 		{
-			"url": "https://api.test.51st.de/",
+			"url": "https://api.51st.de/",
+			"variables": {}
+		},
+		{
+			"url": "https://api.dev.51st.de/",
 			"variables": {}
 		}
 	],
@@ -1445,82 +1449,6 @@
 		}
 	},
 	"components": {
-        
-        "IncompleteServiceAccount": {
-            "title": "Incomplete service account object",
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "The name of the service account"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "The description of the service account"
-                }
-            }
-        },
-        "CompleteServiceAccount": {
-            "title": "Complete service account object",
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "The name of the service account"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "The description of the service account"
-                },
-                "guid": {
-                    "type": "string",
-                    "description": "The GUID of the service account"
-                }
-            }
-        },
-        "ServiceAccountRoles": {
-            "title": "Service account key roles",
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        },
-        "IncompleteServiceAccountKey": {
-            "title": "Incomplete service account key object",
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Name of the service account key"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of the service account key"
-                }
-            }
-        },
-        "CompleteServiceAccountKey": {
-            "title": "Complete service account key object",
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Name of the service account key"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of the service account key"
-                },
-                "service_account_guid": {
-                    "type": "string",
-                    "description": "The service account guid the key is connected to"
-                },
-                "guid": {
-                    "type": "string",
-                    "description": "The GUID of the service account key"
-                }
-            }
-        },
 		"securitySchemes": {
 			"bearerAuth": {
 				"type": "http",
@@ -1529,6 +1457,81 @@
 			}
 		},
 		"schemas": {
+            "IncompleteServiceAccount": {
+                "title": "Incomplete service account object",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the service account"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the service account"
+                    }
+                }
+            },
+            "CompleteServiceAccount": {
+                "title": "Complete service account object",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the service account"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the service account"
+                    },
+                    "guid": {
+                        "type": "string",
+                        "description": "The GUID of the service account"
+                    }
+                }
+            },
+            "ServiceAccountRoles": {
+                "title": "Service account key roles",
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "IncompleteServiceAccountKey": {
+                "title": "Incomplete service account key object",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the service account key"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the service account key"
+                    }
+                }
+            },
+            "CompleteServiceAccountKey": {
+                "title": "Complete service account key object",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the service account key"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the service account key"
+                    },
+                    "service_account_guid": {
+                        "type": "string",
+                        "description": "The service account guid the key is connected to"
+                    },
+                    "guid": {
+                        "type": "string",
+                        "description": "The GUID of the service account key"
+                    }
+                }
+            },
 			"RefreshToken": {
 				"title": "Refresh Token object",
 				"type": "object",
