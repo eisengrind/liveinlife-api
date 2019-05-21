@@ -59,11 +59,7 @@ func MakeCreateEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Cont
 func MakeDeleteEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		uuid := chi.URLParam(r, "uuid")
-		return struct {
-			UUID string `json:"uuid"`
-		}{
-			uuid,
-		}, m.Delete(ctx, newIdentifier(uuid))
+		return struct{}{}, m.Delete(ctx, newIdentifier(uuid))
 	}).
 		WithBefore(token.NewMiddleware(pubKey)).
 		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("users.delete"))).
@@ -82,14 +78,10 @@ func MakeUpdateEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Cont
 			return nil, err
 		}
 
-		return struct {
-				UUID string `json:"uuid"`
-			}{
-				uuid,
-			}, m.Update(ctx, newComplete(
-				newIdentifier(uuid),
-				inc,
-			))
+		return struct{}{}, m.Update(ctx, newComplete(
+			newIdentifier(uuid),
+			inc,
+		))
 	}).
 		WithBefore(token.NewMiddleware(pubKey)).
 		WithBefore(rbacMiddleware.NewRulecheck(rb, rbac.Rule("users.update"))).

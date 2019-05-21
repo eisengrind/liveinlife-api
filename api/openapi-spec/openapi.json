@@ -857,7 +857,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CompleteUser"
+									"$ref": "#/components/schemas/Empty"
 								}
 							}
 						}
