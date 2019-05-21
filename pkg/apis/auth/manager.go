@@ -78,19 +78,6 @@ func (m *Manager) Login(ctx context.Context, c Credentials) (*Token, error) {
 		return m.loginServiceAccount(ctx, c)
 	}
 
-	attempts, err := m.repo.LoginAttemptsCountSince(
-		ctx,
-		fmt.Sprintf("user/%s", c.Name()),
-		time.Now().Add(-(time.Hour * 24)),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	if attempts > 0 {
-		return nil, errTooManyAttempts
-	}
-
 	return m.loginUser(ctx, c)
 }
 
@@ -110,11 +97,24 @@ func (m *Manager) loginUser(ctx context.Context, c Credentials) (*Token, error) 
 		return nil, err
 	}
 
+	attempts, err := m.repo.LoginAttemptsCountSince(
+		ctx,
+		fmt.Sprintf("user/%s", u.UUID()),
+		time.Now().Add(-(time.Hour * 24)),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if attempts > 0 {
+		return nil, errTooManyAttempts
+	}
+
 	if err := m.user.CheckPassword(ctx, u, c); err != nil {
 		// TODO: get exact status code of the error since the error also could be a timeout error
 		if err := m.repo.AddLoginAttempt(
 			ctx,
-			fmt.Sprintf("user/%s", c.Name()),
+			fmt.Sprintf("user/%s", u.UUID()),
 			time.Now(),
 		); err != nil {
 			return nil, err
