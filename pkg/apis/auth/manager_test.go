@@ -94,7 +94,7 @@ func TestManagerLogin(t *testing.T) {
 	}, nil)
 	userManager.GetByWCFUserIDReturns(newComplete(
 		id,
-		user.NewIncomplete(1, "", false),
+		user.NewIncomplete(1, "", "", "", false),
 	), nil)
 	userManager.CheckPasswordReturns(nil)
 
@@ -151,7 +151,7 @@ func TestManagerLogin(t *testing.T) {
 
 	userManager.GetByWCFUserIDReturns(newComplete(
 		id,
-		user.NewIncomplete(1, "", false),
+		user.NewIncomplete(1, "", "", "", false),
 	), nil)
 	userManager.CheckPasswordReturns(errors.New("fake error"))
 
