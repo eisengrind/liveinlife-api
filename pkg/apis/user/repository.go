@@ -21,7 +21,14 @@ type WCFUserID uint64
 
 // UnmarshalJSON impletements the json.Unmarshaler interface
 func (id *WCFUserID) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, (*uint64)(id))
+	var num float32
+	if err := json.Unmarshal(b, &num); err != nil {
+		return err
+	}
+
+	*id = WCFUserID(num)
+
+	return nil
 }
 
 // WCFUserInfo of an existing user in the WCF database
