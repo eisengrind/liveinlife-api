@@ -81,7 +81,7 @@ func NewRepository(db *sql.DB) user.Repository {
 }
 
 func (r *repository) Get(ctx context.Context, id user.Identifier) (user.Complete, error) {
-	inc := user.NewIncomplete(0, "", false)
+	inc := user.NewIncomplete(0, "", "", "", false)
 
 	if err := r.database.QueryRowContext(
 		ctx,
@@ -103,7 +103,7 @@ func (r *repository) Get(ctx context.Context, id user.Identifier) (user.Complete
 }
 
 func (r *repository) GetByWCFUserID(ctx context.Context, wcfUserID user.WCFUserID) (user.Complete, error) {
-	inc := user.NewIncomplete(wcfUserID, "", false)
+	inc := user.NewIncomplete(wcfUserID, "", "", "", false)
 	var id string
 
 	if err := r.database.QueryRowContext(
@@ -129,7 +129,7 @@ func (r *repository) GetByWCFUserID(ctx context.Context, wcfUserID user.WCFUserI
 }
 
 func (r *repository) GetByGameSerialHash(ctx context.Context, hash string) (user.Complete, error) {
-	inc := user.NewIncomplete(0, hash, false)
+	inc := user.NewIncomplete(0, "", "", hash, false)
 	var id string
 
 	if err := r.database.QueryRowContext(

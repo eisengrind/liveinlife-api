@@ -41,7 +41,7 @@ func MakeGetByGameSerialHashEndpoint(l *zap.Logger, m Manager, e encode.Encoder,
 // API-Path: /users
 func MakeCreateEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Control, pubKey rsa.PublicKey) http.HandlerFunc {
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
-		inc := NewIncomplete(0, "", false)
+		inc := NewIncomplete(0, "", "", "", false)
 
 		if err := json.NewDecoder(r.Body).Decode(&inc); err != nil {
 			return nil, err
@@ -76,7 +76,7 @@ func MakeUpdateEndpoint(l *zap.Logger, m Manager, e encode.Encoder, rb rbac.Cont
 	return endpoint.New(e, func(ctx context.Context, r *http.Request) (interface{}, error) {
 		uuid := chi.URLParam(r, "uuid")
 
-		inc := NewIncomplete(0, "", false)
+		inc := NewIncomplete(0, "", "", "", false)
 
 		if err := json.NewDecoder(r.Body).Decode(&inc); err != nil {
 			return nil, err

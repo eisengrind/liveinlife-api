@@ -88,6 +88,8 @@ func (s *GRPCServer) GetUserByGameSerialHash(ctx context.Context, req *pb.GetUse
 func (s *GRPCServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.User, error) {
 	c, err := s.manager.Create(ctx, NewIncomplete(
 		WCFUserID(req.GetData().GetWCFUserID()),
+		"",
+		"",
 		req.GetData().GetGameHash(),
 		req.GetData().GetBanned(),
 	))
@@ -125,6 +127,8 @@ func (s *GRPCServer) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) 
 		),
 		NewIncomplete(
 			WCFUserID(req.GetData().GetWCFUserID()),
+			"",
+			"",
 			req.GetData().GetGameHash(),
 			req.GetData().GetBanned(),
 		),

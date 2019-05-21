@@ -19,6 +19,7 @@ type WCFUserID uint64
 // WCFUserInfo of an existing user in the WCF database
 type WCFUserInfo struct {
 	UserID   WCFUserID
+	Username string
 	Email    string
 	Password CompletePassword
 }

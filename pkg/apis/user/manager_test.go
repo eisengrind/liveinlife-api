@@ -52,7 +52,7 @@ func TestManagerGet(t *testing.T) {
 
 	repo.GetReturns(&fakeComplete{
 		fakeIdent,
-		user.NewIncomplete(1, "testSerialHash", false),
+		user.NewIncomplete(1, "", "", "testSerialHash", false),
 	}, nil)
 	if _, err := m.Get(context.Background(), id); err != nil {
 		t.Fatal("there is no error")
@@ -124,7 +124,7 @@ func TestManagerCreate(t *testing.T) {
 
 	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
 
-	validIncomplete := user.NewIncomplete(1, "exampleHash", false)
+	validIncomplete := user.NewIncomplete(1, "", "", "exampleHash", false)
 	if _, err := m.Create(
 		context.Background(),
 		validIncomplete,
@@ -134,7 +134,7 @@ func TestManagerCreate(t *testing.T) {
 
 	if _, err := m.Create(
 		context.Background(),
-		user.NewIncomplete(0, "exampleHash", false),
+		user.NewIncomplete(0, "", "", "exampleHash", false),
 	); err == nil {
 		t.Fatal("the wcf user id is invalid")
 	}
@@ -202,7 +202,7 @@ func TestManagerUpdate(t *testing.T) {
 
 	if err := m.Update(context.Background(), &fakeComplete{
 		id,
-		user.NewIncomplete(1, "exampleHash", false),
+		user.NewIncomplete(1, "", "", "exampleHash", false),
 	}); err == nil {
 		t.Fatal("the given uuid is empty")
 	}
@@ -213,7 +213,7 @@ func TestManagerUpdate(t *testing.T) {
 		context.Background(),
 		&fakeComplete{
 			id,
-			user.NewIncomplete(0, "exampleHash", false),
+			user.NewIncomplete(0, "", "", "exampleHash", false),
 		},
 	); err == nil {
 		t.Fatal("the given wcf user id is invalid")
@@ -223,7 +223,7 @@ func TestManagerUpdate(t *testing.T) {
 		context.Background(),
 		&fakeComplete{
 			id,
-			user.NewIncomplete(1, "exampleHash", false),
+			user.NewIncomplete(1, "", "", "exampleHash", false),
 		},
 	); err != nil {
 		t.Fatal("the given parameters are both correct")
@@ -234,7 +234,7 @@ func TestManagerUpdate(t *testing.T) {
 		context.Background(),
 		&fakeComplete{
 			id,
-			user.NewIncomplete(1, "exampleGameSerialHash", false),
+			user.NewIncomplete(1, "", "", "exampleGameSerialHash", false),
 		},
 	); err == nil {
 		t.Fatal("the wcf repository returns an error")
@@ -246,7 +246,7 @@ func TestManagerUpdate(t *testing.T) {
 		context.Background(),
 		&fakeComplete{
 			id,
-			user.NewIncomplete(1, "exampleGameSerialHash", false),
+			user.NewIncomplete(1, "", "", "exampleGameSerialHash", false),
 		},
 	); err == nil {
 		t.Fatal("the repository returns an error")
@@ -276,7 +276,7 @@ func TestManagerCheckPassword(t *testing.T) {
 
 	repo.GetReturns(&fakeComplete{
 		id,
-		user.NewIncomplete(1, "testSerialHash", false),
+		user.NewIncomplete(1, "", "", "testSerialHash", false),
 	}, nil)
 	wcfRepo.GetInfoReturns(nil, errors.New("fake error"))
 

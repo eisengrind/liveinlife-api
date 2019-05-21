@@ -98,13 +98,15 @@ func newComplete(id Identifier, inc Incomplete) Complete {
 
 type data struct {
 	WCFUserID      WCFUserID `json:"wcf_user_id"`
+	WCFUsername    string    `json:"wcf_username"`
+	WCFEmail       string    `json:"wcf_email"`
 	GameSerialHash string    `json:"game_serial_hash"`
 	Banned         bool      `json:"banned"`
 }
 
 // NewIncomplete user object
-func NewIncomplete(wcfUserID WCFUserID, gameSerialHash string, status bool) Incomplete {
-	return &data{wcfUserID, gameSerialHash, status}
+func NewIncomplete(wcfUserID WCFUserID, wcfUsername, wcfEmail, gameSerialHash string, status bool) Incomplete {
+	return &data{wcfUserID, wcfUsername, wcfEmail, gameSerialHash, status}
 }
 
 func (d *data) Data() *data {

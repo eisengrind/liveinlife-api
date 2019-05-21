@@ -27,6 +27,7 @@ func (r *wcfRepository) GetInfo(ctx context.Context, id user.WCFUserID) (*user.W
 	if err := r.database.QueryRowContext(
 		ctx,
 		`SELECT userId,
+        username,
         email,
         password
         FROM wcf1_user
@@ -34,6 +35,7 @@ func (r *wcfRepository) GetInfo(ctx context.Context, id user.WCFUserID) (*user.W
 		id,
 	).Scan(
 		&info.UserID,
+		&info.Username,
 		&info.Email,
 		&hash,
 	); err != nil {
@@ -52,6 +54,7 @@ func (r *wcfRepository) GetInfoByEmail(ctx context.Context, wcfEmail string) (*u
 	if err := r.database.QueryRowContext(
 		ctx,
 		`SELECT userId,
+        username,
         email,
         password
         FROM wcf1_user
@@ -59,6 +62,7 @@ func (r *wcfRepository) GetInfoByEmail(ctx context.Context, wcfEmail string) (*u
 		wcfEmail,
 	).Scan(
 		&info.UserID,
+		&info.Username,
 		&info.Email,
 		&hash,
 	); err != nil {
@@ -77,6 +81,7 @@ func (r *wcfRepository) GetInfoByUsername(ctx context.Context, username string) 
 	if err := r.database.QueryRowContext(
 		ctx,
 		`SELECT userId,
+        username,
         email,
         password
         FROM wcf1_user
@@ -84,6 +89,7 @@ func (r *wcfRepository) GetInfoByUsername(ctx context.Context, username string) 
 		username,
 	).Scan(
 		&info.UserID,
+		&info.Username,
 		&info.Email,
 		&hash,
 	); err != nil {

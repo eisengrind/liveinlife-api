@@ -41,6 +41,8 @@ func (cli *grpcClient) Get(ctx context.Context, id Identifier) (Complete, error)
 		id,
 		NewIncomplete(
 			WCFUserID(resp.GetData().GetWCFUserID()),
+			resp.GetData().GetUsername(),
+			resp.GetData().GetEmail(),
 			resp.GetData().GetGameHash(),
 			resp.GetData().GetBanned(),
 		),
@@ -65,6 +67,8 @@ func (cli *grpcClient) GetByWCFUserID(ctx context.Context, wcfUserID WCFUserID) 
 		newIdentifier(resp.UUID.GetUUID()),
 		NewIncomplete(
 			WCFUserID(resp.GetData().GetWCFUserID()),
+			resp.GetData().GetUsername(),
+			resp.GetData().GetEmail(),
 			resp.GetData().GetGameHash(),
 			resp.GetData().GetBanned(),
 		),
@@ -92,6 +96,8 @@ func (cli *grpcClient) GetByGameSerialHash(ctx context.Context, hash string) (Co
 		newIdentifier(resp.UUID.GetUUID()),
 		NewIncomplete(
 			WCFUserID(resp.GetData().GetWCFUserID()),
+			resp.GetData().GetUsername(),
+			resp.GetData().GetEmail(),
 			resp.GetData().GetGameHash(),
 			resp.GetData().GetBanned(),
 		),
@@ -169,6 +175,7 @@ func (cli *grpcClient) GetWCFInfo(ctx context.Context, name string) (*WCFUserInf
 
 	return &WCFUserInfo{
 		WCFUserID(resp.GetUserID()),
+		resp.GetUsername(),
 		resp.GetEmail(),
 		newCompletePassword(resp.GetPassword()),
 	}, nil

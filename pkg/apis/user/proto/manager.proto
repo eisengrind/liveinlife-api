@@ -24,8 +24,10 @@ message UUID {
 
 message Data {
     uint64 WCFUserID = 1;
-    string GameHash = 2;
-    bool Banned = 3;
+    string Username = 2;
+    string Email = 3;
+    string GameHash = 4;
+    bool Banned = 5;
 }
 
 message GetUserRequest {
@@ -52,8 +54,9 @@ message CheckUserPasswordRequest {
 
 message WCFUserInfo {
     uint64 UserID = 1;
-    string Email = 2;
-    bytes Password = 3;
+    string Username = 2;
+    string Email = 3;
+    bytes Password = 4;
 }
 
 message GetWCFInfoRequest {
