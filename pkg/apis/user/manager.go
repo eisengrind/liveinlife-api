@@ -54,7 +54,20 @@ func (m *manager) Get(ctx context.Context, id Identifier) (Complete, error) {
 		return nil, errInvalidUUID
 	}
 
-	return m.repository.Get(ctx, id)
+	c, err := m.repository.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	wcfInfo, err := m.wcfRepository.GetInfo(ctx, c.Data().WCFUserID)
+	if err != nil {
+		return nil, err
+	}
+
+	c.Data().WCFUsername = wcfInfo.Username
+	c.Data().WCFEmail = wcfInfo.Email
+
+	return c, nil
 }
 
 // GetByGameSerialHash returns a user filtered by its unique game serial hash
@@ -63,7 +76,20 @@ func (m *manager) GetByGameSerialHash(ctx context.Context, hash string) (Complet
 		return nil, errInvalidGameSerialHash
 	}
 
-	return m.repository.GetByGameSerialHash(ctx, hash)
+	c, err := m.repository.GetByGameSerialHash(ctx, hash)
+	if err != nil {
+		return nil, err
+	}
+
+	wcfInfo, err := m.wcfRepository.GetInfo(ctx, c.Data().WCFUserID)
+	if err != nil {
+		return nil, err
+	}
+
+	c.Data().WCFUsername = wcfInfo.Username
+	c.Data().WCFEmail = wcfInfo.Email
+
+	return c, nil
 }
 
 // GetByWCFUserID returns an user filtered by its wcf user id
@@ -72,7 +98,20 @@ func (m *manager) GetByWCFUserID(ctx context.Context, wcfUserID WCFUserID) (Comp
 		return nil, errInvalidWCFUserID
 	}
 
-	return m.repository.GetByWCFUserID(ctx, wcfUserID)
+	c, err := m.repository.GetByWCFUserID(ctx, wcfUserID)
+	if err != nil {
+		return nil, err
+	}
+
+	wcfInfo, err := m.wcfRepository.GetInfo(ctx, c.Data().WCFUserID)
+	if err != nil {
+		return nil, err
+	}
+
+	c.Data().WCFUsername = wcfInfo.Username
+	c.Data().WCFEmail = wcfInfo.Email
+
+	return c, nil
 }
 
 var errInvalidWCFUserID = errors.New("invalid woltlab community framework user id")
@@ -91,6 +130,14 @@ func (m *manager) Create(ctx context.Context, inc Incomplete) (Complete, error) 
 	if err != nil {
 		return nil, err
 	}
+
+	wcfInfo, err := m.wcfRepository.GetInfo(ctx, c.Data().WCFUserID)
+	if err != nil {
+		return nil, err
+	}
+
+	c.Data().WCFUsername = wcfInfo.Username
+	c.Data().WCFEmail = wcfInfo.Email
 
 	return c, m.event.Produce(ctx, CreatedEventID, &CreatedEvent{
 		&event.PayloadMeta{
