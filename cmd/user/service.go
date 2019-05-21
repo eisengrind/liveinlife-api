@@ -40,7 +40,7 @@ import (
 var (
 	httpAddr        = flagenv.String("http-addr", ":8080", "the http addr of the service")
 	grpcAddr        = flagenv.String("grpc-addr", ":2345", "the grpc address of this service")
-	nsqdAddr        = flagenv.String("nsqd-addr", "nsqd:4151", "the address of the nsq lookupd servers")
+	nsqdAddr        = flagenv.String("nsqd-addr", "nsqd:4150", "the address of the nsq lookupd servers")
 	publicKeyPath   = flagenv.String("public-key-path", "/secrets/public.pem", "the public key to validate jwt token")
 	rbacGRPCAddress = flagenv.String("rbac-grpc-addr", "rbac-service:2345", "the grpc address to the rbac control")
 
