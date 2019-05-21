@@ -57,6 +57,8 @@ func newComplete(id user.Identifier, inc user.Incomplete) user.Complete {
 type completeUser struct {
 	UUID           string         `json:"uuid"`
 	WCFUserID      user.WCFUserID `json:"wcf_user_id"`
+	WCFUsername    string         `json:"wcf_username"`
+	WCFEmail       string         `json:"wcf_email"`
 	GameSerialHash string         `json:"game_serial_hash"`
 	Banned         bool           `json:"banned"`
 }
@@ -66,6 +68,8 @@ func (c *complete) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&completeUser{
 		c.UUID(),
 		c.Data().WCFUserID,
+		c.Data().WCFUsername,
+		c.Data().WCFEmail,
 		c.Data().GameSerialHash,
 		c.Data().Banned,
 	})
