@@ -1,6 +1,9 @@
 package user
 
-import "context"
+import (
+	"context"
+	"encoding/json"
+)
 
 // Repository of user objects
 //go:generate counterfeiter -o ./mocks/repository.go . Repository
@@ -15,6 +18,11 @@ type Repository interface {
 
 // WCFUserID of the user existing in the Woltlab Community Framwork database
 type WCFUserID uint64
+
+// UnmarshalJSON impletements the json.Unmarshaler interface
+func (id *WCFUserID) UnmarshalJSON(b []byte) error {
+	return json.Unmarshal(b, (*uint64)(id))
+}
 
 // WCFUserInfo of an existing user in the WCF database
 type WCFUserInfo struct {
