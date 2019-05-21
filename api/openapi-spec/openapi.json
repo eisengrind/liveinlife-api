@@ -1599,11 +1599,11 @@
                         "description": "The WCF user id bind to the user."
                     },
                     "wcf_username": {
-                        "type": "number",
+                        "type": "string",
                         "description": "The WCF username of the user"
                     },
                     "wcf_email": {
-                        "type": "number",
+                        "type": "string",
                         "description": "The WCF email of the user"
                     },
                     "game_serial_hash": {
