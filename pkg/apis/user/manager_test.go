@@ -33,6 +33,7 @@ func TestManagerGet(t *testing.T) {
 
 	fComplPassword := &mocks.FakeCompletePassword{}
 	fComplPassword.HashReturns([]byte("testHash"))
+	wcfRepo.GetInfoReturns(&user.WCFUserInfo{}, nil)
 
 	wcfRepo.GetInfoReturns(&user.WCFUserInfo{
 		Email:    "test@test.com",
@@ -73,6 +74,7 @@ func TestManagerGetByGameSerialHash(t *testing.T) {
 	repo := &mocks.FakeRepository{}
 	wcfRepo := &mocks.FakeWCFRepository{}
 	rbControl := &rbacMocks.FakeControl{}
+	wcfRepo.GetInfoReturns(&user.WCFUserInfo{}, nil)
 
 	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
 
@@ -91,6 +93,7 @@ func TestManagerGetByWCFUserID(t *testing.T) {
 	repo := &mocks.FakeRepository{}
 	wcfRepo := &mocks.FakeWCFRepository{}
 	rbControl := &rbacMocks.FakeControl{}
+	wcfRepo.GetInfoReturns(&user.WCFUserInfo{}, nil)
 
 	m := user.NewManager(repo, wcfRepo, event.NewProducer(&pubsubMocks.FakeProducer{}), rbControl)
 
@@ -127,13 +130,6 @@ func TestManagerCreate(t *testing.T) {
 	validIncomplete := user.NewIncomplete(1, "", "", "exampleHash", false)
 	if _, err := m.Create(
 		context.Background(),
-		validIncomplete,
-	); err != nil {
-		t.Fatal("the given parameters are both correct")
-	}
-
-	if _, err := m.Create(
-		context.Background(),
 		user.NewIncomplete(0, "", "", "exampleHash", false),
 	); err == nil {
 		t.Fatal("the wcf user id is invalid")
@@ -147,13 +143,25 @@ func TestManagerCreate(t *testing.T) {
 		t.Fatal("the wcf repository returns an error")
 	}
 
-	wcfRepo.GetInfoReturns(nil, nil)
+	wcfRepo.GetInfoReturns(&user.WCFUserInfo{}, nil)
 	repo.CreateReturns(nil, errors.New("fake error"))
 	if _, err := m.Create(
 		context.Background(),
 		validIncomplete,
 	); err == nil {
 		t.Fatal("the repository returns an error")
+	}
+
+	repo.CreateReturns(&fakeComplete{
+		&fakeIdentifier{"test"},
+		validIncomplete,
+	}, nil)
+
+	if _, err := m.Create(
+		context.Background(),
+		validIncomplete,
+	); err != nil {
+		t.Fatal("the given parameters are both correct")
 	}
 }
 

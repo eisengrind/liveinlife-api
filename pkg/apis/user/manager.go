@@ -122,16 +122,12 @@ func (m *manager) Create(ctx context.Context, inc Incomplete) (Complete, error) 
 		return nil, errInvalidWCFUserID
 	}
 
-	if _, err := m.wcfRepository.GetInfo(ctx, inc.Data().WCFUserID); err != nil {
-		return nil, err
-	}
-
-	c, err := m.repository.Create(ctx, inc)
+	wcfInfo, err := m.wcfRepository.GetInfo(ctx, inc.Data().WCFUserID)
 	if err != nil {
 		return nil, err
 	}
 
-	wcfInfo, err := m.wcfRepository.GetInfo(ctx, c.Data().WCFUserID)
+	c, err := m.repository.Create(ctx, inc)
 	if err != nil {
 		return nil, err
 	}
