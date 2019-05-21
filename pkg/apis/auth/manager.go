@@ -102,7 +102,7 @@ func (m *Manager) loginUser(ctx context.Context, c Credentials) (*Token, error) 
 
 	u, err := m.user.GetByWCFUserID(ctx, info.UserID)
 	if err == user.ErrNotFound {
-		u, err = m.user.Create(ctx, user.NewIncomplete(info.UserID, "", false))
+		u, err = m.user.Create(ctx, user.NewIncomplete(info.UserID, "", "", "", false))
 		if err != nil {
 			return nil, err
 		}
