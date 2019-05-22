@@ -17,7 +17,6 @@
 		}
 	],
 	"paths": {
-        
         "/serviceaccounts": {
             "post": {
                 "summary": "Create a service account",
