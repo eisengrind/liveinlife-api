@@ -12,7 +12,7 @@ type db struct {
 	database *sql.DB
 }
 
-// NewRepository creates a new instance of a repository provider for a cockroachdb database
+// NewRepository creates a new instance of a repository for a cockroachdb database
 func NewRepository(d *sql.DB) auth.Repository {
 	return &db{d}
 }
