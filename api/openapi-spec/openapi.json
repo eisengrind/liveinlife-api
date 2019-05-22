@@ -21,7 +21,7 @@
         "/serviceaccounts": {
             "post": {
                 "summary": "Create a service account",
-                "description": "Creates a service account",
+                "description": "Creates a service account for services",
                 "operationId": "CreateServiceAccount",
                 "security": [
                     {
