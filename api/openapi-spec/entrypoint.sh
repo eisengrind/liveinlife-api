@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # get the github key
-ssh-keyscan github.com >> ~/.ssh/known_hosts
+ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # setup git stuff
 git config --global user.email "$GITHUB_BOT_EMAIL"
@@ -21,5 +21,5 @@ java -jar /openapi-generator-cli.jar generate \
     --additional-properties=clientPackage=FF.Client
 cd /tmp/lib/cs
 git add -A
-git commit -a -m "generate csharp library\ncommit reference 51st-state/api@$SHORT_SHA"
+git commit -a -m "generate csharp library"
 git push
