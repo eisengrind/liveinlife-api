@@ -61,6 +61,10 @@ func (m *Manager) RecaptchaLogin(ctx context.Context, c Credentials) (*Token, er
 		return nil, err
 	}
 
+	if !verifyResp.Success {
+		return nil, errors.New("recaptcha could not be verified")
+	}
+
 	return m.loginUser(ctx, c)
 }
 
