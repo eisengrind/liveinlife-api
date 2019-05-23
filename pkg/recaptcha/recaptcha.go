@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 const siteVerifyEndpoint = "https://www.google.com/recaptcha/api/siteverify"
@@ -40,6 +43,10 @@ func (v *Verifier) Verify(response, remoteIP string) (*Response, error) {
 	var vResponse Response
 	if err := json.NewDecoder(resp.Body).Decode(&vResponse); err != nil {
 		return nil, err
+	}
+
+	if len(vResponse.ErrorCodes) > 0 {
+		return nil, errors.WithMessagef(err, "error codes: %s", strings.Join(vResponse.ErrorCodes, ", "))
 	}
 
 	return &vResponse, nil
