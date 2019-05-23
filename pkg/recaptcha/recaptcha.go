@@ -40,7 +40,9 @@ func (v *Verifier) Verify(response, remoteIP string) (*Response, error) {
 	}
 	defer resp.Body.Close()
 
-	var vResponse Response
+	vResponse := Response{
+		ErrorCodes: make([]string, 0),
+	}
 	if err := json.NewDecoder(resp.Body).Decode(&vResponse); err != nil {
 		return nil, err
 	}
