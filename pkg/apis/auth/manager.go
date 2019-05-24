@@ -56,7 +56,7 @@ func (i *incompletePassword) Password() string {
 // A recaptcha login is only available for default user logins
 func (m *Manager) RecaptchaLogin(ctx context.Context, c Credentials) (*Token, error) {
 	responseToken := recaptchaRespFromCtx(ctx)
-	verifyResp, err := m.recaptchaVerifier.Verify(responseToken, "")
+	_, err := m.recaptchaVerifier.Verify(responseToken, "")
 	if err != nil {
 		return nil, err
 	}
