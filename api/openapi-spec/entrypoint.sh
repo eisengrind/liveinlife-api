@@ -23,3 +23,18 @@ cd /tmp/lib/cs
 git add -A
 git commit -a -m "generate csharp library"
 git push
+
+# generate typescript angular library
+git clone git@github.com:51st-state/ng-api-client.git /tmp/lib/ts-ng
+java -jar /openapi-generator-cli.jar generate \
+    -g typescript-angular \
+    -i $PROJECT_ROOT/api/openapi-spec/openapi.json \
+    -o /tmp/lib/ts-ng/src/ \
+    --additional-properties=modelPropertyNaming=original \
+    --additional-properties=npmName=@51st-state/ng-api-client \
+    --additional-properties=npmVersion=1.0.0 \
+    --additional-properties=ngVersion=7.0.0
+cd /tmp/lib/ts-ng
+git add -A
+git commit -a -m "generate typescript angular library"
+git push
