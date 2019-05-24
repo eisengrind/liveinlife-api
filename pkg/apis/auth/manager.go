@@ -65,23 +65,79 @@ func (m *Manager) RecaptchaLogin(ctx context.Context, c Credentials) (*Token, er
 		return nil, errors.New("recaptcha could not be verified")
 	}*/
 
-	return m.loginUser(ctx, c)
+	return m.loginUserRecaptcha(ctx, c)
 }
 
-var errTooManyAttempts = problems.New("too many login attempts", "a login request has to provide a recaptcha", 425)
+var errTooManyAttempts = problems.New("too many login attempts", "you may have to provide a recaptcha response token", 425)
 
 const serviceAccountLoginName = "_json_key"
 
 // Login logs a user in with their connected wcf user credentials
 func (m *Manager) Login(ctx context.Context, c Credentials) (*Token, error) {
+	return m.loginUser(ctx, c)
+}
+
+func (m *Manager) keypair(ctx context.Context, t, id string) (*Token, error) {
+	aT := token.New(&jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Minute * 5).Unix(),
+		Audience:  "default",
+	}, &token.User{
+		ID:   id,
+		Type: t,
+	})
+
+	rT := token.New(&jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
+		Audience:  "auth/refresh",
+	}, &token.User{
+		ID:   id,
+		Type: t,
+	})
+
+	return &Token{
+		m.pK,
+		aT,
+		rT,
+	}, nil
+}
+
+func (m *Manager) loginUserRecaptcha(ctx context.Context, c Credentials) (*Token, error) {
+	info, err := m.user.GetWCFInfo(ctx, c.Name())
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := m.user.GetByWCFUserID(ctx, info.UserID)
+	if err == user.ErrNotFound {
+		u, err = m.user.Create(ctx, user.NewIncomplete(info.UserID, "", "", "", false))
+		if err != nil {
+			return nil, err
+		}
+	} else if err != nil {
+		return nil, err
+	}
+
+	if err := m.user.CheckPassword(ctx, u, c); err != nil {
+		// TODO: get exact status code of the error since the error also could be a timeout error
+		if err := m.repo.AddLoginAttempt(
+			ctx,
+			fmt.Sprintf("user/%s", u.UUID()),
+			time.Now(),
+		); err != nil {
+			return nil, err
+		}
+
+		return nil, err
+	}
+
+	return m.keypair(ctx, "user", u.UUID())
+}
+
+func (m *Manager) loginUser(ctx context.Context, c Credentials) (*Token, error) {
 	if c.Name() == serviceAccountLoginName {
 		return m.loginServiceAccount(ctx, c)
 	}
 
-	return m.loginUser(ctx, c)
-}
-
-func (m *Manager) loginUser(ctx context.Context, c Credentials) (*Token, error) {
 	info, err := m.user.GetWCFInfo(ctx, c.Name())
 	if err != nil {
 		return nil, err
@@ -123,27 +179,7 @@ func (m *Manager) loginUser(ctx context.Context, c Credentials) (*Token, error) 
 		return nil, err
 	}
 
-	aT := token.New(&jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Minute * 5).Unix(),
-		Audience:  "default",
-	}, &token.User{
-		ID:   u.UUID(),
-		Type: "user",
-	})
-
-	rT := token.New(&jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
-		Audience:  "auth/refresh",
-	}, &token.User{
-		ID:   u.UUID(),
-		Type: "user",
-	})
-
-	return &Token{
-		m.pK,
-		aT,
-		rT,
-	}, nil
+	return m.keypair(ctx, "user", u.UUID())
 }
 
 var errServiceAccountGUIDNotEqual = errors.New("the service account guid's are not equal")
@@ -167,27 +203,7 @@ func (m *Manager) loginServiceAccount(ctx context.Context, c Credentials) (*Toke
 		return nil, err
 	}
 
-	aT := token.New(&jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Minute * 5).Unix(),
-		Audience:  "default",
-	}, &token.User{
-		ID:   jsonKey.ServiceAccountGUID,
-		Type: "service_account",
-	})
-
-	rT := token.New(&jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
-		Audience:  "auth/refresh",
-	}, &token.User{
-		ID:   jsonKey.ServiceAccountGUID,
-		Type: "service_account",
-	})
-
-	return &Token{
-		m.pK,
-		aT,
-		rT,
-	}, nil
+	return m.keypair(ctx, "service_account", jsonKey.ServiceAccountGUID)
 }
 
 var errKeypairNotMatching = errors.New("the given keypair does not match")
@@ -219,25 +235,5 @@ func (m *Manager) RefreshToken(ctx context.Context, accessToken token.Token, ref
 		return nil, errors.New("the UUIDs are not equal")
 	}
 
-	aT := token.New(&jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Minute * 5).UnixNano(),
-		Audience:  "default",
-	}, &token.User{
-		ID:   accessToken.Data().User.ID,
-		Type: accessToken.Data().User.Type,
-	})
-
-	rT := token.New(&jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Hour * 48).UnixNano(),
-		Audience:  "auth/refresh",
-	}, &token.User{
-		ID:   accessToken.Data().User.ID,
-		Type: accessToken.Data().User.Type,
-	})
-
-	return &Token{
-		m.pK,
-		aT,
-		rT,
-	}, nil
+	return m.keypair(ctx, accessToken.Data().User.ID, accessToken.Data().User.Type)
 }
