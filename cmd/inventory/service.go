@@ -23,6 +23,8 @@ import (
 
 	"github.com/playnet-public/flagenv"
 	"go.uber.org/zap"
+
+	_ "github.com/lib/pq"
 )
 
 var (
