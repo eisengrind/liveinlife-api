@@ -17,6 +17,7 @@ go_library(
         "//pkg/rbac:go_default_library",
         "//vendor/github.com/grpc-ecosystem/go-grpc-middleware:go_default_library",
         "//vendor/github.com/grpc-ecosystem/go-grpc-middleware/logging/zap:go_default_library",
+        "//vendor/github.com/lib/pq:go_default_library",
         "//vendor/github.com/playnet-public/flagenv:go_default_library",
         "//vendor/go.uber.org/zap:go_default_library",
         "//vendor/google.golang.org/grpc:go_default_library",
