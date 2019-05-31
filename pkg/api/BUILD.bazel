@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/go-chi/chi:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
         "//vendor/github.com/rs/cors:go_default_library",
         "//vendor/go.uber.org/zap:go_default_library",
     ],

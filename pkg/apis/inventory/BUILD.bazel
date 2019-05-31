@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "manager.go",
+        "repository.go",
+        "transport.go",
+        "types.go",
+    ],
+    importpath = "github.com/51st-state/api/pkg/apis/inventory",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/api/endpoint:go_default_library",
+        "//pkg/encode:go_default_library",
+        "//pkg/rbac:go_default_library",
+        "//pkg/rbac/middleware:go_default_library",
+        "//pkg/token:go_default_library",
+        "//vendor/github.com/go-chi/chi:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "manager_test.go",
+        "types_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = ["//pkg/apis/inventory/mocks:go_default_library"],
+)

@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package inventory;
+
+message Identifier {
+    string GUID = 1;
+}
+
+message Item {
+    string ID = 1;
+    uint64 Amount = 2;
+    double Subset = 3;
+}
+
+message Incomplete {
+    repeated Item Items = 1;
+}
+
+message Complete {
+    Identifier Identifier = 1;
+    Incomplete Incomplete = 2;
+}
+
+message AddItemRequest {
+    Identifier Identifier = 1;
+    Item Item = 2;
+}
+
+message RemoveItemRequest {
+    Identifier Identifier = 1;
+    Item Item = 2;
+}
+
+service Manager {
+    rpc Get(Identifier) returns (Complete) {}
+    rpc Create(Incomplete) returns (Complete) {}
+    rpc AddItem(AddItemRequest) returns (google.protobuf.Empty) {}
+    rpc RemoveItem(RemoveItemRequest) returns (google.protobuf.Empty) {}
+    rpc Delete(Identifier) returns (google.protobuf.Empty) {}
+}

@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "identifier.go",
+        "manager.go",
+        "repository.go",
+    ],
+    importpath = "github.com/51st-state/api/pkg/apis/inventory/mocks",
+    visibility = ["//visibility:public"],
+    deps = ["//pkg/apis/inventory:go_default_library"],
+)
