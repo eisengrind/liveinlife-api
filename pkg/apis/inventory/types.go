@@ -31,6 +31,11 @@ type Complete interface {
 	Incomplete
 }
 
+type complete struct {
+	Identifier
+	Incomplete
+}
+
 // Item of an inventory
 type Item struct {
 	ID     string  `json:"id"`

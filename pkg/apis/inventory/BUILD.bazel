@@ -3,6 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = [
+        "grpc_client.go",
+        "grpc_server.go",
         "manager.go",
         "repository.go",
         "transport.go",
@@ -12,12 +14,15 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/api/endpoint:go_default_library",
+        "//pkg/apis/inventory/proto:go_default_library",
         "//pkg/encode:go_default_library",
         "//pkg/rbac:go_default_library",
         "//pkg/rbac/middleware:go_default_library",
         "//pkg/token:go_default_library",
         "//vendor/github.com/go-chi/chi:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/empty:go_default_library",
         "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/google.golang.org/grpc:go_default_library",
     ],
 )
 

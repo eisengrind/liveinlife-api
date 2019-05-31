@@ -1,14 +1,78 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
+package(default_visibility = ["//visibility:public"])
+
 go_library(
     name = "go_default_library",
     srcs = ["service.go"],
     importpath = "github.com/51st-state/api/cmd/inventory",
     visibility = ["//visibility:private"],
+    deps = [
+        "//pkg/api:go_default_library",
+        "//pkg/apis/inventory:go_default_library",
+        "//pkg/apis/inventory/cockroachdb:go_default_library",
+        "//pkg/apis/inventory/proto:go_default_library",
+        "//pkg/encode:go_default_library",
+        "//pkg/keys:go_default_library",
+        "//pkg/rbac:go_default_library",
+        "//vendor/github.com/grpc-ecosystem/go-grpc-middleware:go_default_library",
+        "//vendor/github.com/grpc-ecosystem/go-grpc-middleware/logging/zap:go_default_library",
+        "//vendor/github.com/playnet-public/flagenv:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/google.golang.org/grpc:go_default_library",
+        "//vendor/google.golang.org/grpc/reflection:go_default_library",
+    ],
 )
 
 go_binary(
-    name = "inventory",
+    name = "bin",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
+)
+
+# docker things
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+
+go_image(
+    name = "image",
+    binary = ":bin",
+)
+
+# k8s stuff
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load(
+    "//:helpers/k8s.bzl",
+    manifest = "template_manifest",
+)
+
+manifest(
+    name = "dpl",
+    template = "deployment.yaml",
+)
+
+k8s_deploy(
+    name = "deployment",
+    template = ":dpl",
+    images = {
+        "eu.gcr.io/liveinlife/inventory:dev": ":image",
+    },
+)
+
+manifest(
+    name = "svc",
+    template = "service.yaml",
+)
+
+k8s_deploy(
+    name = "service",
+    template = ":svc",
+)
+
+k8s_objects(
+    name = "dev",
+    objects = [
+        ":deployment",
+        ":service",
+    ],
 )
