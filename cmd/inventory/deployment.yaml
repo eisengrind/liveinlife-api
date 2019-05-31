@@ -48,7 +48,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: dbPassword
-              name: "{NAME}-secrets"
+              name: "{NAME}-secret"
         ports:
         - name: http
           containerPort: 8080
