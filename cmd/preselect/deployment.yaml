@@ -14,8 +14,6 @@ spec:
     metadata:
       labels:
         app: "{NAME}"
-      annotations:
-        prometheus.io/scrape: "true"
     spec:
       containers:
       - name: "{NAME}-pod"

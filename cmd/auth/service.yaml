@@ -2,6 +2,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: "{NAME}-service"
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "metrics"
+    prometheus.io/port: "8080"
 spec:
   selector:
     app: "{NAME}"
