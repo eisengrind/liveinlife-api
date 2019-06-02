@@ -17,6 +17,264 @@
 		}
 	],
 	"paths": {
+        "/inventory": {
+            "post": {
+                "summary": "Create an inventory object",
+                "description": "Creates a new inventory in the inventory storage",
+                "operationId": "CreateInventory",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "inventory"
+                ],
+                "requestBody": {
+                    "description": "The incomplete inventory object to create an inventory from",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/IncompleteInventory"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation returned Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CompleteInventory"
+                                }
+                            }
+                        }
+                    },
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            }
+        },
+        "/inventory/{guid}": {
+            "get": {
+                "summary": "Returns an inventory",
+                "description": "Returns the content of a stored inventory",
+                "operationId": "GetInventory",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "inventory"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the inventory",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation returned Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CompleteInventory"
+                                }
+                            }
+                        }
+                    },
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            },
+            "delete": {
+                "summary": "Deletes an inventory",
+                "description": "Deletes an inventory and its contents",
+                "operationId": "DeleteInventory",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "inventory"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the inventory",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            }
+        },
+        "/inventory/{guid}/items/add": {
+            "patch": {
+                "summary": "Adds an item to the inventory",
+                "description": "Adds an item to the inventory.",
+                "operationId": "AddItemToInventory",
+                "tags": [
+                    "inventory"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the inventory",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "The item to add",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InventoryItem"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            }
+        },
+        "/inventory/{guid}/items/remove": {
+            "patch": {
+                "summary": "Removes an item to the inventory",
+                "description": "Removes an item to the inventory.",
+                "operationId": "RemoveItemFromInventory",
+                "tags": [
+                    "inventory"
+                ],
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "The GUID of the inventory",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "The item to remove",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InventoryItem"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+					"200": {
+						"description": "Operation returned Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Empty"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "A problem occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
+					}
+                }
+            }
+        },
         "/serviceaccounts": {
             "post": {
                 "summary": "Create a service account",
@@ -1456,6 +1714,54 @@
 			}
 		},
 		"schemas": {
+            "InventoryItem": {
+                "title": "An item of an inventory",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "The id of the item"
+                    },
+                    "amount": {
+                        "type": "integer",
+                        "description": "The amount of the item"
+                    },
+                    "subset": {
+                        "type": "number",
+                        "description": "The subset of the item"
+                    }
+                }
+            },
+            "IncompleteInventory": {
+                "title": "An incomplete inventory object",
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "description": "The items the inventory currently holds",
+                        "items": {
+                            "$ref": "#/components/schemas/InventoryItem"
+                        }
+                    }
+                }
+            },
+            "CompleteInventory": {
+                "title": "A complete inventory object",
+                "type": "object",
+                "properties": {
+                    "guid": {
+                        "type": "string",
+                        "description": "The guid of the inventory"
+                    },
+                    "items": {
+                        "type": "array",
+                        "description": "The items the inventory currently holds",
+                        "items": {
+                            "$ref": "#/components/schemas/InventoryItem"
+                        }
+                    }
+                }
+            },
             "IncompleteServiceAccount": {
                 "title": "Incomplete service account object",
                 "type": "object",
